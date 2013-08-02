@@ -30,6 +30,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	}
 
+	public void initialSetup(EntityPlayer player) {
+		this.owner = player.username;
+		this.isActive = false;
+		PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player, this.xCoord, this.yCoord, this.zCoord, false);
+	}
+
 	@Override
 	public void updateEntity() {
 		//Update every 10 ticks. no need to update every tick
@@ -56,7 +62,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			}
 			//Use this somewhere
 			//this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
-
 		}
 	}
 }

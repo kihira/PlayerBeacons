@@ -1,4 +1,4 @@
-package playerbeacons.common;
+package playerbeacons.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import playerbeacons.common.PlayerBeacons;
 
 import java.util.Random;
 

@@ -15,6 +15,8 @@ import playerbeacons.block.PlayerBeaconBaseBlock;
 import playerbeacons.block.PlayerBeaconBlock;
 import playerbeacons.item.BeheaderItem;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
+import playerbeacons.util.BeaconDataHandler;
+import playerbeacons.util.EventHandler;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -29,6 +31,8 @@ public class PlayerBeacons {
 	public static Item beheaderItem;
 
 	public static DecapitationEnchantment decapitationEnchantment;
+
+	public static BeaconDataHandler beaconData;
 
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent e) {
@@ -66,5 +70,6 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
+		beaconData = new BeaconDataHandler();
 	}
 }
