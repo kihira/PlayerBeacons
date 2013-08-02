@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
+import playerbeacons.item.CrystalItem;
 import playerbeacons.tileentity.TileEntityConductor;
 
 public class ConductorBlock extends BlockContainer {
@@ -41,7 +42,7 @@ public class ConductorBlock extends BlockContainer {
 		if (!world.isRemote) {
 			ItemStack itemStack = entityPlayer.getCurrentItemOrArmor(0);
 			if (itemStack != null) {
-				if (itemStack.getItem() == PlayerBeacons.speedCrystalItem) {
+				if (itemStack.getItem() instanceof CrystalItem) {
 					TileEntityConductor tileEntityConductor = (TileEntityConductor) world.getBlockTileEntity(x, y, z);
 					if (tileEntityConductor.getStackInSlot(0) == null) {
 						tileEntityConductor.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
