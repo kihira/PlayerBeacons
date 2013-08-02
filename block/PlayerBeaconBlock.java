@@ -4,11 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import playerbeacons.common.PlayerBeacons;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;
@@ -27,6 +30,28 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 	}
 
 	@Override
+	public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+			if (tileEntity instanceof TileEntityPlayerBeacon) {
+				if ((player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || (player.capabilities.isCreativeMode)) {
+					PlayerBeacons.beaconData.deleteBeaconInformation(world, ((TileEntityPlayerBeacon) tileEntity).getOwner());
+					return world.setBlockToAir(x, y, z);
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if (tileEntity instanceof TileEntityPlayerBeacon) {
+			((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
+		}
+	}
+
+	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
 		if (!par1World.isRemote) {
 			if (par1World.getBlockId(par2, par3+1, par4) == Item.skull.itemID) par1World.addWeatherEffect(new EntityLightningBolt(par1World, par2, par3, par4));
@@ -36,6 +61,7 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 	}
 
 	//Should I keep? Or maybe adjust it? Wait on nex's design
+	//Make this change based on the level of bad stuff?
 	@Override
 	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
 		for (int l = 0; l < 3; ++l)

@@ -1,6 +1,5 @@
 package playerbeacons.util;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -36,24 +35,27 @@ public class BeaconDataHandler {
 	private void saveData(NBTTagCompound data) {
 		try
 		{
-			File mainFileNew = new File(DimensionManager.getCurrentSaveRootDirectory().toString() + "playerbeacons.dat_new");
-			File mainFile = new File(DimensionManager.getCurrentSaveRootDirectory().toString() + "playerbeacons.dat");
-			File backupFile = new File(DimensionManager.getCurrentSaveRootDirectory().toString() + "playerbeacons.dat_old");
+			File mainFileNew = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat_new");
+			File backupFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat_old");
+			File mainFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat");
+			System.out.println(mainFileNew);
+			System.out.println(mainFile);
+			System.out.println(backupFile);
 			CompressedStreamTools.writeCompressed(data, new FileOutputStream(mainFileNew));
-
-			if (mainFile.exists())
-			{
-				mainFile.delete();
-			}
-
-			backupFile.renameTo(mainFile);
 
 			if (backupFile.exists())
 			{
 				backupFile.delete();
 			}
 
-			mainFileNew.renameTo(backupFile);
+			mainFile.renameTo(backupFile);
+
+			if (mainFile.exists())
+			{
+				mainFile.delete();
+			}
+
+			mainFileNew.renameTo(mainFile);
 
 			if (mainFileNew.exists())
 			{
@@ -66,15 +68,16 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public boolean updateBeaconInformation(World world, EntityPlayer player, int x, int y, int z, boolean isActive) {
-		if (beaconList.hasKey(player.username)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(player.username);
+	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, int badStuff) {
+		if (beaconList.hasKey(player)) {
+			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (playerData.hasKey("world" + world.getWorldInfo().getWorldName())) {
 				NBTTagCompound playerDataWorld = playerData.getCompoundTag("world" + world.getWorldInfo().getWorldName());
 				playerDataWorld.setInteger("x", x);
-				playerDataWorld.setInteger("y", x);
-				playerDataWorld.setInteger("z", x);
+				playerDataWorld.setInteger("y", y);
+				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
+				playerDataWorld.setInteger("badstuff", badStuff);
 				playerData.setCompoundTag("world" + world.getWorldInfo().getWorldName(), playerDataWorld);
 				saveData(beaconList);
 				return true;
@@ -83,9 +86,9 @@ public class BeaconDataHandler {
 		return false;
 	}
 
-	public boolean deleteBeaconInformation(World world, EntityPlayer entityPlayer) {
-		if (beaconList.hasKey(entityPlayer.username)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(entityPlayer.username);
+	public boolean deleteBeaconInformation(World world, String username) {
+		if (beaconList.hasKey(username)) {
+			NBTTagCompound playerData = beaconList.getCompoundTag(username);
 			if (playerData.hasKey("world" + world.getWorldInfo().getWorldName())) {
 				playerData.removeTag("world" + world.getWorldInfo().getWorldName());
 				saveData(beaconList);
@@ -95,15 +98,20 @@ public class BeaconDataHandler {
 		return false;
 	}
 
-	public void addBeaconInformation(World world, EntityPlayer player, int x, int y, int z, boolean isActive) {
-		if (beaconList.hasKey(player.username)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(player.username);
+	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, int badStuff) {
+		if (!beaconList.hasKey(player)) {
+			NBTTagCompound newPlayerData = new NBTTagCompound();
+			beaconList.setCompoundTag(player, newPlayerData);
+		}
+		if (beaconList.hasKey(player)) {
+			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (!playerData.hasKey("world" + world.getWorldInfo().getWorldName())) {
 				NBTTagCompound playerDataWorld = new NBTTagCompound();
 				playerDataWorld.setInteger("x", x);
-				playerDataWorld.setInteger("y", x);
-				playerDataWorld.setInteger("z", x);
+				playerDataWorld.setInteger("y", y);
+				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
+				playerDataWorld.setInteger("badstuff", badStuff);
 				playerData.setCompoundTag("world" + world.getWorldInfo().getWorldName(), playerDataWorld);
 				saveData(beaconList);
 			}
