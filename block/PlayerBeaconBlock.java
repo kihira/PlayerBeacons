@@ -5,9 +5,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -49,15 +47,6 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 		if (tileEntity instanceof TileEntityPlayerBeacon) {
 			((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
 		}
-	}
-
-	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (!par1World.isRemote) {
-			if (par1World.getBlockId(par2, par3+1, par4) == Item.skull.itemID) par1World.addWeatherEffect(new EntityLightningBolt(par1World, par2, par3, par4));
-
-		}
-		return false;
 	}
 
 	//Should I keep? Or maybe adjust it? Wait on nex's design

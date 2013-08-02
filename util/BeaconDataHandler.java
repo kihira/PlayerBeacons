@@ -38,9 +38,6 @@ public class BeaconDataHandler {
 			File mainFileNew = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat_new");
 			File backupFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat_old");
 			File mainFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat");
-			System.out.println(mainFileNew);
-			System.out.println(mainFile);
-			System.out.println(backupFile);
 			CompressedStreamTools.writeCompressed(data, new FileOutputStream(mainFileNew));
 
 			if (backupFile.exists())

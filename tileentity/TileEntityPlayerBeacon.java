@@ -24,7 +24,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.badStuff = par1NBTTagCompound.getInteger("badStuff");
 		this.isActive = par1NBTTagCompound.getBoolean("isActive");
-
 	}
 
 	@Override
@@ -33,7 +32,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		par1NBTTagCompound.setString("owner", this.owner);
 		par1NBTTagCompound.setInteger("badStuff", this.badStuff);
 		par1NBTTagCompound.setBoolean("isActive", this.isActive);
-
 	}
 
 	public void initialSetup(EntityPlayer player) {
@@ -60,7 +58,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				//If player head
 				if (skull.getSkullType() == 3) {
 					if (skull.getExtraType().equals(this.owner)) {
-						//TODO not use an array? Maybe enum?
 						this.levels = 0;
 						for (int i = 1; i <= 4; levels = i++) {
 							int j = this.yCoord - i;
@@ -80,13 +77,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 							if (!flag) break;
 						}
-						if (levels == 1) {
+						if (levels > 0) {
 							EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
 							if (player != null) {
 								//Do effects
+								player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels-1, true));
+								player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels-1, true));
+								player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels-1, true));
+								player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels-1, true));
 							}
 						}
-						System.out.println("Detected " + levels + " beacon levels");
+						//System.out.println("Detected " + levels + " beacon levels");
 						//Keep this below the beacon base counter so we know what level to look on based on how many levels there are
 						//TODO implement a better checking system
 						this.conductors = 0;
@@ -114,7 +115,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 							y++;
 							if (y > 3 + levels) break;
 						}
-						System.out.println("Detected " + conductors + " conductors");
+						//System.out.println("Detected " + conductors + " conductors");
 					}
 					else if (this.worldObj.getTotalWorldTime() %60L == 0) {
 						this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));

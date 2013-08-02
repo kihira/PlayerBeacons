@@ -12,6 +12,10 @@ public class Config {
 	public int conductorBlockID;
 
 	public int beheaderItemID;
+	public int speedCrystalItemID;
+	public int digCrystalItemID;
+	public int jumpCrystalItemID;
+	public int resCrystalItemID;
 
 	public int decapitationEnchantmentID;
 
@@ -20,8 +24,8 @@ public class Config {
 	public boolean jumpBuffEnabled;
 	public boolean nightVisionBuffEnabled;
 
-
 	private Configuration config;
+
 
 	public Config(File file) {
 		config = new Configuration(file);
@@ -46,8 +50,15 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Speed Crystal", 20001);
+		speedCrystalItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Dig Crystal", 20002);
+		digCrystalItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Jump Crystal", 20003);
+		jumpCrystalItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Resistance Crystal", 20004);
+		resCrystalItemID = prop.getInt();
 
-		//TODO Check if ID is valid
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
 
