@@ -7,16 +7,17 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import playerbeacons.block.ConductorBlock;
 import playerbeacons.block.PlayerBeaconBaseBlock;
 import playerbeacons.block.PlayerBeaconBlock;
 import playerbeacons.item.BeheaderItem;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
-@NetworkMod(clientSideRequired = false, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
-	public Config config;
+	public static Config config;
 
 	public static Block playerBeaconBlock;
 	public static Block playerBeaconBaseBlock;
@@ -44,6 +45,8 @@ public class PlayerBeacons {
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		GameRegistry.registerItem(beheaderItem, "Beheader");
 		LanguageRegistry.addName(beheaderItem, "Beheader");
+
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 
 	}
 }
