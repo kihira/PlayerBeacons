@@ -36,7 +36,6 @@ public class EventHandler {
 							tag.setString("SkullOwner", deadThing.username);
 							itemStack.setTagCompound(tag);
 							e.entityLiving.entityDropItem(itemStack, 1);
-							System.out.println("Skull drop!");
 						}
 					}
 				}

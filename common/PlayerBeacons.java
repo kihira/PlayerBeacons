@@ -1,8 +1,8 @@
 package playerbeacons.common;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -35,12 +35,6 @@ public class PlayerBeacons {
 
 		config = new Config(e.getSuggestedConfigurationFile());
 
-		MinecraftForge.EVENT_BUS.register(new EventHandler());
-	}
-
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent e) {
-
 		playerBeaconBlock = new PlayerBeaconBlock(config.playerBeaconBlockID);
 		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
 		GameRegistry.registerBlock(playerBeaconBlock, "playerBeaconBlock");
@@ -61,5 +55,16 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
+
+		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
+		//TODO fix formatting
+		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%d) to %s");
+
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
+	}
+
+	@Mod.EventHandler
+	public void serverStart(FMLServerStartingEvent e) {
+		e.registerServerCommand(new CommandPlayerHead());
 	}
 }
