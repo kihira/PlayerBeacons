@@ -14,6 +14,7 @@ import playerbeacons.block.ConductorBlock;
 import playerbeacons.block.PlayerBeaconBaseBlock;
 import playerbeacons.block.PlayerBeaconBlock;
 import playerbeacons.item.BeheaderItem;
+import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -42,21 +43,23 @@ public class PlayerBeacons {
 
 		playerBeaconBlock = new PlayerBeaconBlock(config.playerBeaconBlockID);
 		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
-		GameRegistry.registerBlock(playerBeaconBlock, "Player Beacon");
+		GameRegistry.registerBlock(playerBeaconBlock, "playerBeaconBlock");
 
 		playerBeaconBaseBlock = new PlayerBeaconBaseBlock(config.playerBeaconBaseBlockID);
 		LanguageRegistry.addName(playerBeaconBaseBlock, "Player Beacon Base");
-		GameRegistry.registerBlock(playerBeaconBaseBlock, "Player Beacon Base");
+		GameRegistry.registerBlock(playerBeaconBaseBlock, "playerBeaconBaseBlock");
 
 		conductorBlock = new ConductorBlock(config.conductorBlockID);
 		LanguageRegistry.addName(conductorBlock, "Conductor");
-		GameRegistry.registerBlock(conductorBlock, "Conductor");
+		GameRegistry.registerBlock(conductorBlock, "conductorBlock");
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		LanguageRegistry.addName(beheaderItem, "Beheader");
-		GameRegistry.registerItem(beheaderItem, "Beheader");
+		GameRegistry.registerItem(beheaderItem, "beheaderItem");
 
 		decapitationEnchantment = new DecapitationEnchantment(config.decapitationEnchantmentID, 5, EnumEnchantmentType.weapon);
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
+
+		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 	}
 }
