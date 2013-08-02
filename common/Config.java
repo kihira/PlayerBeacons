@@ -44,7 +44,7 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_BLOCK, "Conductor", 3502);
 		conductorBlockID = prop.getInt();
 
-		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 35000);
+		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
 
 		//TODO Check if ID is valid

@@ -1,5 +1,6 @@
 package playerbeacons.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ public class BeheaderItem extends Item {
 
 	public BeheaderItem(int id) {
 		super(id);
+		setCreativeTab(CreativeTabs.tabCombat);
 	}
 
 	//What does par4 do? Metadata?

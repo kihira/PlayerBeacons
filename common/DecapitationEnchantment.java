@@ -7,6 +7,7 @@ public class DecapitationEnchantment extends Enchantment {
 
 	protected DecapitationEnchantment(int effectID, int weight, EnumEnchantmentType enchantmentType) {
 		super(effectID, weight, enchantmentType);
+		setName("decapitation");
 	}
 
 	@Override
