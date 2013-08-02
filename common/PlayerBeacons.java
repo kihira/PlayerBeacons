@@ -63,6 +63,7 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
 		//TODO fix formatting
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%d) to %s");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
 
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
