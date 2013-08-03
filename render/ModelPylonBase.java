@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 
 public class ModelPylonBase extends ModelBase {
 
+	//fields
 	ModelRenderer Foot;
 	ModelRenderer Foot2;
 	ModelRenderer Connection;
@@ -24,6 +25,10 @@ public class ModelPylonBase extends ModelBase {
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;
 	ModelRenderer Shape4;
+	ModelRenderer Shape5;
+	ModelRenderer Shape6;
+	ModelRenderer Shape7;
+	ModelRenderer Shape8;
 
 	public ModelPylonBase() {
 		textureWidth = 64;
@@ -137,12 +142,35 @@ public class ModelPylonBase extends ModelBase {
 		Shape4.setTextureSize(64, 32);
 		Shape4.mirror = true;
 		setRotation(Shape4, 0F, -2.356194F, 0F);
+		Shape5 = new ModelRenderer(this, 9, 0);
+		Shape5.addBox(-0.5F, 0F, -1F, 1, 1, 2);
+		Shape5.setRotationPoint(4.4F, 8F, 0F);
+		Shape5.setTextureSize(64, 32);
+		Shape5.mirror = true;
+		setRotation(Shape5, 0F, 0F, 0F);
+		Shape6 = new ModelRenderer(this, 9, 0);
+		Shape6.addBox(-0.5F, 0F, -1F, 1, 1, 2);
+		Shape6.setRotationPoint(0F, 8F, -4.4F);
+		Shape6.setTextureSize(64, 32);
+		Shape6.mirror = true;
+		setRotation(Shape6, 0F, 1.570796F, 0F);
+		Shape7 = new ModelRenderer(this, 9, 0);
+		Shape7.addBox(-0.5F, 0F, -1F, 1, 1, 2);
+		Shape7.setRotationPoint(0F, 8F, 4.4F);
+		Shape7.setTextureSize(64, 32);
+		Shape7.mirror = true;
+		setRotation(Shape7, 0F, -1.570796F, 0F);
+		Shape8 = new ModelRenderer(this, 9, 0);
+		Shape8.addBox(-0.5F, 0F, -1F, 1, 1, 2);
+		Shape8.setRotationPoint(-4.4F, 8F, 0F);
+		Shape8.setTextureSize(64, 32);
+		Shape8.mirror = true;
+		setRotation(Shape8, 0F, 3.141593F, 0F);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-	{
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		setRotationAngles(f, f1, f2, f3, f4, f5);
 		Foot.render(f5);
 		Foot2.render(f5);
 		Connection.render(f5);
@@ -161,6 +189,10 @@ public class ModelPylonBase extends ModelBase {
 		Shape2.render(f5);
 		Shape3.render(f5);
 		Shape4.render(f5);
+		Shape5.render(f5);
+		Shape6.render(f5);
+		Shape7.render(f5);
+		Shape8.render(f5);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -169,8 +201,8 @@ public class ModelPylonBase extends ModelBase {
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
+		super.setRotationAngles(f, f1, f2, f3, f4, f5, (Entity) null);
 	}
 
 }
