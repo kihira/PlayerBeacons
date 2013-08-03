@@ -7,11 +7,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.DigCrystalItem;
@@ -23,7 +26,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
 	private boolean isActive = false;
-	private int badStuff = 0;
+	private float badStuff = 0;
 	private int levels;
 	private int resCrystals;
 	private int speedCrystals;
@@ -34,18 +37,20 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
+		par1NBTTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldObj, owner);
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.badStuff = par1NBTTagCompound.getInteger("badStuff");
 		this.isActive = par1NBTTagCompound.getBoolean("isActive");
+		this.levels = par1NBTTagCompound.getInteger("levels");
+		this.resCrystals = par1NBTTagCompound.getInteger("resCrystals");
+		this.speedCrystals = par1NBTTagCompound.getInteger("speedCrystals");
+		this.jumpCrystals = par1NBTTagCompound.getInteger("jumpCrystals");
+		this.digCrystals = par1NBTTagCompound.getInteger("digCrystals");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
-		//TODO Remove redudant code seeing as we are saving this else where as well
-		par1NBTTagCompound.setString("owner", this.owner);
-		par1NBTTagCompound.setInteger("badStuff", this.badStuff);
-		par1NBTTagCompound.setBoolean("isActive", this.isActive);
 		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, badStuff, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels);
 	}
 
@@ -140,44 +145,45 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 						System.out.println("We have " + levels + " levels");
 						for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
-							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
-							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
-								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
+							if ((tileEntityDefiledSoulPylon != null) && tileEntityDefiledSoulPylon.getStackInSlot(0) != null) {
+								if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
 						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
-							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
-								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
+							if ((tileEntityDefiledSoulPylon != null) && tileEntityDefiledSoulPylon.getStackInSlot(0) != null) {
+								if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
 						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
-								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityDefiledSoulPylon != null) && tileEntityDefiledSoulPylon.getStackInSlot(0) != null) {
+								if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
 						for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
-								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityDefiledSoulPylon != null) && tileEntityDefiledSoulPylon.getStackInSlot(0) != null) {
+								if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityDefiledSoulPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
 
 						System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
-						float baseBadStuff = 0;
+						calcBadStuff();
+						doBadStuff(badStuff);
 					}
 				}
 				else {
@@ -191,6 +197,58 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
 				dragon.setCustomNameTag(owner + "'s Puppy");
 				worldObj.spawnEntityInWorld(dragon);
+			}
+		}
+	}
+	private void calcBadStuff() {
+		float newBadStuff = 0;
+		float modifier = MinecraftServer.getServer().getDifficulty() / 2;
+		int y;
+		y = levels - resCrystals;
+		if (y > 0) newBadStuff = newBadStuff + (y * modifier);
+		y = levels - digCrystals;
+		if (y > 0) newBadStuff = newBadStuff + (y * modifier);
+		y = levels - speedCrystals;
+		if (y > 0) newBadStuff = newBadStuff + (y * modifier);
+		y = levels - resCrystals;
+		if (y > 0) newBadStuff = newBadStuff + (y * modifier);
+
+		badStuff = badStuff + newBadStuff;
+		System.out.println(badStuff);
+	}
+
+	private void doBadStuff(float badStuff) {
+		float remainder = badStuff % 30;
+		if (badStuff > 900) {
+			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
+					player.attackEntityFrom(DamageSource.magic, 10);
+					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
+					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
+					player.travelToDimension(1);
+				}
+			}
+		}
+		if (badStuff > 600) {
+			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, disorientating you"));
+					player.attackEntityFrom(DamageSource.magic, 4);
+					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
+					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
+				}
+			}
+		}
+		if (badStuff > 300) {
+			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond"));
+					player.attackEntityFrom(DamageSource.magic, 2);
+				}
 			}
 		}
 	}

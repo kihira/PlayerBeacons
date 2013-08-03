@@ -54,7 +54,7 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, int badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
+	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
 		if (beaconList.hasKey(player)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (playerData.hasKey("world" + world.getWorldInfo().getWorldName())) {
@@ -63,7 +63,7 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("y", y);
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
-				playerDataWorld.setInteger("badstuff", badStuff);
+				playerDataWorld.setFloat("badstuff", badStuff);
 				playerDataWorld.setInteger("resCrystals", resCrystals);
 				playerDataWorld.setInteger("speedCrystals", speedCrystals);
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
@@ -89,7 +89,17 @@ public class BeaconDataHandler {
 		return false;
 	}
 
-	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, int badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
+	public NBTTagCompound loadBeaconInformation(World world, String username) {
+		if (beaconList.hasKey(username)) {
+			NBTTagCompound playerData = beaconList.getCompoundTag(username);
+			if (playerData.hasKey("world" + world.getWorldInfo().getWorldName())) {
+				return playerData.getCompoundTag("world" + world.getWorldInfo().getWorldName());
+			}
+		}
+		return null;
+	}
+
+	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
 		if (!beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
 			beaconList.setCompoundTag(player, newPlayerData);
@@ -102,7 +112,7 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("y", y);
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
-				playerDataWorld.setInteger("badstuff", badStuff);
+				playerDataWorld.setFloat("badstuff", badStuff);
 				playerDataWorld.setInteger("resCrystals", resCrystals);
 				playerDataWorld.setInteger("speedCrystals", speedCrystals);
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);

@@ -6,7 +6,7 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.List;
 
-public class ChunkManager implements ForgeChunkManager.LoadingCallback {
+public class BeaconChunkManager implements ForgeChunkManager.LoadingCallback {
 	@Override
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
 		System.out.println("Loading tickets");

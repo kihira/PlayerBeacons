@@ -4,11 +4,11 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import playerbeacons.common.PlayerBeacons;
+import playerbeacons.render.BlockDefiledSoulPylonRenderer;
+import playerbeacons.render.ItemDefiledSoulPylonRenderer;
 import playerbeacons.render.ItemPlayerBeaconRenderer;
-import playerbeacons.render.ItemPylonRenderer;
 import playerbeacons.render.PlayerBeaconRenderer;
-import playerbeacons.render.PylonRenderer;
-import playerbeacons.tileentity.TileEntityPylon;
+import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 public class ClientProxy extends CommonProxy {
@@ -22,8 +22,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlayerBeacon.class, playerBeaconRenderer);
 		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.playerBeaconBlockID, new ItemPlayerBeaconRenderer());
 
-		PylonRenderer pylonRenderer = new PylonRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylon.class, pylonRenderer);
-		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.conductorBlockID, new ItemPylonRenderer());
+		BlockDefiledSoulPylonRenderer blockDefiledSoulPylonRenderer = new BlockDefiledSoulPylonRenderer();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDefiledSoulPylon.class, blockDefiledSoulPylonRenderer);
+		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());
 	}
 }

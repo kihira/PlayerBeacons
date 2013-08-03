@@ -17,10 +17,10 @@ import playerbeacons.block.BlockDefiledSoulPylon;
 import playerbeacons.block.BlockPlayerBeacon;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
-import playerbeacons.tileentity.TileEntityPylon;
+import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
+import playerbeacons.util.BeaconChunkManager;
 import playerbeacons.util.BeaconDataHandler;
-import playerbeacons.util.ChunkManager;
 import playerbeacons.util.EventHandler;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
@@ -39,7 +39,7 @@ public class PlayerBeacons {
 	public static JumpCrystalItem jumpCrystalItem;
 	public static ResCrystalItem resCrystalItem;
 
-	public static DecapitationEnchantment decapitationEnchantment;
+	public static EnchantmentDecapitation enchantmentDecapitation;
 
 	public static BeaconDataHandler beaconData;
 
@@ -80,11 +80,11 @@ public class PlayerBeacons {
 		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
 		GameRegistry.registerItem(resCrystalItem, "resCrystalItem");
 
-		decapitationEnchantment = new DecapitationEnchantment(config.decapitationEnchantmentID, 5, EnumEnchantmentType.weapon);
+		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID, 5, EnumEnchantmentType.weapon);
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
-		GameRegistry.registerTileEntity(TileEntityPylon.class, "defiledSoulPylonBlock");
+		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
@@ -92,7 +92,7 @@ public class PlayerBeacons {
 
 		proxy.registerRenderers();
 
-		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ChunkManager());
+		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new BeaconChunkManager());
 
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}

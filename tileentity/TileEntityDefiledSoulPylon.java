@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
-public class TileEntityPylon extends TileEntity implements IInventory {
+public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory {
 
 	private ItemStack crystal;
 

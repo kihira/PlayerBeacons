@@ -7,11 +7,11 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.proxy.ClientProxy;
 
-public class ItemPylonRenderer implements IItemRenderer {
+public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	private ModelPylon model;
 
-	public ItemPylonRenderer() {
+	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();
 	}
 
