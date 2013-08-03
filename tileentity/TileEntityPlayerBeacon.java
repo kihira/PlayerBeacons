@@ -3,6 +3,7 @@ package playerbeacons.tileentity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -220,7 +221,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private void doBadStuff(float badStuff) {
 		float remainder = badStuff % 30;
 		if (badStuff > 900) {
-			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+			if (badStuff % (worldObj.rand.nextInt() - remainder) == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
@@ -230,9 +231,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					player.travelToDimension(1);
 				}
 			}
+			return;
 		}
 		if (badStuff > 600) {
-			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+			if (badStuff % (worldObj.rand.nextInt() - remainder) == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, disorientating you"));
@@ -241,13 +243,27 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
 				}
 			}
+			return;
 		}
 		if (badStuff > 300) {
-			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+			if (badStuff % (worldObj.rand.nextInt() - remainder) == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond"));
 					player.attackEntityFrom(DamageSource.magic, 2);
+				}
+			}
+			return;
+		}
+		if (badStuff > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
+			if (badStuff % (worldObj.rand.nextFloat() - remainder) == 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					EntityEnderman enderman = new EntityEnderman(worldObj);
+					enderman.setLocationAndAngles(xCoord + worldObj.rand.nextInt(20) - 10, yCoord, zCoord + worldObj.rand.nextInt(20) - 10, 0F, 0F);
+					enderman.setTarget(player);
+					enderman.setScreaming(true);
+					worldObj.spawnEntityInWorld(enderman);
 				}
 			}
 		}

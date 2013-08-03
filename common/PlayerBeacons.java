@@ -10,6 +10,8 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPotion;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import playerbeacons.block.BlockDefiledSoulConductor;
@@ -89,6 +91,8 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
 
 		proxy.registerRenderers();
 
@@ -105,8 +109,17 @@ public class PlayerBeacons {
 	}
 
 	public void registerRecipes(boolean hardcore) {
-		if (hardcore) {
-			//Special recipes for you lot
-		}
+
+		//TODO balance pass and fix some recipes
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 5), "OPO", "PDP", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'D', new ItemStack(Block.blockDiamond));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 10), "OPO", "ONO", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'N', new ItemStack(Item.netherStar));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.playerBeaconBlock), " P ", "NBN", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), " P ", "SHS", 'P', new ItemStack(Item.eyeOfEnder), 'S', new ItemStack(Item.swordIron), 'H', new ItemStack(Item.helmetIron));
+
+		//TODO Empty crystal item?
+		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.speedCrystalItem), new ItemStack(Item.potion, 1, 8194), new ItemStack(Item.diamond));
+		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.digCrystalItem), new ItemStack(Item.pickaxeDiamond), new ItemStack(Item.diamond));
+		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.jumpCrystalItem), new ItemStack(Item.bed), new ItemStack(Item.diamond));
+		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.resCrystalItem), new ItemStack(Item.potion, 1, 8227), new ItemStack(Item.diamond));
 	}
 }

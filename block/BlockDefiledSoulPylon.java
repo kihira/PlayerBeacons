@@ -40,7 +40,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
-		if (tileEntityDefiledSoulPylon.isPylonBase()) return AxisAlignedBB.getBoundingBox(x + 0F, y + 0F, y + 0F, x + 1F, y + 1F, z + 1F);
+		if (tileEntityDefiledSoulPylon.isPylonBase()) return AxisAlignedBB.getBoundingBox(x + 0F, y + 0F, z + 0F, x + 1F, y + 1F, z + 1F);
 		else return  AxisAlignedBB.getBoundingBox(x + 0.20D, y + 0.0F, z + 0.20F, x +  0.8F, y + 1.0F, z + 0.8F);
 	}
 

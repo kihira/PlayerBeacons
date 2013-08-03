@@ -46,14 +46,14 @@ public class BeheaderItem extends ItemArmor {
 	public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack itemStack) {
 		if (!world.isRemote) {
 			switch (itemStack.getItemDamage()) {
-				case 1: player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel a strange device clamp around your head")); break;
+				case 1: player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6You feel a strange device clamp around your head")); break;
 				case 100:
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The device tightens, as you hear it power up"));
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6The device tightens, as you hear it power up"));
 					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
 					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
 					break;
 				case 200:
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("With a quick slash, you suddenly find yourself without your head"));
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6With a quick slash, you suddenly find yourself without your head"));
 					player.setCurrentItemOrArmor(4, null);
 					player.attackEntityFrom(new DamageBehead(), 100);
 					break;
