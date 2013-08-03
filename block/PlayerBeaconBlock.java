@@ -8,8 +8,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
+import playerbeacons.proxy.ClientProxy;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;
@@ -20,6 +22,21 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("playerBeaconBlock");
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public int getRenderType() {
+		return ClientProxy.playerBeaconRenderID;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
 	}
 
 	@Override

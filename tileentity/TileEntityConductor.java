@@ -18,7 +18,8 @@ public class TileEntityConductor extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
-		this.crystal = ItemStack.loadItemStackFromNBT(tag);
+		//TODO fix?
+		if (tag != null) this.crystal = ItemStack.loadItemStackFromNBT(tag);
 	}
 
 	@Override

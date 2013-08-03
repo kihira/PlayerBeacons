@@ -7,6 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
@@ -19,7 +20,6 @@ public class ConductorBlock extends BlockContainer {
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("conductorBlock");
 	}
-
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 
@@ -29,7 +29,7 @@ public class ConductorBlock extends BlockContainer {
 			ItemStack inv = tileEntityConductor.getStackInSlot(0);
 			if (inv != null) {
 				tileEntityConductor.setInventorySlotContents(0, null);
-				EntityItem item = new EntityItem(world, x, y+1, z, inv);
+				EntityItem item = new EntityItem(world, x, y + 0.5, z, inv);
 				world.spawnEntityInWorld(item);
 			}
 		}
@@ -55,7 +55,7 @@ public class ConductorBlock extends BlockContainer {
 				ItemStack inv = tileEntityConductor.getStackInSlot(0);
 				if (inv != null) {
 					tileEntityConductor.setInventorySlotContents(0, null);
-					EntityItem item = new EntityItem(world, x, y+1, z, inv);
+					EntityItem item = new EntityItem(world, x, y + 0.5, z, inv);
 					world.spawnEntityInWorld(item);
 				}
 			}

@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.CrystalItem;
+import playerbeacons.item.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +24,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private int badStuff = 0;
 	private HashMap<CrystalItem, Integer> conductors = new HashMap<CrystalItem, Integer>();
 	private int levels;
+	private int resCrystals;
+	private int speedCrystals;
+	private int jumpCrystals;
+	private int digCrystals;
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -59,7 +63,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	@Override
 	public void updateEntity() {
 		//Update every 10 ticks. no need to update every tick
-		if ((this.worldObj.getTotalWorldTime() %10L == 0) && !this.worldObj.isRemote) {
+		if ((this.worldObj.getTotalWorldTime() %20L == 0) && !this.worldObj.isRemote) {
 			if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
 				TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
 				//If player head
@@ -87,78 +91,65 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
 						if (player != null) {
 							//Do effects
-							player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1, true));
-							player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1, true));
-							player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1, true));
-							player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1, true));
+							if (levels - 1 - speedCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - speedCrystals, true));
+							if (levels - 1 - jumpCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - jumpCrystals, true));
+							if (levels - 1 - digCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - digCrystals, true));
+							if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
 						}
 					}
 					//System.out.println("Detected " + levels + " beacon levels");
 					//Keep this below the beacon base counter so we know what level to look on based on how many levels there are
-					//TODO implement a better checking system
-					//TODO Overhaul this entire system. Need a good way of storing what type of conductors we have. HashMap or is that too expensive?
-					//This code is so bad
-					int y = 1;
-					int resCrystals = 0;
-					int speedCrystals = 0;
-					int jumpCrystals = 0;
-					int digCrystals = 0;
-					while (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID) {
-						TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + y, zCoord - levels);
-						if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-							if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.jumpCrystalItemID) jumpCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.digCrystalItemID) digCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.speedCrystalItemID) speedCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.resCrystalItemID) resCrystals++;
-						}
-						y++;
-						if (y > 3 + levels) break;
-					}
-					y = 1;
-					while (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID) {
-						TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + y, this.zCoord - levels);
-						if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-							if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.jumpCrystalItemID) jumpCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.digCrystalItemID) digCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.speedCrystalItemID) speedCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.resCrystalItemID) resCrystals++;
-						}
-						y++;
-						if (y > 3 + levels) break;
-					}
-					y = 1;
-					while (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID) {
-						TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + y, this.zCoord + levels);
-						if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-							if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.jumpCrystalItemID) jumpCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.digCrystalItemID) digCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.speedCrystalItemID) speedCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.resCrystalItemID) resCrystals++;
-						}
-						y++;
-						if (y > 3 + levels) break;
-					}
-					y = 1;
-					while (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID) {
-						TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + y, this.zCoord + levels);
-						if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-							if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.jumpCrystalItemID) jumpCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.digCrystalItemID) digCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.speedCrystalItemID) speedCrystals++;
-							else if (tileEntityConductor.getStackInSlot(0).getItem().itemID == PlayerBeacons.config.resCrystalItemID) resCrystals++;
-						}
-						y++;
-						if (y > 3 + levels) break;
-					}
+					//TODO Overhaul this entire system? Need a good way of storing what type of conductors we have. HashMap or is that too expensive?
+					//Calculate bad stuff every 2 seconds
+					if ((levels > 0) && (this.worldObj.getTotalWorldTime() % 40L == 0)) {
+						resCrystals = 0;
+						speedCrystals = 0;
+						jumpCrystals = 0;
+						digCrystals = 0;
 
-					System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
-					//Calculate bad stuff
-					if ((levels > 0) && (this.worldObj.getTotalWorldTime() % 100L == 0)) {
+						System.out.println("We have " + levels + " levels");
+						for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID) && ( y < (1 + levels))); y++) {
+							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
+							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
+								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							}
+						}
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
+							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
+							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
+								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							}
+						}
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
+							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
+								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							}
+						}
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
+							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
+								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+							}
+						}
+
+						System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
 						float baseBadStuff = 0;
 					}
-
-					//System.out.println("Detected " + conductors + " conductors");
-				} else if (this.worldObj.getTotalWorldTime() % 60L == 0) {
+				}
+				else if (this.worldObj.getTotalWorldTime() % 60L == 0) {
 					this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 					worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 				}

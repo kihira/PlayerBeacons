@@ -1,6 +1,7 @@
 package playerbeacons.common;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -14,6 +15,8 @@ import playerbeacons.block.ConductorBlock;
 import playerbeacons.block.PlayerBeaconBaseBlock;
 import playerbeacons.block.PlayerBeaconBlock;
 import playerbeacons.item.*;
+import playerbeacons.proxy.ClientProxy;
+import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityConductor;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
@@ -38,6 +41,9 @@ public class PlayerBeacons {
 	public static DecapitationEnchantment decapitationEnchantment;
 
 	public static BeaconDataHandler beaconData;
+
+	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
+	public static CommonProxy proxy;
 
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent e) {
@@ -80,6 +86,8 @@ public class PlayerBeacons {
 		//TODO fix formatting
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
+
+		proxy.registerRenderers();
 
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
