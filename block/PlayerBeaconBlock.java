@@ -31,7 +31,7 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 
 	@Override
 	public int getRenderType() {
-		return ClientProxy.playerBeaconRenderID;
+		return -1;
 	}
 
 	@Override

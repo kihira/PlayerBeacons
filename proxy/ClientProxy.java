@@ -1,17 +1,20 @@
 package playerbeacons.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import playerbeacons.render.RenderPlayerBeacon;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
+import playerbeacons.common.PlayerBeacons;
+import playerbeacons.render.ItemPlayerBeaconRenderer;
+import playerbeacons.render.PlayerBeaconRenderer;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 public class ClientProxy extends CommonProxy {
 
-	public static int playerBeaconRenderID;
+	public static ResourceLocation playerBeaconTexture = new ResourceLocation("playerbeacon", "textures/model/playerbeacon.png");
 
 	public void registerRenderers() {
-		playerBeaconRenderID = RenderingRegistry.getNextAvailableRenderId();
-		RenderPlayerBeacon renderPlayerBeacon = new RenderPlayerBeacon(playerBeaconRenderID);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlayerBeacon.class, renderPlayerBeacon);
+		PlayerBeaconRenderer playerBeaconRenderer = new PlayerBeaconRenderer();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlayerBeacon.class, playerBeaconRenderer);
+		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.playerBeaconBlockID, new ItemPlayerBeaconRenderer());
 	}
 }

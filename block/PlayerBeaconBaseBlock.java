@@ -11,6 +11,7 @@ public class PlayerBeaconBaseBlock extends Block {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("playerBeaconBase");
+		func_111022_d("playerbeacon:pyramidBrick");
 	}
 
 	@Override
