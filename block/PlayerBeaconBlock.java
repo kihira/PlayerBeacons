@@ -22,6 +22,7 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("playerBeaconBlock");
+		func_111022_d("playerbeacon:pyramidBrick");
 	}
 
 	@Override

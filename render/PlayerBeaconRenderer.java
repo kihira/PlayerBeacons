@@ -3,9 +3,7 @@ package playerbeacons.render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import playerbeacons.proxy.ClientProxy;
 
 public class PlayerBeaconRenderer extends TileEntitySpecialRenderer {
@@ -21,8 +19,9 @@ public class PlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		func_110628_a(ClientProxy.playerBeaconTexture);
-		GL11.glTranslated(x + 0.5d, y + 1.5001d, z + 0.5d);
-		GL11.glScalef(1.0F, -1F, 1.0F);
+		GL11.glTranslated(x + 0.5d, y + 1.7501d, z + 0.5d);
+		GL11.glRotatef(180F, 0F, 0F, 1F);
+		GL11.glScalef(1.2F, 1.2F, 1.2F);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
