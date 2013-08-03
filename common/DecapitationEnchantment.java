@@ -14,4 +14,11 @@ public class DecapitationEnchantment extends Enchantment {
 	public int getMaxLevel() {
 		return 3;
 	}
+
+	@Override
+	public boolean canApplyTogether(Enchantment par1Enchantment) {
+		if (par1Enchantment == Enchantment.fortune) return false;
+		else if (par1Enchantment == Enchantment.knockback) return false;
+		else return true;
+	}
 }

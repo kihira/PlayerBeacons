@@ -8,8 +8,8 @@ import java.io.File;
 public class Config {
 
 	public int playerBeaconBlockID;
-	public int playerBeaconBaseBlockID;
-	public int conductorBlockID;
+	public int defiledSoulConductorBlockID;
+	public int defiledSoulPylonBlockID;
 
 	public int beheaderItemID;
 	public int speedCrystalItemID;
@@ -42,13 +42,11 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_BLOCK, "Player Beacon", 3500);
 		playerBeaconBlockID = prop.getInt();
 
-		//TODO Think of good name for this block
-		prop = config.get(Configuration.CATEGORY_BLOCK, "Player Beacon Base", 3501);
-		playerBeaconBaseBlockID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_BLOCK, "Defiled Soul Conductor", 3501);
+		defiledSoulConductorBlockID = prop.getInt();
 
-		//TODO Think of good name for this block
-		prop = config.get(Configuration.CATEGORY_BLOCK, "Conductor", 3502);
-		conductorBlockID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_BLOCK, "Defiled Soul Pylon", 3502);
+		defiledSoulPylonBlockID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();

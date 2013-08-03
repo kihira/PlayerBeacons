@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.proxy.ClientProxy;
-import playerbeacons.tileentity.TileEntityConductor;
+import playerbeacons.tileentity.TileEntityPylon;
 
 public class PylonRenderer extends TileEntitySpecialRenderer {
 
@@ -19,21 +19,20 @@ public class PylonRenderer extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
-		TileEntityConductor tileEntityConductor = (TileEntityConductor) tileentity;
+		TileEntityPylon tileEntityPylon = (TileEntityPylon) tileentity;
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glTranslated(x + 0.5d, y + 1.5101d, z + 0.5d);
+		GL11.glTranslated(x + 0.5d, y + 1.5001d, z + 0.5d);
 		GL11.glRotatef(180F, 0F, 0F, 1F);
 		GL11.glScalef(1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		if (tileEntityConductor.isPylonBase()) {
+		if (tileEntityPylon.isPylonBase()) {
 			func_110628_a(ClientProxy.pylonTextureBase);
 			modelPylonBase.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		else {
-			//TODO Change
 			func_110628_a(ClientProxy.pylonTexture);
 			modelPylon.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}

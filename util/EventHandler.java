@@ -33,7 +33,6 @@ public class EventHandler {
 					if (id == PlayerBeacons.config.decapitationEnchantmentID) {
 						Random random = new Random();
 						if ((random.nextInt()) % (6/lvl) == 0) {
-							//TODO Improve drop algorithm?
 							ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
 							NBTTagCompound tag = new NBTTagCompound();
 							tag.setString("SkullOwner", deadThing.username);
@@ -46,6 +45,7 @@ public class EventHandler {
 			}
 		}
 
+		//Death by DamageBehead
 		if ((deadEntity instanceof EntityPlayer) && (e.source instanceof DamageBehead)) {
 			EntityPlayer deadThing = (EntityPlayer) deadEntity;
 			ItemStack itemStack = new ItemStack(Item.skull, 1, 3);

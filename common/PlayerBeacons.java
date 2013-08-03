@@ -12,12 +12,12 @@ import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import playerbeacons.block.PylonBlock;
-import playerbeacons.block.PlayerBeaconBaseBlock;
-import playerbeacons.block.PlayerBeaconBlock;
+import playerbeacons.block.BlockDefiledSoulConductor;
+import playerbeacons.block.BlockDefiledSoulPylon;
+import playerbeacons.block.BlockPlayerBeacon;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
-import playerbeacons.tileentity.TileEntityConductor;
+import playerbeacons.tileentity.TileEntityPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.ChunkManager;
@@ -30,8 +30,8 @@ public class PlayerBeacons {
 	public static Config config;
 
 	public static Block playerBeaconBlock;
-	public static Block playerBeaconBaseBlock;
-	public static Block conductorBlock;
+	public static Block defiledSoulConductorBlock;
+	public static Block defiledSoulPylonBlock;
 
 	public static Item beheaderItem;
 	public static SpeedCrystalItem speedCrystalItem;
@@ -54,15 +54,15 @@ public class PlayerBeacons {
 
 		config = new Config(e.getSuggestedConfigurationFile());
 
-		playerBeaconBlock = new PlayerBeaconBlock(config.playerBeaconBlockID);
+		playerBeaconBlock = new BlockPlayerBeacon(config.playerBeaconBlockID);
 		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
 		GameRegistry.registerBlock(playerBeaconBlock, "playerBeaconBlock");
-		playerBeaconBaseBlock = new PlayerBeaconBaseBlock(config.playerBeaconBaseBlockID);
-		LanguageRegistry.addName(playerBeaconBaseBlock, "Player Beacon Base");
-		GameRegistry.registerBlock(playerBeaconBaseBlock, "playerBeaconBaseBlock");
-		conductorBlock = new PylonBlock(config.conductorBlockID);
-		LanguageRegistry.addName(conductorBlock, "Conductor");
-		GameRegistry.registerBlock(conductorBlock, "conductorBlock");
+		defiledSoulConductorBlock = new BlockDefiledSoulConductor(config.defiledSoulConductorBlockID);
+		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
+		GameRegistry.registerBlock(defiledSoulConductorBlock, "defiledSoulConductorBlock");
+		defiledSoulPylonBlock = new BlockDefiledSoulPylon(config.defiledSoulPylonBlockID);
+		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
+		GameRegistry.registerBlock(defiledSoulPylonBlock, "defiledSoulPylonBlock");
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		LanguageRegistry.addName(beheaderItem, "Beheader");
@@ -84,10 +84,9 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
-		GameRegistry.registerTileEntity(TileEntityConductor.class, "conductorBlock");
+		GameRegistry.registerTileEntity(TileEntityPylon.class, "defiledSoulPylonBlock");
 
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
-		//TODO fix formatting
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
 

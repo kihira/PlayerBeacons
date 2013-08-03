@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
-public class TileEntityConductor extends TileEntity implements IInventory {
+public class TileEntityPylon extends TileEntity implements IInventory {
 
 	private ItemStack crystal;
 
@@ -18,7 +18,6 @@ public class TileEntityConductor extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
-		//TODO fix?
 		if (tag != null) this.crystal = ItemStack.loadItemStackFromNBT(tag);
 	}
 
@@ -76,7 +75,7 @@ public class TileEntityConductor extends TileEntity implements IInventory {
 
 	@Override
 	public String getInvName() {
-		return "Conductor";
+		return "Pylon";
 	}
 
 	@Override
@@ -109,6 +108,6 @@ public class TileEntityConductor extends TileEntity implements IInventory {
 	}
 
 	public boolean isPylonBase() {
-		return worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == PlayerBeacons.config.playerBeaconBaseBlockID;
+		return worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == PlayerBeacons.config.defiledSoulConductorBlockID;
 	}
 }

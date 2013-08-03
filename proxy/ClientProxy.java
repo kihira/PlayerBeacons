@@ -8,7 +8,7 @@ import playerbeacons.render.ItemPlayerBeaconRenderer;
 import playerbeacons.render.ItemPylonRenderer;
 import playerbeacons.render.PlayerBeaconRenderer;
 import playerbeacons.render.PylonRenderer;
-import playerbeacons.tileentity.TileEntityConductor;
+import playerbeacons.tileentity.TileEntityPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 public class ClientProxy extends CommonProxy {
@@ -23,7 +23,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.playerBeaconBlockID, new ItemPlayerBeaconRenderer());
 
 		PylonRenderer pylonRenderer = new PylonRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConductor.class, pylonRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylon.class, pylonRenderer);
 		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.conductorBlockID, new ItemPylonRenderer());
 	}
 }

@@ -42,17 +42,19 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
+		//TODO Remove redudant code seeing as we are saving this else where as well
 		par1NBTTagCompound.setString("owner", this.owner);
 		par1NBTTagCompound.setInteger("badStuff", this.badStuff);
 		par1NBTTagCompound.setBoolean("isActive", this.isActive);
+		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, badStuff, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels);
 	}
 
 	public void initialSetup(EntityPlayer player) {
-		if (worldObj.isRemote) {
+		if (!worldObj.isRemote) {
 			this.owner = player.username;
 			this.isActive = false;
 			this.badStuff = 0;
-			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0);
+			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0);
 
 			ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
 
@@ -61,10 +63,9 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			}
 			else {
 				ticket.getModData().setInteger("x", xCoord);
-				ticket.getModData().setInteger("y", xCoord);
-				ticket.getModData().setInteger("z", xCoord);
+				ticket.getModData().setInteger("y", yCoord);
+				ticket.getModData().setInteger("z", zCoord);
 				useTicket(ticket);
-				System.out.println("Registered a ticket");
 			}
 		}
 	}
@@ -97,7 +98,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
 				TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
 				//If player head
-				if (skull.getSkullType() == 3) if (skull.getExtraType().equals(this.owner)) {
+				if (skull.getExtraType().equals(this.owner)) {
 					this.levels = 0;
 					for (int i = 1; i <= 4; levels = i++) {
 						int j = this.yCoord - i;
@@ -108,7 +109,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 						for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
 							for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-								if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.playerBeaconBaseBlockID)) {
+								if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
 									flag = false;
 									break;
 								}
@@ -138,40 +139,40 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						digCrystals = 0;
 
 						System.out.println("We have " + levels + " levels");
-						for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID) && ( y < (1 + levels))); y++) {
-							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
-							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+						for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
+							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
+							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
+								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
-						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
-							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
-							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
+							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
+								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
-						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
-							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
+								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
-						for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.conductorBlockID && ( y < (1 + levels))); y++) {
-							TileEntityConductor tileEntityConductor = (TileEntityConductor) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-							if ((tileEntityConductor != null) && tileEntityConductor.getStackInSlot(0) != null) {
-								if (tileEntityConductor.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
-								else if (tileEntityConductor.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
+						for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+							TileEntityPylon tileEntityPylon = (TileEntityPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+							if ((tileEntityPylon != null) && tileEntityPylon.getStackInSlot(0) != null) {
+								if (tileEntityPylon.getStackInSlot(0).getItem() instanceof JumpCrystalItem) jumpCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof DigCrystalItem) digCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof SpeedCrystalItem) speedCrystals++;
+								else if (tileEntityPylon.getStackInSlot(0).getItem() instanceof ResCrystalItem) resCrystals++;
 							}
 						}
 
@@ -179,7 +180,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						float baseBadStuff = 0;
 					}
 				}
-				else if (this.worldObj.getTotalWorldTime() % 60L == 0) {
+				else {
 					this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 					worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 				}

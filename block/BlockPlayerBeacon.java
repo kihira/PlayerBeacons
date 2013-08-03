@@ -18,9 +18,9 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;
 
-public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
+public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
-	public PlayerBeaconBlock(int id) {
+	public BlockPlayerBeacon(int id) {
 		super(id, Material.iron);
 		setHardness(8f);
 		setCreativeTab(CreativeTabs.tabCombat);

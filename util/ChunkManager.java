@@ -6,7 +6,7 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.List;
 
-public class ChunkManager implements ForgeChunkManager.LoadingCallback{
+public class ChunkManager implements ForgeChunkManager.LoadingCallback {
 	@Override
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
 		System.out.println("Loading tickets");
@@ -15,8 +15,8 @@ public class ChunkManager implements ForgeChunkManager.LoadingCallback{
 			int y = ticket.getModData().getInteger("y");
 			int z = ticket.getModData().getInteger("z");
 			TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
-			tileEntityPlayerBeacon.useTicket(ticket);
-			System.out.println(ticket.toString());
+			if (tileEntityPlayerBeacon != null) tileEntityPlayerBeacon.useTicket(ticket);
+			else ForgeChunkManager.releaseTicket(ticket);
 		}
 	}
 }

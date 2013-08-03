@@ -5,12 +5,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.World;
 
-public class PlayerBeaconBaseBlock extends Block {
+public class BlockDefiledSoulConductor extends Block {
 
-	public PlayerBeaconBaseBlock(int id) {
+	public BlockDefiledSoulConductor(int id) {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
-		setUnlocalizedName("playerBeaconBase");
+		setUnlocalizedName("Defiled Soul Conductor");
 		func_111022_d("playerbeacon:pyramidBrick");
 	}
 
