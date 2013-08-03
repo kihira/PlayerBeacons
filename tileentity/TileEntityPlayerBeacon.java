@@ -1,6 +1,5 @@
 package playerbeacons.tileentity;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +8,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.ForgeChunkManager;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.DigCrystalItem;
 import playerbeacons.item.JumpCrystalItem;
@@ -25,6 +28,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private int speedCrystals;
 	private int jumpCrystals;
 	private int digCrystals;
+	private ForgeChunkManager.Ticket ticket;
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -47,6 +51,18 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.isActive = false;
 		this.badStuff = 0;
 		PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0);
+
+		ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
+
+		if (ticket == null) {
+			player.sendChatToPlayer(ChatMessageComponent.func_111066_d("[PlayerBeacons] There is no more chunkloading tickets available so the beacon will not be chunk loaded"));
+		}
+		else {
+			Chunk thisChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
+			ChunkCoordIntPair chunkCoordIntPair = new ChunkCoordIntPair(thisChunk.xPosition, thisChunk.zPosition);
+			ForgeChunkManager.forceChunk(ticket, chunkCoordIntPair);
+			System.out.println("Registered a ticket");
+		}
 	}
 
 	public String getOwner() {
@@ -55,6 +71,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public boolean isActive() {
 		return isActive;
+	}
+
+	@Override
+	public void invalidate() {
+		ForgeChunkManager.releaseTicket(ticket);
+		super.invalidate();
 	}
 
 	@Override

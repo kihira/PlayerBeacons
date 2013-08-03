@@ -46,6 +46,9 @@ public class PlayerBeacons {
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
+	@Mod.Instance("PlayerBeacons")
+	public static PlayerBeacons instance;
+
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent e) {
 

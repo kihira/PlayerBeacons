@@ -15,6 +15,7 @@ public class ClientProxy extends CommonProxy {
 
 	public static ResourceLocation playerBeaconTexture = new ResourceLocation("playerbeacon", "textures/model/playerbeacon.png");
 	public static ResourceLocation pylonTextureBase = new ResourceLocation("playerbeacon", "textures/model/pylonbase.png");
+	public static ResourceLocation pylonTexture = new ResourceLocation("playerbeacon", "textures/model/pylon.png");
 
 	public void registerRenderers() {
 		PlayerBeaconRenderer playerBeaconRenderer = new PlayerBeaconRenderer();
