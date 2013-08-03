@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
@@ -96,5 +97,12 @@ public class PlayerBeacons {
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
 		beaconData = new BeaconDataHandler();
+		registerRecipes(e.getServer().func_130014_f_().getWorldInfo().isHardcoreModeEnabled());
+	}
+
+	public void registerRecipes(boolean hardcore) {
+		if (hardcore) {
+			//Special recipes for you lot
+		}
 	}
 }

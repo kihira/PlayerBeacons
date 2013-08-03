@@ -8,8 +8,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.proxy.ClientProxy;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
@@ -20,6 +22,7 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 
 	public PlayerBeaconBlock(int id) {
 		super(id, Material.iron);
+		setHardness(8f);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("playerBeaconBlock");
 		func_111022_d("playerbeacon:pyramidBrick");
@@ -54,9 +57,26 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 					PlayerBeacons.beaconData.deleteBeaconInformation(world, ((TileEntityPlayerBeacon) tileEntity).getOwner());
 					return world.setBlockToAir(x, y, z);
 				}
+				else {
+					player.attackEntityFrom(new DamageBehead(), 2);
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("A mystical energy seems to guard this device"));
+				}
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+			if (tileEntity instanceof TileEntityPlayerBeacon) {
+				if (!(player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || !(player.capabilities.isCreativeMode)) {
+					player.attackEntityFrom(new DamageBehead(), 2);
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("A mystical energy seems to guard this device"));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -71,8 +91,7 @@ public class PlayerBeaconBlock extends Block implements ITileEntityProvider {
 	//Make this change based on the level of bad stuff?
 	@Override
 	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		for (int l = 0; l < 3; ++l)
-		{
+		for (int l = 0; l < 3; ++l) {
 			double d1 = (double)((float)par3 + par5Random.nextFloat());
 			int i1 = par5Random.nextInt(2) * 2 - 1;
 			int j1 = par5Random.nextInt(2) * 2 - 1;

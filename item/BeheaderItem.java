@@ -54,14 +54,8 @@ public class BeheaderItem extends ItemArmor {
 					break;
 				case 200:
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("With a quick slash, you suddenly find yourself without your head"));
-					ItemStack newItemStack = new ItemStack(Item.skull, 1, 3);
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setString("SkullOwner", player.username);
-					newItemStack.setTagCompound(tag);
 					player.setCurrentItemOrArmor(4, null);
-					player.setCurrentItemOrArmor(4, newItemStack);
 					player.attackEntityFrom(new DamageBehead(), 100);
-					itemStack.setItemDamage(itemStack.getMaxDamage());
 					break;
 			}
 			itemStack.setItemDamage(itemStack.getItemDamage()+1);

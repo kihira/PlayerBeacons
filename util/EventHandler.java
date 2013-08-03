@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
 
 import java.util.Random;
@@ -19,6 +20,7 @@ public class EventHandler {
 		Entity entity = e.source.getEntity();
 		Entity deadEntity = e.entity;
 
+		//Death by enchantment
 		if ((deadEntity instanceof EntityPlayer) && (entity instanceof EntityPlayer)) {
 			EntityPlayer attacker = (EntityPlayer) entity;
 			EntityPlayer deadThing = (EntityPlayer) deadEntity;
@@ -38,9 +40,19 @@ public class EventHandler {
 							itemStack.setTagCompound(tag);
 							e.entityLiving.entityDropItem(itemStack, 1);
 						}
+						break;
 					}
 				}
 			}
+		}
+
+		if ((deadEntity instanceof EntityPlayer) && (e.source instanceof DamageBehead)) {
+			EntityPlayer deadThing = (EntityPlayer) deadEntity;
+			ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("SkullOwner", deadThing.username);
+			itemStack.setTagCompound(tag);
+			deadThing.entityDropItem(itemStack, 1);
 		}
 	}
 }

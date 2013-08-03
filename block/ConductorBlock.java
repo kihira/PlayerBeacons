@@ -20,11 +20,25 @@ public class ConductorBlock extends BlockContainer {
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("conductorBlock");
 	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public int getRenderType() {
+		return -1;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
-
 		TileEntityConductor tileEntityConductor = (TileEntityConductor)world.getBlockTileEntity(x, y, z);
-
 		if (tileEntityConductor != null) {
 			ItemStack inv = tileEntityConductor.getStackInSlot(0);
 			if (inv != null) {

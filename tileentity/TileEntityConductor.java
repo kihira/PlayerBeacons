@@ -107,4 +107,8 @@ public class TileEntityConductor extends TileEntity implements IInventory {
 		}
 		return false;
 	}
+
+	public boolean isPylonBase() {
+		return worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == PlayerBeacons.config.playerBeaconBaseBlockID;
+	}
 }

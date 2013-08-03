@@ -7,12 +7,12 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.proxy.ClientProxy;
 
-public class ItemPlayerBeaconRenderer implements IItemRenderer {
+public class ItemPylonRenderer implements IItemRenderer {
 
-	private ModelPlayerBeacon modelPlayerBeacon;
+	private ModelPylonBase model;
 
-	public ItemPlayerBeaconRenderer() {
-		modelPlayerBeacon = new ModelPlayerBeacon();
+	public ItemPylonRenderer() {
+		model = new ModelPylonBase();
 	}
 
 	@Override
@@ -29,33 +29,34 @@ public class ItemPlayerBeaconRenderer implements IItemRenderer {
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		switch (type) {
 			case ENTITY: {
-				renderPlayerBeaconItem(0f, 0f, 0f, 1f);
+				renderPylonItem(0f, 0f, 0f, 1f);
 				break;
 			}
 			case EQUIPPED: {
-				renderPlayerBeaconItem(0.5f, 1.5f, 0.5f, 1f);
+				renderPylonItem(0.5f, 1.5f, 0.5f, 1f);
 				break;
 			}
 			case INVENTORY: {
-				renderPlayerBeaconItem(0f, 1f, 0f, 1f);
+				renderPylonItem(0f, 1f, 0f, 1f);
 				break;
 			}
 			case EQUIPPED_FIRST_PERSON: {
-				renderPlayerBeaconItem(3f, 1.5f, 0.5f, 2f);
+				renderPylonItem(3f, 1.5f, 0.5f, 2f);
 				break;
 			}
 			default: break;
 		}
+
 	}
 
-	private void renderPlayerBeaconItem(float x, float y, float z, float scale) {
+	private void renderPylonItem(float x, float y, float z, float scale) {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.playerBeaconTexture);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.pylonTextureBase);
 		GL11.glTranslated(x, y, z);
 		GL11.glScalef(scale, scale, scale);
 		GL11.glRotatef(180.0f, 0f, 0f, 1f);
-		modelPlayerBeacon.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+		model.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}

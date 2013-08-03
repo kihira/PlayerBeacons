@@ -1,28 +1,25 @@
 package playerbeacons.tileentity;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
-import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.*;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import playerbeacons.item.DigCrystalItem;
+import playerbeacons.item.JumpCrystalItem;
+import playerbeacons.item.ResCrystalItem;
+import playerbeacons.item.SpeedCrystalItem;
 
 public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
 	private boolean isActive = false;
 	private int badStuff = 0;
-	private HashMap<CrystalItem, Integer> conductors = new HashMap<CrystalItem, Integer>();
 	private int levels;
 	private int resCrystals;
 	private int speedCrystals;
@@ -149,6 +146,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						float baseBadStuff = 0;
 					}
 				}
+				else System.out.println(skull.getSkullType());
 				else if (this.worldObj.getTotalWorldTime() % 60L == 0) {
 					this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 					worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
