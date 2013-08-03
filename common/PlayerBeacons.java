@@ -7,20 +7,20 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import playerbeacons.block.ConductorBlock;
+import playerbeacons.block.PylonBlock;
 import playerbeacons.block.PlayerBeaconBaseBlock;
 import playerbeacons.block.PlayerBeaconBlock;
 import playerbeacons.item.*;
-import playerbeacons.proxy.ClientProxy;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityConductor;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
+import playerbeacons.util.ChunkManager;
 import playerbeacons.util.EventHandler;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
@@ -60,7 +60,7 @@ public class PlayerBeacons {
 		playerBeaconBaseBlock = new PlayerBeaconBaseBlock(config.playerBeaconBaseBlockID);
 		LanguageRegistry.addName(playerBeaconBaseBlock, "Player Beacon Base");
 		GameRegistry.registerBlock(playerBeaconBaseBlock, "playerBeaconBaseBlock");
-		conductorBlock = new ConductorBlock(config.conductorBlockID);
+		conductorBlock = new PylonBlock(config.conductorBlockID);
 		LanguageRegistry.addName(conductorBlock, "Conductor");
 		GameRegistry.registerBlock(conductorBlock, "conductorBlock");
 
@@ -92,6 +92,8 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
 
 		proxy.registerRenderers();
+
+		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ChunkManager());
 
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}

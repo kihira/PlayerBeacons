@@ -13,12 +13,12 @@ import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 import playerbeacons.tileentity.TileEntityConductor;
 
-public class ConductorBlock extends BlockContainer {
+public class PylonBlock extends BlockContainer {
 
-	public ConductorBlock(int id) {
+	public PylonBlock(int id) {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
-		setUnlocalizedName("conductorBlock");
+		setUnlocalizedName("pylonBlock");
 	}
 
 	@Override

@@ -24,6 +24,8 @@ public class Config {
 	public boolean jumpBuffEnabled;
 	public boolean nightVisionBuffEnabled;
 
+	public boolean enableEasterEgg;
+
 	private Configuration config;
 
 
@@ -61,6 +63,10 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
+
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
+		prop.comment = "WARNING: This could destory parts of your world unintentionally";
+		enableEasterEgg = prop.getBoolean(false);
 
 		//Buffs
 		prop = config.get("Beacon Buffs", "Swiftness", true);

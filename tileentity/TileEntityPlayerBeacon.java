@@ -1,6 +1,7 @@
 package playerbeacons.tileentity;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,22 +48,32 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void initialSetup(EntityPlayer player) {
-		this.owner = player.username;
-		this.isActive = false;
-		this.badStuff = 0;
-		PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0);
+		if (worldObj.isRemote) {
+			this.owner = player.username;
+			this.isActive = false;
+			this.badStuff = 0;
+			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0);
 
-		ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
+			ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
 
-		if (ticket == null) {
-			player.sendChatToPlayer(ChatMessageComponent.func_111066_d("[PlayerBeacons] There is no more chunkloading tickets available so the beacon will not be chunk loaded"));
+			if (ticket == null) {
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("[PlayerBeacons] There is no more chunkloading tickets available so the beacon will not be chunk loaded"));
+			}
+			else {
+				ticket.getModData().setInteger("x", xCoord);
+				ticket.getModData().setInteger("y", xCoord);
+				ticket.getModData().setInteger("z", xCoord);
+				useTicket(ticket);
+				System.out.println("Registered a ticket");
+			}
 		}
-		else {
-			Chunk thisChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
-			ChunkCoordIntPair chunkCoordIntPair = new ChunkCoordIntPair(thisChunk.xPosition, thisChunk.zPosition);
-			ForgeChunkManager.forceChunk(ticket, chunkCoordIntPair);
-			System.out.println("Registered a ticket");
-		}
+	}
+
+	public void useTicket(ForgeChunkManager.Ticket ticket) {
+		Chunk thisChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
+		ChunkCoordIntPair chunkCoordIntPair = new ChunkCoordIntPair(thisChunk.xPosition, thisChunk.zPosition);
+		ForgeChunkManager.forceChunk(ticket, chunkCoordIntPair);
+
 	}
 
 	public String getOwner() {
@@ -168,11 +179,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						float baseBadStuff = 0;
 					}
 				}
-				else System.out.println(skull.getSkullType());
 				else if (this.worldObj.getTotalWorldTime() % 60L == 0) {
 					this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 					worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 				}
+			}
+			else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg == true)) {
+				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
+				EntityDragon dragon = new EntityDragon(worldObj);
+				dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
+				dragon.setCustomNameTag(owner + "'s Puppy");
+				worldObj.spawnEntityInWorld(dragon);
 			}
 		}
 	}
