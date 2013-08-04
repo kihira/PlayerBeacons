@@ -55,7 +55,7 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
+	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short badStuffLevels) {
 		if (beaconList.hasKey(player)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (playerData.hasKey(world.getWorldInfo().getWorldName())) {
@@ -70,6 +70,7 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
 				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
+				playerDataWorld.setShort("badstufflevel", badStuffLevels);
 				playerData.setCompoundTag(world.getWorldInfo().getWorldName(), playerDataWorld);
 				saveData(beaconList);
 				return true;
@@ -105,7 +106,7 @@ public class BeaconDataHandler {
 		return null;
 	}
 
-	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels) {
+	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short badStuffLevels) {
 		if (!beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
 			beaconList.setCompoundTag(player, newPlayerData);
@@ -124,6 +125,7 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
 				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
+				playerDataWorld.setShort("badstufflevel", badStuffLevels);
 				playerData.setCompoundTag(world.getWorldInfo().getWorldName(), playerDataWorld);
 				saveData(beaconList);
 			}

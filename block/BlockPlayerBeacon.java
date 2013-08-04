@@ -7,8 +7,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import playerbeacons.common.DamageBehead;
@@ -53,12 +56,31 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		if (!world.isRemote) {
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
-				if ((player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || (player.capabilities.isCreativeMode)) {
-					PlayerBeacons.beaconData.deleteBeaconInformation(world, ((TileEntityPlayerBeacon) tileEntity).getOwner());
+				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
+				if ((player.username.equals(tileEntityPlayerBeacon.getOwner())) || (player.capabilities.isCreativeMode)) {
+					//Check the level of bad stuff
+					float badStuff = tileEntityPlayerBeacon.getCorruption();
+					if (badStuff > 900) {
+						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption from the beacon has drawn you into another dimension"));
+						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
+						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
+						player.travelToDimension(1);
+					}
+					else if (badStuff > 600) {
+						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption flows out through your soul"));
+						player.attackEntityFrom(DamageSource.magic, 8);
+						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
+						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
+					}
+					else if (badStuff > 300) {
+						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption touches your skin"));
+						player.attackEntityFrom(DamageSource.magic, 4);
+					}
+					PlayerBeacons.beaconData.deleteBeaconInformation(world, tileEntityPlayerBeacon.getOwner());
 					return world.setBlockToAir(x, y, z);
 				}
 				else {
-					player.attackEntityFrom(new DamageBehead(), 2);
+					player.attackEntityFrom(new DamageBehead(), 10);
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("A mystical energy seems to guard this device"));
 				}
 			}

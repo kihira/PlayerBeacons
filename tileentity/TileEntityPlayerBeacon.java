@@ -29,6 +29,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private String owner = " ";
 	private boolean isActive = false;
 	private float badStuff = 0;
+	private short badStuffLevel = 0;
 	private int levels;
 	private int resCrystals;
 	private int speedCrystals;
@@ -41,6 +42,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.readFromNBT(par1NBTTagCompound);
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.badStuff = par1NBTTagCompound.getFloat("badstuff");
+		this.badStuffLevel = par1NBTTagCompound.getShort("badstufflevel");
 		//worldobj is null on world load. Save important data above, less important data below. Data below should always override main data
 		if (worldObj != null) {
 			par1NBTTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
@@ -52,6 +54,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			this.speedCrystals = par1NBTTagCompound.getInteger("speedCrystals");
 			this.jumpCrystals = par1NBTTagCompound.getInteger("jumpCrystals");
 			this.digCrystals = par1NBTTagCompound.getInteger("digCrystals");
+			this.badStuffLevel = par1NBTTagCompound.getShort("badstufflevel");
 		}
 	}
 
@@ -60,7 +63,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.writeToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", badStuff);
-		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, badStuff, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels);
+		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, badStuff, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels, badStuffLevel);
 	}
 
 	public void initialSetup(EntityPlayer player) {
@@ -68,7 +71,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			this.owner = player.username;
 			this.isActive = false;
 			this.badStuff = 0;
-			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0);
+			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 
 			ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
 
@@ -279,6 +282,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
+	public float getCorruption() {
+		return badStuff;
+	}
+
 	private void calcBadStuff() {
 		float newBadStuff = 0;
 		float modifier = MinecraftServer.getServer().getDifficulty() / 2;
@@ -298,22 +305,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	private void doBadStuff(float badStuff) {
 		//TODO better random chance calc?
-		//TODO add in way to reset bad stuff
 		System.out.println("Bad Stuff level: " + badStuff);
 		if (badStuff > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
-			if (worldObj.rand.nextInt(1000) % 50 == 0) {
+			if (worldObj.rand.nextInt(1000) % 369 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					EntityEnderman enderman = new EntityEnderman(worldObj);
-					enderman.setLocationAndAngles(xCoord + worldObj.rand.nextInt(20) - 10, yCoord, zCoord + worldObj.rand.nextInt(20) - 10, 0F, 0F);
+					enderman.setLocationAndAngles(player.posX + worldObj.rand.nextInt(10) - 5, player.posY, player.posZ + worldObj.rand.nextInt(10) - 5, 0F, 0F);
 					enderman.setTarget(player);
 					enderman.setScreaming(true);
 					worldObj.spawnEntityInWorld(enderman);
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Your corruption has allowed a foul demon to spawn from the end"));
 					System.out.println("Spawned Enderman");
 				}
 			}
 		}
-		if (badStuff > 900) {
+		if ((badStuff > 900) && (badStuffLevel == 2)) {
 			if (worldObj.rand.nextInt(1000) % 90 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
@@ -321,30 +328,33 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
 					player.travelToDimension(1);
-					this.badStuff = badStuff - worldObj.rand.nextInt(500);
+					badStuffLevel = 0;
+					this.badStuff = badStuff - worldObj.rand.nextInt(900);
 				}
 			}
 			return;
 		}
-		if (badStuff > 600) {
-			if (worldObj.rand.nextInt(700) % 90 == 0) {
+		if ((badStuff > 600) && (badStuffLevel == 1)) {
+			if (worldObj.rand.nextInt(700) % 50 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, disorientating you"));
 					player.attackEntityFrom(DamageSource.magic, 4);
 					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
+					badStuffLevel = 2;
 					this.badStuff = badStuff - worldObj.rand.nextInt(200);
 				}
 			}
 			return;
 		}
-		if (badStuff > 300) {
+		if ((badStuff > 300) && (badStuffLevel == 0)) {
 			if (worldObj.rand.nextInt(400) % 90 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond"));
 					player.attackEntityFrom(DamageSource.magic, 2);
+					badStuffLevel = 1;
 					this.badStuff = badStuff - worldObj.rand.nextInt(100);
 				}
 			}
