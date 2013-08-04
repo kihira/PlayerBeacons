@@ -94,15 +94,10 @@ public class BeaconDataHandler {
 	public NBTTagCompound loadBeaconInformation(World world, String username) {
 		if (beaconList.hasKey(username)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(username);
-			System.out.println(world);
-			System.out.println(String.valueOf(world.provider.dimensionId));
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
-				System.out.println("Found player and world data");
 				return playerData.getCompoundTag(String.valueOf(world.provider.dimensionId));
 			}
-			System.out.println("Found player data but no world data");
 		}
-		System.out.println("Couldn't find the player");
 		return null;
 	}
 
