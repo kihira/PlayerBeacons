@@ -37,6 +37,7 @@ public class PlayerBeacons {
 	public static Block defiledSoulPylonBlock;
 
 	public static Item beheaderItem;
+	public static CrystalItem crystalItem;
 	public static SpeedCrystalItem speedCrystalItem;
 	public static DigCrystalItem digCrystalItem;
 	public static JumpCrystalItem jumpCrystalItem;
@@ -82,6 +83,10 @@ public class PlayerBeacons {
 		resCrystalItem = new ResCrystalItem(config.resCrystalItemID);
 		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
 		GameRegistry.registerItem(resCrystalItem, "resCrystalItem");
+		crystalItem = new ResCrystalItem(config.crystalItemID);
+		LanguageRegistry.addName(resCrystalItem, "Depleted Crystal");
+		GameRegistry.registerItem(crystalItem, "crystalItem");
+
 
 		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID, 5, EnumEnchantmentType.weapon);
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
@@ -118,11 +123,10 @@ public class PlayerBeacons {
 
 		//TODO balance pass and fix some recipes
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 5), "OPO", "PDP", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'D', new ItemStack(Block.blockDiamond));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 10), "OPO", "ONO", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'N', new ItemStack(Item.netherStar));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 10), "OPO", "GNG", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'N', new ItemStack(Item.netherStar), 'N', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.playerBeaconBlock), " P ", "NBN", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), " P ", "SHS", 'P', new ItemStack(Item.eyeOfEnder), 'S', new ItemStack(Item.swordIron), 'H', new ItemStack(Item.helmetIron));
 
-		//TODO Empty crystal item?
 		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.speedCrystalItem), new ItemStack(Item.potion, 1, 8194), new ItemStack(Item.diamond));
 		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.digCrystalItem), new ItemStack(Item.pickaxeDiamond), new ItemStack(Item.diamond));
 		GameRegistry.addShapelessRecipe(new ItemStack(PlayerBeacons.jumpCrystalItem), new ItemStack(Item.bed), new ItemStack(Item.diamond));

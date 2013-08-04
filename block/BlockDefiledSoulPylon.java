@@ -21,6 +21,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		super(id, Material.iron);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("pylonBlock");
+		func_111022_d("playerbeacon:pyramidBrick");
 		setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}
 

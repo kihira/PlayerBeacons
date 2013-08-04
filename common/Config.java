@@ -12,6 +12,7 @@ public class Config {
 	public int defiledSoulPylonBlockID;
 
 	public int beheaderItemID;
+	public int crystalItemID;
 	public int speedCrystalItemID;
 	public int digCrystalItemID;
 	public int jumpCrystalItemID;
@@ -58,6 +59,8 @@ public class Config {
 		jumpCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Resistance Crystal", 20004);
 		resCrystalItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Depleted Crystal", 20005);
+		crystalItemID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();

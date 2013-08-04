@@ -55,23 +55,23 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short badStuffLevels) {
+	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short corruptionLevels) {
 		if (beaconList.hasKey(player)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
-			if (playerData.hasKey(world.getWorldInfo().getWorldName())) {
-				NBTTagCompound playerDataWorld = playerData.getCompoundTag(world.getWorldInfo().getWorldName());
+			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
+				NBTTagCompound playerDataWorld = playerData.getCompoundTag(String.valueOf(world.provider.dimensionId));
 				playerDataWorld.setInteger("x", x);
 				playerDataWorld.setInteger("y", y);
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
-				playerDataWorld.setFloat("badstuff", badStuff);
+				playerDataWorld.setFloat("badstuff", corruption);
 				playerDataWorld.setInteger("resCrystals", resCrystals);
 				playerDataWorld.setInteger("speedCrystals", speedCrystals);
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
 				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
-				playerDataWorld.setShort("badstufflevel", badStuffLevels);
-				playerData.setCompoundTag(world.getWorldInfo().getWorldName(), playerDataWorld);
+				playerDataWorld.setShort("badstufflevel", corruptionLevels);
+				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
 				saveData(beaconList);
 				return true;
 			}
@@ -82,8 +82,8 @@ public class BeaconDataHandler {
 	public boolean deleteBeaconInformation(World world, String username) {
 		if (beaconList.hasKey(username)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(username);
-			if (playerData.hasKey(world.getWorldInfo().getWorldName())) {
-				playerData.removeTag(world.getWorldInfo().getWorldName());
+			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
+				playerData.removeTag(String.valueOf(world.provider.dimensionId));
 				saveData(beaconList);
 				return true;
 			}
@@ -95,10 +95,10 @@ public class BeaconDataHandler {
 		if (beaconList.hasKey(username)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(username);
 			System.out.println(world);
-			System.out.println(world.getWorldInfo().getWorldName());
-			if (playerData.hasKey(world.getWorldInfo().getWorldName())) {
+			System.out.println(String.valueOf(world.provider.dimensionId));
+			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				System.out.println("Found player and world data");
-				return playerData.getCompoundTag(world.getWorldInfo().getWorldName());
+				return playerData.getCompoundTag(String.valueOf(world.provider.dimensionId));
 			}
 			System.out.println("Found player data but no world data");
 		}
@@ -106,27 +106,27 @@ public class BeaconDataHandler {
 		return null;
 	}
 
-	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float badStuff, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short badStuffLevels) {
+	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short corruptionLevels) {
 		if (!beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
 			beaconList.setCompoundTag(player, newPlayerData);
 		}
 		if (beaconList.hasKey(player)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
-			if (!playerData.hasKey(world.getWorldInfo().getWorldName())) {
+			if (!playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				NBTTagCompound playerDataWorld = new NBTTagCompound();
 				playerDataWorld.setInteger("x", x);
 				playerDataWorld.setInteger("y", y);
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
-				playerDataWorld.setFloat("badstuff", badStuff);
+				playerDataWorld.setFloat("badstuff", corruption);
 				playerDataWorld.setInteger("resCrystals", resCrystals);
 				playerDataWorld.setInteger("speedCrystals", speedCrystals);
 				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
 				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
-				playerDataWorld.setShort("badstufflevel", badStuffLevels);
-				playerData.setCompoundTag(world.getWorldInfo().getWorldName(), playerDataWorld);
+				playerDataWorld.setShort("badstufflevel", corruptionLevels);
+				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
 				saveData(beaconList);
 			}
 		}
