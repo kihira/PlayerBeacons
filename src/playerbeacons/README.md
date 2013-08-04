@@ -2,6 +2,8 @@
 
 Test 1 - http://www.mediafire.com/download/2u0cj9yi80tz0s5/playerbeacons_test1.zip
 
+Requires Forge 800+
+
 REPORT ALL ISSUES HERE - https://bitbucket.org/Kihira/modjam2/issues - IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
 
 # Build instruction for Player Beacons
