@@ -15,6 +15,7 @@ public class ServerTickHandler implements IScheduledTickHandler {
 	private short cycle = 0;
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
+		cycle++;
 		MinecraftServer mc = MinecraftServer.getServer();
 		for (WorldServer worldServer : mc.worldServers) {
 			for (Object object : worldServer.playerEntities) {
@@ -27,15 +28,16 @@ public class ServerTickHandler implements IScheduledTickHandler {
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) worldServer.getBlockTileEntity(x, y, z);
 					if (tileEntityPlayerBeacon != null) {
 						tileEntityPlayerBeacon.calcLevels();
-						if (cycle == 1) {
+						if (cycle % 2 == 0) {
 							tileEntityPlayerBeacon.calcPylons();
 							tileEntityPlayerBeacon.doCorruption();
+							if (cycle % 4 == 0) worldServer.markBlockForUpdate(x, y, z);
 						}
+						if (cycle >= 32000) cycle = 0;
 					}
 				}
 			}
 		}
-		cycle++;
 	}
 
 	@Override

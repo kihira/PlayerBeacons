@@ -115,7 +115,11 @@ public class EventHandler {
 						double viewZ = movingObject.blockZ - RenderManager.renderPosZ;
 						FontRenderer fontRenderer = mc.fontRenderer;
 						RenderManager renderManager = RenderManager.instance;
-						String string = "Corruption: " + String.valueOf(corruption);
+						String string;
+						if (corruption >= 9000) string = "Corruption: §4" + String.valueOf(corruption);
+						else if (corruption >= 6000) string = "Corruption: §c" + String.valueOf(corruption);
+						else if (corruption >= 3000) string = "Corruption: §e" + String.valueOf(corruption);
+						else string = "Corruption: " + String.valueOf(corruption);
 						float f = 1.6F;
 						float f1 = 0.016666668F * f;
 						GL11.glPushMatrix();

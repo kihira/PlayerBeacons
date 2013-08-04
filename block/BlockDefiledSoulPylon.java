@@ -71,7 +71,6 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 				world.spawnEntityInWorld(item);
 			}
 		}
-
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
@@ -87,6 +86,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 							tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
 							tileEntityDefiledSoulPylon.updateContainingBlockInfo();
 							entityPlayer.setCurrentItemOrArmor(0, null);
+							world.markBlockForUpdate(x, y, z);
 						}
 					}
 				}
@@ -94,9 +94,10 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 					ItemStack inv = tileEntityDefiledSoulPylon.getStackInSlot(0);
 					if (inv != null) {
 						tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
-						EntityItem item = new EntityItem(world, x, y + 0.5, z, inv);
-						world.spawnEntityInWorld(item);
 						tileEntityDefiledSoulPylon.updateContainingBlockInfo();
+						world.markBlockForUpdate(x, y, z);
+						EntityItem item = new EntityItem(world, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, inv);
+						world.spawnEntityInWorld(item);
 					}
 				}
 			}

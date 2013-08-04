@@ -1,11 +1,10 @@
 package playerbeacons.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
@@ -20,27 +19,28 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
-		if (tag != null) {
-			System.out.println("tag was null");
-			this.crystal = ItemStack.loadItemStackFromNBT(tag);
-		}
+		this.crystal = ItemStack.loadItemStackFromNBT(tag);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
-		if (crystal != null) {
-			NBTTagCompound tag = new NBTTagCompound();
-			crystal.writeToNBT(tag);
-			par1NBTTagCompound.setTag("crystal", tag);
-		}
+		NBTTagCompound tag = new NBTTagCompound();
+		if (crystal != null) crystal.writeToNBT(tag);
+		par1NBTTagCompound.setTag("crystal", tag);
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
+		readFromNBT(pkt.customParam1);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
-		NBTTagCompound nbttagcompound = new NBTTagCompound();
-		this.writeToNBT(nbttagcompound);
-		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 3, nbttagcompound);
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
 	}
 
 	@Override
@@ -77,6 +77,8 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		if (i == 0) {
 			this.crystal = itemstack;
+			System.out.println("Updated item stack");
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 

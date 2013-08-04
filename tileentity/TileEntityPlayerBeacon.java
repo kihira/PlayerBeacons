@@ -7,6 +7,9 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
@@ -14,9 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.DigCrystalItem;
@@ -35,7 +35,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private int speedCrystals;
 	private int jumpCrystals;
 	private int digCrystals;
-	private ForgeChunkManager.Ticket ticket;
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -66,6 +65,19 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels, corruptionLevel);
 	}
 
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
+		readFromNBT(pkt.customParam1);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
+	}
+
 	public void initialSetup(EntityPlayer player) {
 		if (!worldObj.isRemote) {
 			this.owner = player.username;
@@ -85,7 +97,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	@Override
 	public void invalidate() {
-		ForgeChunkManager.releaseTicket(ticket);
 		PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
 		super.invalidate();
 	}

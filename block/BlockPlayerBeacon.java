@@ -92,7 +92,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
 					tileEntityPlayerBeacon.doCorruption();
 					tileEntityPlayerBeacon.setCorruption(0, true);
-					tileEntityPlayerBeacon.updateContainingBlockInfo();
+					world.markBlockForUpdate(x, y, z);
 					entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
 					return true;
 				}
