@@ -24,6 +24,7 @@ public class BeheaderItem extends ItemArmor {
 		super(id, EnumArmorMaterial.IRON, 2, 0);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("Beheader");
+		func_111206_d("playerbeacon:beheader");
 		setMaxDamage(200);
 	}
 
@@ -47,7 +48,6 @@ public class BeheaderItem extends ItemArmor {
 
 	@Override
 	public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack itemStack) {
-		/*
 		if (!world.isRemote) {
 			switch (itemStack.getItemDamage()) {
 				case 1: player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6You feel a strange device clamp around your head")); break;
@@ -64,7 +64,6 @@ public class BeheaderItem extends ItemArmor {
 			}
 			itemStack.setItemDamage(itemStack.getItemDamage()+1);
 		}
-		*/
 	}
 
 	@Override
@@ -86,7 +85,9 @@ public class BeheaderItem extends ItemArmor {
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
 		super.addInformation(itemStack, entityPlayer, list, par4);
-		list.add("A cruel device, this will behead anyone who wears it");
+		list.add("A cruel device,");
+		list.add("this will behead");
+		list.add("anyone who wears it");
 	}
 
 	//TODO Get nex to do something for this?

@@ -1,6 +1,7 @@
 package playerbeacons.tileentity;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,7 +20,10 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
-		if (tag != null) this.crystal = ItemStack.loadItemStackFromNBT(tag);
+		if (tag != null) {
+			System.out.println("tag was null");
+			this.crystal = ItemStack.loadItemStackFromNBT(tag);
+		}
 	}
 
 	@Override
@@ -34,16 +38,9 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public Packet getDescriptionPacket() {
-		System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		this.writeToNBT(nbttagcompound);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 3, nbttagcompound);
-	}
-
-	@Override
-	public void updateContainingBlockInfo() {
-		super.updateContainingBlockInfo();
-		System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 	}
 
 	@Override
@@ -78,7 +75,9 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		if (i == 0) this.crystal = itemstack;
+		if (i == 0) {
+			this.crystal = itemstack;
+		}
 	}
 
 	@Override
