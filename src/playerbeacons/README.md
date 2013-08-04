@@ -1,3 +1,9 @@
+# Download
+
+Test 1 - http://www.mediafire.com/download/2u0cj9yi80tz0s5/playerbeacons_test1.zip
+
+REPORT ALL ISSUES HERE - https://bitbucket.org/Kihira/modjam2/issues - IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
+
 # Build instruction for Player Beacons
 
 1) Setup Forge/MCP dev enviroment by downloading from minecraftforge.net (Build 800) and running /install.sh or /install.cmd
