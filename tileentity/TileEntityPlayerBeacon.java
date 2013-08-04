@@ -72,26 +72,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			this.isActive = false;
 			this.corruption = 0;
 			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
-
-			ticket = ForgeChunkManager.requestTicket(PlayerBeacons.instance, player.worldObj, ForgeChunkManager.Type.NORMAL);
-
-			if (ticket == null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("[PlayerBeacons] There is no more chunkloading tickets available so the beacon will not be chunk loaded"));
-			}
-			else {
-				ticket.getModData().setInteger("x", xCoord);
-				ticket.getModData().setInteger("y", yCoord);
-				ticket.getModData().setInteger("z", zCoord);
-				useTicket(ticket);
-			}
 		}
-	}
-
-	public void useTicket(ForgeChunkManager.Ticket ticket) {
-		Chunk thisChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
-		ChunkCoordIntPair chunkCoordIntPair = new ChunkCoordIntPair(thisChunk.xPosition, thisChunk.zPosition);
-		ForgeChunkManager.forceChunk(ticket, chunkCoordIntPair);
-
 	}
 
 	public String getOwner() {
@@ -109,176 +90,51 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.invalidate();
 	}
 
-	@Override
-	public void updateEntity() {
-		//Update every 10 ticks. no need to update every tick
-		if ((this.worldObj.getTotalWorldTime() %20L == 0) && !this.worldObj.isRemote) {
-			if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
-				TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
-				//If player head
-				if (skull.getExtraType().equals(this.owner)) {
-					EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
-					if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
-						this.levels = 0;
-						for (int i = 1; i <= 4; levels = i++) {
-							int j = this.yCoord - i;
-
-							if (j < 0) break;
-
-							boolean flag = true;
-
-							for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
-								for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-									if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
-										flag = false;
-										break;
-									}
+	public void calcLevels() {
+		if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
+			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
+			//If player head
+			if (skull.getExtraType().equals(this.owner)) {
+				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
+				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
+					this.levels = 0;
+					for (int i = 1; i <= 4; levels = i++) {
+						int j = this.yCoord - i;
+    							if (j < 0) break;
+    							boolean flag = true;
+    							for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
+							for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
+								if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
+									flag = false;
+									break;
 								}
-							}
-							if (!flag) break;
-						}
-						if (levels > 0) {
-							EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
-							if (player != null) {
-								//Do effects
-								if (levels - 1 - speedCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - speedCrystals, true));
-								if (levels - 1 - jumpCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - jumpCrystals, true));
-								if (levels - 1 - digCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - digCrystals, true));
-								if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
 							}
 						}
-						//Keep this below the beacon base counter so we know what level to look on based on how many levels there are
-						//TODO Overhaul this entire system? Need a good way of storing what type of conductors we have. HashMap or is that too expensive?
-						//Calculate bad stuff every 2 seconds
-						if ((levels > 0) && (this.worldObj.getTotalWorldTime() % 40L == 0)) {
-							resCrystals = 0;
-							speedCrystals = 0;
-							jumpCrystals = 0;
-							digCrystals = 0;
-
-							for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
-								TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
-								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-								if (itemStack != null) {
-									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										jumpCrystals++;
-									}
-									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										digCrystals++;
-									}
-									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										speedCrystals++;
-									}
-									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										resCrystals++;
-									}
-								}
-							}
-							for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-								TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
-								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-								if (itemStack != null) {
-									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										jumpCrystals++;
-									}
-									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										digCrystals++;
-									}
-									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										speedCrystals++;
-									}
-									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										resCrystals++;
-									}
-								}
-							}
-							for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-								TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-								if (itemStack != null) {
-									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										jumpCrystals++;
-									}
-									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										digCrystals++;
-									}
-									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										speedCrystals++;
-									}
-									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										resCrystals++;
-									}
-								}
-							}
-							for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
-								TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
-								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-								if (itemStack != null) {
-									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										jumpCrystals++;
-									}
-									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										digCrystals++;
-									}
-									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										speedCrystals++;
-									}
-									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-										resCrystals++;
-									}
-								}
-							}
-
-							System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
-							calcCorruption();
-							doCorruption();
+						if (!flag) break;
+					}
+					if (levels > 0) {
+						EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
+						if (player != null) {
+							//Do effects
+							if (levels - 1 - speedCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - speedCrystals, true));
+							if (levels - 1 - jumpCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - jumpCrystals, true));
+							if (levels - 1 - digCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - digCrystals, true));
+							if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
 						}
 					}
 				}
-				else {
-					this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
-					worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
-				}
 			}
-			else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg == true)) {
+			else {
+				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
-				EntityDragon dragon = new EntityDragon(worldObj);
-				dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
-				dragon.setCustomNameTag(owner + "'s Puppy");
-				worldObj.spawnEntityInWorld(dragon);
 			}
+		}
+		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg == true)) {
+			worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
+			EntityDragon dragon = new EntityDragon(worldObj);
+			dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
+			dragon.setCustomNameTag(owner + "'s Puppy");
+			worldObj.spawnEntityInWorld(dragon);
 		}
 	}
 
@@ -292,6 +148,123 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (newCorruption >= 3000) corruptionLevel = 1;
 			else if (newCorruption >= 6000) corruptionLevel = 2;
 			else corruptionLevel = 0;
+		}
+	}
+
+	public void calcPylons() {
+		if (levels > 0) {
+			resCrystals = 0;
+			speedCrystals = 0;
+			jumpCrystals = 0;
+			digCrystals = 0;
+
+			for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
+				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
+				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
+				if (itemStack != null) {
+					if (itemStack.getItem() instanceof JumpCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						jumpCrystals++;
+					}
+					else if (itemStack.getItem() instanceof DigCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						digCrystals++;
+					}
+					else if (itemStack.getItem() instanceof SpeedCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						speedCrystals++;
+					}
+					else if (itemStack.getItem() instanceof ResCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						resCrystals++;
+					}
+				}
+			}
+			for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
+				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
+				if (itemStack != null) {
+					if (itemStack.getItem() instanceof JumpCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						jumpCrystals++;
+					}
+					else if (itemStack.getItem() instanceof DigCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						digCrystals++;
+					}
+					else if (itemStack.getItem() instanceof SpeedCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						speedCrystals++;
+					}
+					else if (itemStack.getItem() instanceof ResCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						resCrystals++;
+					}
+				}
+			}
+			for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
+				if (itemStack != null) {
+					if (itemStack.getItem() instanceof JumpCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						jumpCrystals++;
+					}
+					else if (itemStack.getItem() instanceof DigCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						digCrystals++;
+					}
+					else if (itemStack.getItem() instanceof SpeedCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						speedCrystals++;
+					}
+					else if (itemStack.getItem() instanceof ResCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						resCrystals++;
+					}
+				}
+			}
+			for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
+				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
+				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
+				if (itemStack != null) {
+					if (itemStack.getItem() instanceof JumpCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						jumpCrystals++;
+					}
+					else if (itemStack.getItem() instanceof DigCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						digCrystals++;
+					}
+					else if (itemStack.getItem() instanceof SpeedCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						speedCrystals++;
+					}
+					else if (itemStack.getItem() instanceof ResCrystalItem) {
+						if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+						else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						resCrystals++;
+					}
+				}
+			}
+
+			System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
+			calcCorruption();
 		}
 	}
 

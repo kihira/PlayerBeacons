@@ -78,21 +78,24 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int meta, float par7, float par8, float par9) {
 		if (!world.isRemote) {
-			if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.emerald.itemID) {
-				entityPlayer.setCurrentItemOrArmor(0, null);
-				EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oAn energy from the beacon flows into the emerald forging a mysterious crystal"));
-				world.spawnEntityInWorld(item);
-				return true;
-			}
-			//If they right click with depleted, disperse all corruption
-			else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
-				entityPlayer.setCurrentItemOrArmor(0, null);
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
-				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
-				tileEntityPlayerBeacon.doCorruption();
-				tileEntityPlayerBeacon.setCorruption(0, true);
-				return true;
+			if (entityPlayer.getCurrentItemOrArmor(0) != null) {
+				if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.emerald.itemID) {
+					entityPlayer.setCurrentItemOrArmor(0, null);
+					EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
+					entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oAn energy from the beacon flows into the emerald forging a mysterious crystal"));
+					world.spawnEntityInWorld(item);
+					return true;
+				}
+				//If they right click with depleted, disperse all corruption
+				else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
+					entityPlayer.setCurrentItemOrArmor(0, null);
+					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
+					tileEntityPlayerBeacon.doCorruption();
+					tileEntityPlayerBeacon.setCorruption(0, true);
+					tileEntityPlayerBeacon.updateContainingBlockInfo();
+					entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
+					return true;
+				}
 			}
 		}
 		return false;

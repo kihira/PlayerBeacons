@@ -8,10 +8,11 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +23,6 @@ import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
-import playerbeacons.util.BeaconChunkManager;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
 
@@ -102,8 +102,6 @@ public class PlayerBeacons {
 
 		proxy.registerRenderers();
 
-		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new BeaconChunkManager());
-
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
@@ -117,6 +115,7 @@ public class PlayerBeacons {
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
 		registerRecipes();
+		TickRegistry.registerScheduledTickHandler(new ServerTickHandler(), Side.SERVER);
 	}
 
 	public void registerRecipes() {

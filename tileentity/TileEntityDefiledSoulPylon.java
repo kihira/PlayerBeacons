@@ -1,5 +1,6 @@
 package playerbeacons.tileentity;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -33,9 +34,16 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public Packet getDescriptionPacket() {
+		System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		this.writeToNBT(nbttagcompound);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 3, nbttagcompound);
+	}
+
+	@Override
+	public void updateContainingBlockInfo() {
+		super.updateContainingBlockInfo();
+		System.out.println(FMLCommonHandler.instance().getEffectiveSide());
 	}
 
 	@Override

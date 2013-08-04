@@ -78,23 +78,26 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
 		if (!world.isRemote) {
-			ItemStack itemStack = entityPlayer.getCurrentItemOrArmor(0);
-			if (itemStack != null) {
-				if (itemStack.getItem() instanceof CrystalItem) {
-					TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
-					if (tileEntityDefiledSoulPylon.getStackInSlot(0) == null) {
-						tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
-						entityPlayer.setCurrentItemOrArmor(0, null);
+			TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
+			if (!tileEntityDefiledSoulPylon.isPylonBase()) {
+				ItemStack itemStack = entityPlayer.getCurrentItemOrArmor(0);
+				if (itemStack != null) {
+					if (itemStack.getItem() instanceof CrystalItem) {
+						if (tileEntityDefiledSoulPylon.getStackInSlot(0) == null) {
+							tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
+							tileEntityDefiledSoulPylon.updateContainingBlockInfo();
+							entityPlayer.setCurrentItemOrArmor(0, null);
+						}
 					}
 				}
-			}
-			else {
-				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
-				ItemStack inv = tileEntityDefiledSoulPylon.getStackInSlot(0);
-				if (inv != null) {
-					tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
-					EntityItem item = new EntityItem(world, x, y + 0.5, z, inv);
-					world.spawnEntityInWorld(item);
+				else {
+					ItemStack inv = tileEntityDefiledSoulPylon.getStackInSlot(0);
+					if (inv != null) {
+						tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+						EntityItem item = new EntityItem(world, x, y + 0.5, z, inv);
+						world.spawnEntityInWorld(item);
+						tileEntityDefiledSoulPylon.updateContainingBlockInfo();
+					}
 				}
 			}
 		}

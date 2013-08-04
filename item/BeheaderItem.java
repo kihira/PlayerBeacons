@@ -7,10 +7,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatMessageComponent;
@@ -20,14 +18,19 @@ import playerbeacons.common.PlayerBeacons;
 
 import java.util.List;
 
-
 public class BeheaderItem extends ItemArmor {
 
 	public BeheaderItem(int id) {
 		super(id, EnumArmorMaterial.IRON, 2, 0);
 		setCreativeTab(CreativeTabs.tabCombat);
-		setUnlocalizedName("beheader");
+		setUnlocalizedName("Beheader");
 		setMaxDamage(200);
+	}
+
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer) {
+		if (slot == 0) return "playerbeacon:textures/armour/beheader.png";
+		else return null;
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class BeheaderItem extends ItemArmor {
 
 	@Override
 	public void onArmorTickUpdate(World world, EntityPlayer player, ItemStack itemStack) {
+		/*
 		if (!world.isRemote) {
 			switch (itemStack.getItemDamage()) {
 				case 1: player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6You feel a strange device clamp around your head")); break;
@@ -60,6 +64,7 @@ public class BeheaderItem extends ItemArmor {
 			}
 			itemStack.setItemDamage(itemStack.getItemDamage()+1);
 		}
+		*/
 	}
 
 	@Override
@@ -81,10 +86,7 @@ public class BeheaderItem extends ItemArmor {
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
 		super.addInformation(itemStack, entityPlayer, list, par4);
-
-		list.add("Go on, try it on!");
-		list.add("The spirit of Loki possesses this device");
-
+		list.add("A cruel device, this will behead anyone who wears it");
 	}
 
 	//TODO Get nex to do something for this?

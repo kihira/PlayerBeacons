@@ -82,7 +82,7 @@ public class EventHandler {
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (e.entity instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			if (random.nextInt(500) == 1) {
+			if (random.nextInt(700) == 1) {
 				int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
 				EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
 				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
