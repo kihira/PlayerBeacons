@@ -19,7 +19,6 @@ import playerbeacons.block.BlockDefiledSoulConductor;
 import playerbeacons.block.BlockDefiledSoulPylon;
 import playerbeacons.block.BlockPlayerBeacon;
 import playerbeacons.item.*;
-import playerbeacons.network.PacketHandler;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
