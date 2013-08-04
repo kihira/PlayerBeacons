@@ -18,6 +18,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
+import playerbeacons.item.CrystalItem;
 import playerbeacons.proxy.ClientProxy;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
@@ -61,29 +62,13 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
 				if ((player.username.equals(tileEntityPlayerBeacon.getOwner())) || (player.capabilities.isCreativeMode)) {
 					//Check the level of bad stuff
-					float corruption = tileEntityPlayerBeacon.getCorruption();
-					if (corruption > 900) {
-						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption from the beacon has drawn you into another dimension"));
-						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
-						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
-						player.travelToDimension(1);
-					}
-					else if (corruption > 600) {
-						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption flows out through your soul"));
-						player.attackEntityFrom(DamageSource.magic, 8);
-						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
-						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
-					}
-					else if (corruption > 300) {
-						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("The release of corruption touches your skin"));
-						player.attackEntityFrom(DamageSource.magic, 4);
-					}
+					tileEntityPlayerBeacon.doCorruption();
 					PlayerBeacons.beaconData.deleteBeaconInformation(world, tileEntityPlayerBeacon.getOwner());
 					return world.setBlockToAir(x, y, z);
 				}
 				else {
 					player.attackEntityFrom(new DamageBehead(), 10);
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("A mystical energy seems to guard this device"));
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§d§oA mystical energy seems to guard this device"));
 				}
 			}
 		}
@@ -93,10 +78,20 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int meta, float par7, float par8, float par9) {
 		if (!world.isRemote) {
-			if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.diamond.itemID) {
+			if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.emerald.itemID) {
 				entityPlayer.setCurrentItemOrArmor(0, null);
 				EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oAn energy from the beacon flows into the emerald forging a mysterious crystal"));
 				world.spawnEntityInWorld(item);
+				return true;
+			}
+			//If they right click with depleted, disperse all corruption
+			else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
+				entityPlayer.setCurrentItemOrArmor(0, null);
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
+				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
+				tileEntityPlayerBeacon.doCorruption();
+				tileEntityPlayerBeacon.setCorruption(0, true);
 				return true;
 			}
 		}
@@ -110,7 +105,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				if (!(player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || !(player.capabilities.isCreativeMode)) {
 					player.attackEntityFrom(new DamageBehead(), 2);
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("A mystical energy seems to guard this device"));
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§d§oA mystical energy seems to guard this device"));
 				}
 			}
 		}
@@ -124,9 +119,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		}
 	}
 
-	//Should I keep? Or maybe adjust it? Wait on nex's design
-	//Make this change based on the level of bad stuff?
-	//TODO make this work based on corruption level
+	//TODO make this work based on corruption level?
 	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
 		if (world.getBlockId(x, y+1, z) == Block.skull.blockID) {

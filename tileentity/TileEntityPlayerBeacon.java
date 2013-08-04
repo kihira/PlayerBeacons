@@ -161,22 +161,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 								if (itemStack != null) {
 									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										jumpCrystals++;
 									}
 									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										digCrystals++;
 									}
 									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										speedCrystals++;
 									}
 									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										resCrystals++;
 									}
@@ -187,22 +187,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 								if (itemStack != null) {
 									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										jumpCrystals++;
 									}
 									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										digCrystals++;
 									}
 									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										speedCrystals++;
 									}
 									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										resCrystals++;
 									}
@@ -213,22 +213,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 								if (itemStack != null) {
 									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										jumpCrystals++;
 									}
 									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										digCrystals++;
 									}
 									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										speedCrystals++;
 									}
 									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										resCrystals++;
 									}
@@ -239,22 +239,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 								ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 								if (itemStack != null) {
 									if (itemStack.getItem() instanceof JumpCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										jumpCrystals++;
 									}
 									else if (itemStack.getItem() instanceof DigCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										digCrystals++;
 									}
 									else if (itemStack.getItem() instanceof SpeedCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										speedCrystals++;
 									}
 									else if (itemStack.getItem() instanceof ResCrystalItem) {
-										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, null);
+										if (itemStack.getItemDamage() >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 										else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 										resCrystals++;
 									}
@@ -263,7 +263,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 							System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
 							calcCorruption();
-							doCorruption(corruption);
+							doCorruption();
 						}
 					}
 				}
@@ -286,6 +286,15 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		return corruption;
 	}
 
+	public void setCorruption(float newCorruption, boolean adjustLevel) {
+		if (newCorruption >= 0) corruption = newCorruption;
+		if (adjustLevel) {
+			if (newCorruption >= 3000) corruptionLevel = 1;
+			else if (newCorruption >= 6000) corruptionLevel = 2;
+			else corruptionLevel = 0;
+		}
+	}
+
 	private void calcCorruption() {
 		float newCorruption = 0;
 		float modifier = MinecraftServer.getServer().getDifficulty() / 2;
@@ -302,8 +311,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		corruption = corruption + newCorruption;
 	}
 
-	private void doCorruption(float corruption) {
-		//TODO better random chance calc?
+	public void doCorruption() {
 		if (corruption > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
 			if (worldObj.rand.nextInt(1000) % 369 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
@@ -333,7 +341,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 6000) && (corruptionLevel == 1)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, disorientating you"));
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at your soul from the beyond, disorientating you"));
 				player.attackEntityFrom(DamageSource.magic, 4);
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));

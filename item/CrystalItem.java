@@ -11,5 +11,7 @@ public class CrystalItem extends Item {
 		setMaxDamage(43200);
 		setMaxStackSize(1);
 		setCreativeTab(CreativeTabs.tabMaterials);
+		func_111206_d("playerbeacon:grayXtal");
+		setUnlocalizedName("Depleted Crystal");
 	}
 }

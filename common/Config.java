@@ -66,7 +66,7 @@ public class Config {
 		decapitationEnchantmentID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
-		prop.comment = "WARNING: This could destory parts of your world unintentionally";
+		prop.comment = "WARNING: This could destroy parts of your world unintentionally";
 		enableEasterEgg = prop.getBoolean(false);
 
 		//Buffs
