@@ -3,6 +3,7 @@ package playerbeacons.common;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -102,9 +103,14 @@ public class PlayerBeacons {
 	}
 
 	@Mod.EventHandler
+	public void serverStart(FMLServerAboutToStartEvent e) {
+		beaconData = new BeaconDataHandler();
+		System.out.println("Loaded beacon data");
+	}
+
+	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
-		beaconData = new BeaconDataHandler();
 		registerRecipes(e.getServer().func_130014_f_().getWorldInfo().isHardcoreModeEnabled());
 	}
 
