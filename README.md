@@ -1,1 +1,0 @@
-# Basic readme for ModJam mod
