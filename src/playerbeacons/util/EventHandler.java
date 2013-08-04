@@ -44,7 +44,13 @@ public class EventHandler {
 		if ((deadEntity instanceof EntityPlayer) && (entity instanceof EntityPlayer)) {
 			EntityPlayer attacker = (EntityPlayer) entity;
 			EntityPlayer deadThing = (EntityPlayer) deadEntity;
-			NBTTagList enchantments = attacker.getHeldItem().getEnchantmentTagList();
+			ItemStack item = attacker.getHeldItem();
+			NBTTagList enchantments = null;
+			if (item != null) {
+				if (item.hasTagCompound()) {
+					enchantments = attacker.getHeldItem().getEnchantmentTagList();
+				}
+			}
 
 			if (enchantments != null) {
 				for (int i = 0; i < enchantments.tagCount(); ++i) {

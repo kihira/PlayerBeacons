@@ -45,15 +45,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		//worldobj is null on world load. Save important data above, less important data below. Data below should always override main data
 		if (worldObj != null) {
 			par1NBTTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
-			this.owner = par1NBTTagCompound.getString("owner");
-			this.corruption = par1NBTTagCompound.getFloat("badstuff");
-			this.isActive = par1NBTTagCompound.getBoolean("isActive");
-			this.levels = par1NBTTagCompound.getInteger("levels");
-			this.resCrystals = par1NBTTagCompound.getInteger("resCrystals");
-			this.speedCrystals = par1NBTTagCompound.getInteger("speedCrystals");
-			this.jumpCrystals = par1NBTTagCompound.getInteger("jumpCrystals");
-			this.digCrystals = par1NBTTagCompound.getInteger("digCrystals");
-			this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
+			if (par1NBTTagCompound != null) {
+				this.owner = par1NBTTagCompound.getString("owner");
+				this.corruption = par1NBTTagCompound.getFloat("badstuff");
+				this.isActive = par1NBTTagCompound.getBoolean("isActive");
+				this.levels = par1NBTTagCompound.getInteger("levels");
+				this.resCrystals = par1NBTTagCompound.getInteger("resCrystals");
+				this.speedCrystals = par1NBTTagCompound.getInteger("speedCrystals");
+				this.jumpCrystals = par1NBTTagCompound.getInteger("jumpCrystals");
+				this.digCrystals = par1NBTTagCompound.getInteger("digCrystals");
+				this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
+			}
 		}
 	}
 
