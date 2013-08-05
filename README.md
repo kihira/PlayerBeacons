@@ -5,7 +5,7 @@ REPORT ALL ISSUES HERE - https://bitbucket.org/Kihira/modjam2/issues - IF YOU DO
 
 ##Build instruction for Player Beacons
 
-1) Setup Forge/MCP dev enviroment by downloading from minecraftforge.net (Build 800) and running /install.sh or /install.cmd
+1) Setup Forge/MCP dev enviroment by downloading from minecraftforge.net (Build 804) and running /install.sh or /install.cmd
 
 2) Copy all files and folders from the "src" folder to /mcp/src/minecraft/
 
