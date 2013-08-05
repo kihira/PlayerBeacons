@@ -77,7 +77,6 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		if (i == 0) {
 			this.crystal = itemstack;
-			System.out.println("Updated item stack");
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}

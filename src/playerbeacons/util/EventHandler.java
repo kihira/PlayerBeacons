@@ -42,6 +42,17 @@ public class EventHandler {
 		Entity entity = e.source.getEntity();
 		Entity deadEntity = e.entity;
 
+		//Death by DamageBehead
+		if ((deadEntity instanceof EntityPlayer) && (e.source instanceof DamageBehead)) {
+			EntityPlayer deadThing = (EntityPlayer) deadEntity;
+			ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("SkullOwner", deadThing.username);
+			itemStack.setTagCompound(tag);
+			deadThing.entityDropItem(itemStack, 1);
+			return;
+		}
+
 		//Death by enchantment
 		if ((deadEntity instanceof EntityPlayer) && (entity instanceof EntityPlayer)) {
 			EntityPlayer attacker = (EntityPlayer) entity;
