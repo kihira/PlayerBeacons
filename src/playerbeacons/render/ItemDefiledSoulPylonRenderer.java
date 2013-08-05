@@ -1,7 +1,6 @@
 package playerbeacons.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
@@ -14,7 +13,7 @@ public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();
-		modelCrystalPortDefault = new ModelCrystalPort(0, 0);
+		modelCrystalPortDefault = new ModelCrystalPort(0);
 	}
 
 	@Override

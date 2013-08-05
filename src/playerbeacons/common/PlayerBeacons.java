@@ -11,9 +11,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,9 +51,6 @@ public class PlayerBeacons {
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
-	@Mod.Instance("PlayerBeacons")
-	public static PlayerBeacons instance;
-
 	@Mod.EventHandler
 	public void preinit(FMLPreInitializationEvent e) {
 
@@ -91,7 +86,7 @@ public class PlayerBeacons {
 		GameRegistry.registerItem(crystalItem, "crystalItem");
 
 
-		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID, 5, EnumEnchantmentType.weapon);
+		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID);
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");

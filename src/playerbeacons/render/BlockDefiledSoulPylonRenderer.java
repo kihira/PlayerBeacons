@@ -1,7 +1,6 @@
 package playerbeacons.render;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
@@ -22,11 +21,11 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 	public BlockDefiledSoulPylonRenderer() {
 		modelPylon = new ModelPylon();
 		modelPylonBase = new ModelPylonBase();
-		modelCrystalPortDefault = new ModelCrystalPort(0, 0);
-		modelCrystalPortDig = new ModelCrystalPort(0, 24);
-		modelCrystalPortJump = new ModelCrystalPort(0, 6);
-		modelCrystalPortSpeed = new ModelCrystalPort(0, 12);
-		modelCrystalPortRes = new ModelCrystalPort(0, 18);
+		modelCrystalPortDefault = new ModelCrystalPort(0);
+		modelCrystalPortDig = new ModelCrystalPort(24);
+		modelCrystalPortJump = new ModelCrystalPort(6);
+		modelCrystalPortSpeed = new ModelCrystalPort(12);
+		modelCrystalPortRes = new ModelCrystalPort(18);
 	}
 
 	@Override
