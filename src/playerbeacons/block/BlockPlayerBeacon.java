@@ -63,7 +63,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				if ((player.username.equals(tileEntityPlayerBeacon.getOwner())) || (player.capabilities.isCreativeMode)) {
 					//Check the level of bad stuff
 					tileEntityPlayerBeacon.doCorruption();
-					PlayerBeacons.beaconData.deleteBeaconInformation(world, tileEntityPlayerBeacon.getOwner());
+					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
 				}
 				else {

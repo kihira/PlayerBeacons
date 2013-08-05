@@ -1,5 +1,7 @@
 package playerbeacons.tileentity;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -28,13 +30,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
 	private boolean isActive = false;
-	private float corruption = 0;
+	private float corruption;
 	private short corruptionLevel = 0;
-	private int levels;
-	private int resCrystals;
-	private int speedCrystals;
-	private int jumpCrystals;
-	private int digCrystals;
+	private int levels = 0;
+	private int resCrystals = 0;
+	private int speedCrystals = 0;
+	private int jumpCrystals = 0;
+	private int digCrystals = 0;
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -42,21 +44,18 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
-		//worldobj is null on world load. Save important data above, less important data below. Data below should always override main data
-		if (worldObj != null) {
-			par1NBTTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
-			if (par1NBTTagCompound != null) {
-				this.owner = par1NBTTagCompound.getString("owner");
-				this.corruption = par1NBTTagCompound.getFloat("badstuff");
-				this.isActive = par1NBTTagCompound.getBoolean("isActive");
-				this.levels = par1NBTTagCompound.getInteger("levels");
-				this.resCrystals = par1NBTTagCompound.getInteger("resCrystals");
-				this.speedCrystals = par1NBTTagCompound.getInteger("speedCrystals");
-				this.jumpCrystals = par1NBTTagCompound.getInteger("jumpCrystals");
-				this.digCrystals = par1NBTTagCompound.getInteger("digCrystals");
-				this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
-			}
+		NBTTagCompound nbtTagCompound = par1NBTTagCompound.getCompoundTag("beacondata");
+		if (nbtTagCompound != null) {
+			this.corruption = par1NBTTagCompound.getFloat("badstuff");
+			this.isActive = nbtTagCompound.getBoolean("isActive");
+			this.levels = nbtTagCompound.getInteger("levels");
+			this.resCrystals = nbtTagCompound.getInteger("resCrystals");
+			this.speedCrystals = nbtTagCompound.getInteger("speedCrystals");
+			this.jumpCrystals = nbtTagCompound.getInteger("jumpCrystals");
+			this.digCrystals = nbtTagCompound.getInteger("digCrystals");
+			this.corruptionLevel = nbtTagCompound.getShort("badstufflevel");
 		}
+		else System.out.println("beacondata in NBT is null");
 	}
 
 	@Override
@@ -64,7 +63,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.writeToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", corruption);
-		PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels, corruptionLevel);
+		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+			PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, resCrystals, speedCrystals, jumpCrystals, digCrystals, levels, corruptionLevel);
+			NBTTagCompound tagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldObj, owner);
+			if (tagCompound != null) {
+				par1NBTTagCompound.setCompoundTag("beacondata", tagCompound);
+			}
+		}
 	}
 
 	@Override
@@ -85,7 +91,9 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			this.owner = player.username;
 			this.isActive = false;
 			this.corruption = 0;
-			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
+			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
+			}
 		}
 	}
 
@@ -99,7 +107,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	@Override
 	public void invalidate() {
-		PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
 		super.invalidate();
 	}
 
@@ -283,8 +291,11 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	private void calcCorruption() {
 		float newCorruption = 0;
-		float modifier = MinecraftServer.getServer().getDifficulty() / 2;
+		float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
 		int y;
+
+
+		//TODO Rework
 		y = levels - resCrystals;
 		if (y > 0) newCorruption = newCorruption + (y * modifier);
 		y = levels - digCrystals;

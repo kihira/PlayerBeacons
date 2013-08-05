@@ -34,6 +34,7 @@ import java.util.Random;
 public class EventHandler {
 
 	private Random random = new Random();
+	private long spawnCooldown = 0L;
 
 	@ForgeSubscribe
 	public void onDeath(LivingDeathEvent e) {
@@ -82,26 +83,29 @@ public class EventHandler {
 		}
 	}
 
-	//TODO Change to cloning method?
-	//Possible cloning method. Beheader saves information of who last wore. next zombie who wears it gets "cloned" into that player
+	//TODO Fix. Can spam chat
+	@SideOnly(Side.SERVER)
 	@ForgeSubscribe
 	public void onEntitySpawn(LivingSpawnEvent e) {
-		if (e.entity instanceof EntityZombie) {
+		if (e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			if (random.nextInt(700) == 1) {
+			//TODO better random chance method
+			if (!entityZombie.isVillager() && (random.nextInt(1001) < 5) && (Minecraft.getSystemTime() - this.spawnCooldown) <= 0) {
 				int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
-				EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
-				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setString("SkullOwner", player.username);
-				itemStack.setTagCompound(tag);
-				entityZombie.setCurrentItemOrArmor(4, itemStack);
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+				if (i != 0) {
+					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
+					ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setString("SkullOwner", player.username);
+					itemStack.setTagCompound(tag);
+					entityZombie.setCurrentItemOrArmor(4, itemStack);
+					this.spawnCooldown = Minecraft.getSystemTime() + 300000L;
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+				}
 			}
 		}
 	}
 
-	//TODO packet handler required for faster updates. Disable for now?
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void onRenderWorldLast(RenderWorldLastEvent e) {
@@ -109,12 +113,13 @@ public class EventHandler {
 		MovingObjectPosition movingObject = mc.objectMouseOver;
 		if (movingObject != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
 			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
-				NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(e.context.theWorld, mc.thePlayer.username);
-				if (nbtTagCompound != null) {
-					int x = nbtTagCompound.getInteger("x");
-					int y = nbtTagCompound.getInteger("y");
-					int z = nbtTagCompound.getInteger("z");
-					float corruption = nbtTagCompound.getFloat("badstuff");
+				TileEntity tileEntity = mc.theWorld.getBlockTileEntity(movingObject.blockX , movingObject.blockY, movingObject.blockZ);
+				if (tileEntity != null && tileEntity instanceof TileEntityPlayerBeacon) {
+					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
+					int x = tileEntityPlayerBeacon.xCoord;
+					int y = tileEntityPlayerBeacon.yCoord;
+					int z = tileEntityPlayerBeacon.zCoord;
+					float corruption = tileEntityPlayerBeacon.getCorruption();
 					if (movingObject.blockX == x && movingObject.blockY == y && movingObject.blockZ == z) {
 						double viewX = movingObject.blockX - RenderManager.renderPosX;
 						double viewY = movingObject.blockY - RenderManager.renderPosY;
