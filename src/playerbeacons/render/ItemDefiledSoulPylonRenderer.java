@@ -10,9 +10,11 @@ import playerbeacons.proxy.ClientProxy;
 public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	private ModelPylon model;
+	private ModelCrystalPort modelCrystalPortDefault;
 
 	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();
+		modelCrystalPortDefault = new ModelCrystalPort(0, 0);
 	}
 
 	@Override
@@ -56,7 +58,9 @@ public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 		GL11.glTranslated(x, y, z);
 		GL11.glScalef(scale, scale, scale);
 		GL11.glRotatef(180.0f, 0f, 0f, 1f);
-		model.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.pylonCrystalPortTexture);
+		modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}

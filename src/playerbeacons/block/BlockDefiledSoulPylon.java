@@ -4,6 +4,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,14 +19,15 @@ import java.util.List;
 public class BlockDefiledSoulPylon extends BlockContainer {
 
 	public BlockDefiledSoulPylon(int id) {
-		super(id, Material.iron);
-		setCreativeTab(CreativeTabs.tabCombat);
-		setUnlocalizedName("pylonBlock");
+		super(id, Material.rock);
+		setHardness(8f);
+		setResistance(100.0F);
+		setCreativeTab(CreativeTabs.tabDecorations);
+		setUnlocalizedName("Defiled Soul Pylon");
 		func_111022_d("playerbeacon:pyramidBrick");
 		setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}
 
-	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List list, Entity entity) {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
 		if (tileEntityDefiledSoulPylon.isPylonBase()) {
@@ -38,29 +40,28 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		}
 	}
 
-	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
 		if (tileEntityDefiledSoulPylon.isPylonBase()) return AxisAlignedBB.getBoundingBox(x + 0F, y + 0F, z + 0F, x + 1F, y + 1F, z + 1F);
 		else return  AxisAlignedBB.getBoundingBox(x + 0.20D, y + 0.0F, z + 0.20F, x +  0.8F, y + 1.0F, z + 0.8F);
 	}
 
-	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}
 
-	@Override
 	public int getRenderType() {
 		return -1;
 	}
 
-	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
 
-	@Override
+	public boolean canEntityDestroy(World world, int x, int y, int z, Entity entity) {
+		return !(entity instanceof EntityDragon);
+	}
+
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon)world.getBlockTileEntity(x, y, z);
 		if (tileEntityDefiledSoulPylon != null) {
@@ -74,7 +75,6 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
-	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
 		if (!world.isRemote) {
 			TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getBlockTileEntity(x, y, z);
@@ -105,7 +105,6 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		return false;
 	}
 
-	@Override
 	public TileEntity createNewTileEntity(World world) {
 		return new TileEntityDefiledSoulPylon();
 	}

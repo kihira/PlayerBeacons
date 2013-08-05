@@ -30,7 +30,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
 	private boolean isActive = false;
-	private float corruption;
+	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
 	private int resCrystals = 0;
@@ -88,10 +88,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void initialSetup(EntityPlayer player) {
 		if (!worldObj.isRemote) {
-			this.owner = player.username;
-			this.isActive = false;
-			this.corruption = 0;
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+			if (player != null) {
+				this.owner = player.username;
+				this.isActive = false;
+				this.corruption = 0;
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 			}
 		}
@@ -134,6 +134,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						if (!flag) break;
 					}
 					if (levels > 0) {
+						this.isActive = true;
 						EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
 						if (player != null) {
 							//Do effects

@@ -83,13 +83,11 @@ public class EventHandler {
 		}
 	}
 
-	//TODO Fix. Can spam chat
 	@SideOnly(Side.SERVER)
 	@ForgeSubscribe
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			//TODO better random chance method
 			if (!entityZombie.isVillager() && (random.nextInt(1001) < 5) && (Minecraft.getSystemTime() - this.spawnCooldown) <= 0) {
 				int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
 				if (i != 0) {
@@ -120,53 +118,60 @@ public class EventHandler {
 					int y = tileEntityPlayerBeacon.yCoord;
 					int z = tileEntityPlayerBeacon.zCoord;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
+					String owner = tileEntityPlayerBeacon.getOwner();
 					if (movingObject.blockX == x && movingObject.blockY == y && movingObject.blockZ == z) {
 						double viewX = movingObject.blockX - RenderManager.renderPosX;
 						double viewY = movingObject.blockY - RenderManager.renderPosY;
 						double viewZ = movingObject.blockZ - RenderManager.renderPosZ;
-						FontRenderer fontRenderer = mc.fontRenderer;
-						RenderManager renderManager = RenderManager.instance;
 						String string;
 						if (corruption >= 9000) string = "Corruption: §4" + String.valueOf(corruption);
 						else if (corruption >= 6000) string = "Corruption: §c" + String.valueOf(corruption);
 						else if (corruption >= 3000) string = "Corruption: §e" + String.valueOf(corruption);
 						else string = "Corruption: " + String.valueOf(corruption);
-						float f = 1.6F;
-						float f1 = 0.016666668F * f;
-						GL11.glPushMatrix();
-						GL11.glTranslatef((float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
-						GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-						GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-						GL11.glScalef(-f1, -f1, f1);
-						GL11.glDisable(GL11.GL_LIGHTING);
-						GL11.glDepthMask(false);
-						GL11.glDisable(GL11.GL_DEPTH_TEST);
-						GL11.glEnable(GL11.GL_BLEND);
-						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-						Tessellator tessellator = Tessellator.instance;
-						byte b0 = 0;
-						GL11.glDisable(GL11.GL_TEXTURE_2D);
-						tessellator.startDrawingQuads();
-						int j = fontRenderer.getStringWidth(string) / 2;
-						tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-						tessellator.addVertex((double)(-j - 1), (double)(-1 + b0), 0.0D);
-						tessellator.addVertex((double)(-j - 1), (double)(8 + b0), 0.0D);
-						tessellator.addVertex((double)(j + 1), (double)(8 + b0), 0.0D);
-						tessellator.addVertex((double)(j + 1), (double)(-1 + b0), 0.0D);
-						tessellator.draw();
-						GL11.glEnable(GL11.GL_TEXTURE_2D);
-						fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, 553648127);
-						GL11.glEnable(GL11.GL_DEPTH_TEST);
-						GL11.glDepthMask(true);
-						fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1);
-						GL11.glEnable(GL11.GL_LIGHTING);
-						GL11.glDisable(GL11.GL_BLEND);
-						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-						GL11.glPopMatrix();
+						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
+						if (owner.equals(" ")) owner = "§kNo-one";
+						string = "Bound to: §4" + owner;
+						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
 					}
 				}
 			}
 		}
+	}
+
+	private void renderLabel(String string, float viewX, float viewY, float viewZ) {
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		RenderManager renderManager = RenderManager.instance;
+		float f1 = 0.016666668F * 1.6F;
+		GL11.glPushMatrix();
+		GL11.glTranslatef(viewX, viewY, viewZ);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GL11.glScalef(-f1, -f1, f1);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDepthMask(false);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		Tessellator tessellator = Tessellator.instance;
+		byte b0 = 0;
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		tessellator.startDrawingQuads();
+		int j = fontRenderer.getStringWidth(string) / 2;
+		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
+		tessellator.addVertex((double)(-j - 1), (double)(-1 + b0), 0.0D);
+		tessellator.addVertex((double)(-j - 1), (double)(8 + b0), 0.0D);
+		tessellator.addVertex((double)(j + 1), (double)(8 + b0), 0.0D);
+		tessellator.addVertex((double)(j + 1), (double)(-1 + b0), 0.0D);
+		tessellator.draw();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, 553648127);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(true);
+		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glPopMatrix();
 	}
 }
