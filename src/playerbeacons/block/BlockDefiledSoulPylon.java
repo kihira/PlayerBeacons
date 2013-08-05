@@ -85,7 +85,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 						if (tileEntityDefiledSoulPylon.getStackInSlot(0) == null) {
 							tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
 							tileEntityDefiledSoulPylon.updateContainingBlockInfo();
-							entityPlayer.setCurrentItemOrArmor(0, null);
+							if (!entityPlayer.capabilities.isCreativeMode) entityPlayer.setCurrentItemOrArmor(0, null);
 							world.markBlockForUpdate(x, y, z);
 						}
 					}
