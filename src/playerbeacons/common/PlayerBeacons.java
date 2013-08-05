@@ -27,7 +27,7 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "0.1")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 

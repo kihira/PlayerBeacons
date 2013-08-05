@@ -1,0 +1,19 @@
+[
+{
+"modid": "mod_PlayerBeacons",
+"name": "Player Beacons",
+"description": "Dabble in the dark arts to get different beacons",
+"version": "1.0",
+"credits": "Kihira, Nexans20",
+"logoFile": "",
+"mcversion": "1.6.2",
+"url": "",
+"updateUrl": "",
+"authors": [ "Kihira", "Nexans20", "Stream Chat", "EVERYONE! =D" ],
+"parent":"",
+"screenshots": [],
+"dependencies": [
+"mod_MinecraftForge"
+]
+}
+]
