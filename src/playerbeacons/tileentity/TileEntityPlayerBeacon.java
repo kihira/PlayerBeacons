@@ -111,7 +111,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.invalidate();
 	}
 
-	public void calcLevels() {
+	public void checkBeacon() {
 		if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
 			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
 			//If player head
@@ -133,17 +133,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						}
 						if (!flag) break;
 					}
-					if (levels > 0) {
-						this.isActive = true;
-						EntityPlayer player = this.worldObj.getPlayerEntityByName(skull.getExtraType());
-						if (player != null) {
-							//Do effects
-							if (levels - 1 - speedCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - speedCrystals, true));
-							if (levels - 1 - jumpCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - jumpCrystals, true));
-							if (levels - 1 - digCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - digCrystals, true));
-							if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
-						}
-					}
 				}
 			}
 			else {
@@ -151,12 +140,26 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			}
 		}
-		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg == true)) {
+		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
 			worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			EntityDragon dragon = new EntityDragon(worldObj);
 			dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
 			dragon.setCustomNameTag(owner + "'s Puppy");
 			worldObj.spawnEntityInWorld(dragon);
+		}
+	}
+
+	public void doBuffs() {
+		if (levels > 0) {
+			this.isActive = true;
+			EntityPlayer player = this.worldObj.getPlayerEntityByName(owner);
+			if (player != null) {
+				//Do effects
+				if (levels - 1 - speedCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - speedCrystals, true));
+				if (levels - 1 - jumpCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - jumpCrystals, true));
+				if (levels - 1 - digCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - digCrystals, true));
+				if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
+			}
 		}
 	}
 
@@ -295,7 +298,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
 		int y;
 
-
 		//TODO Rework
 		y = levels - resCrystals;
 		if (y > 0) newCorruption = newCorruption + (y * modifier);
@@ -309,7 +311,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		corruption = corruption + newCorruption;
 	}
 
-	public void doCorruption() {
+	public void doCorruption(boolean alwaysDoCorruption) {
 		if (corruption > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
 			if (worldObj.rand.nextInt(1000) % 369 == 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
@@ -319,15 +321,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					enderman.setTarget(player);
 					enderman.setScreaming(true);
 					worldObj.spawnEntityInWorld(enderman);
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("Your corruption has allowed a foul demon to spawn from the end"));
-					System.out.println("Spawned Enderman");
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption has allowed a foul demon to spawn from the end"));
 				}
 			}
 		}
-		if ((corruption > 9000) && (corruptionLevel == 2)) {
+		if ((corruption > 900) && (corruptionLevel == 2)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-			player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
 				player.travelToDimension(1);
@@ -339,7 +340,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 6000) && (corruptionLevel == 1)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at your soul from the beyond, disorientating you"));
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
 				player.attackEntityFrom(DamageSource.magic, 4);
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
@@ -351,10 +352,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 3000) && (corruptionLevel == 0)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("You feel an unknown force grasp at you from the beyond"));
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond"));
 				player.attackEntityFrom(DamageSource.magic, 2);
 				corruptionLevel = 1;
 				this.corruption = corruption - worldObj.rand.nextInt(100);
+			}
+		}
+		if (alwaysDoCorruption) {
+			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+			if (player != null) {
+				player.addPotionEffect(new PotionEffect(Potion.wither.id, (int) corruption/250, 1));
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption flows through your soul"));
 			}
 		}
 	}

@@ -58,11 +58,6 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		return new TileEntityPlayerBeacon();
 	}
 
-	public int getLightValue(IBlockAccess world, int x, int y, int z) {
-		TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
-		return tileEntityPlayerBeacon.isActive() ? 8 : 1;
-	}
-
 	public boolean canEntityDestroy(World world, int x, int y, int z, Entity entity) {
 		return !(entity instanceof EntityDragon);
 	}
@@ -73,8 +68,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
 				if ((player.username.equals(tileEntityPlayerBeacon.getOwner())) || (player.capabilities.isCreativeMode)) {
-					//Check the level of bad stuff
-					tileEntityPlayerBeacon.doCorruption();
+					tileEntityPlayerBeacon.doCorruption(true);
 					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
 				}
@@ -101,7 +95,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
 					entityPlayer.setCurrentItemOrArmor(0, null);
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
-					tileEntityPlayerBeacon.doCorruption();
+					tileEntityPlayerBeacon.doCorruption(true);
 					tileEntityPlayerBeacon.setCorruption(0, true);
 					world.markBlockForUpdate(x, y, z);
 					entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
@@ -144,31 +138,16 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		if (world.getBlockId(x, y + 1, z) == Block.skull.blockID) {
 			TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon)world.getBlockTileEntity(x, y, z);
 			float corrupution = tileEntityPlayerBeacon.getCorruption();
-			if (corrupution > 0) {
-				for (int l = 0; l < (corrupution / 500); ++l) {
-					double d1 = (double)((float)y + random.nextFloat());
-					int i1 = random.nextInt(2) * 2 - 1;
-					int j1 = random.nextInt(2) * 2 - 1;
-					double d3 = ((double)random.nextFloat() - 0.5D) * 0.125D;
-					double d5 = (double)z + 0.5D + 0.25D * (double)j1;
-					double d4 = (double)(random.nextFloat() * 1.0F * (float)j1);
-					double d6 = (double)x + 0.5D + 0.25D * (double)i1;
-					double d2 = (double)(random.nextFloat() * 1.0F * (float)i1);
-					world.spawnParticle("portal", d6, d1, d5, d2, d3, d4);
-				}
-			}
-			else {
-				for (int l = 0; l < 2; ++l) {
-					double d1 = (double)((float)y + random.nextFloat());
-					int i1 = random.nextInt(2) * 2 - 1;
-					int j1 = random.nextInt(2) * 2 - 1;
-					double d3 = ((double)random.nextFloat() - 0.5D) * 0.125D;
-					double d5 = (double)z + 0.5D + 0.25D * (double)j1;
-					double d4 = (double)(random.nextFloat() * 1.0F * (float)j1);
-					double d6 = (double)x + 0.5D + 0.25D * (double)i1;
-					double d2 = (double)(random.nextFloat() * 1.0F * (float)i1);
-					world.spawnParticle("witchMagic", d6, d1, d5, d2, d3, d4);
-				}
+			for (int l = 0; l < (corrupution / 500); ++l) {
+				double d1 = (double)((float)y + random.nextFloat());
+				int i1 = random.nextInt(2) * 2 - 1;
+				int j1 = random.nextInt(2) * 2 - 1;
+				double d3 = ((double)random.nextFloat() - 0.5D) * 0.125D;
+				double d5 = (double)z + 0.5D + 0.25D * (double)j1;
+				double d4 = (double)(random.nextFloat() * 1.0F * (float)j1);
+				double d6 = (double)x + 0.5D + 0.25D * (double)i1;
+				double d2 = (double)(random.nextFloat() * 1.0F * (float)i1);
+				world.spawnParticle("portal", d6, d1, d5, d2, d3, d4);
 			}
 		}
 	}

@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
@@ -34,7 +35,7 @@ import java.util.Random;
 public class EventHandler {
 
 	private Random random = new Random();
-	private long spawnCooldown = 0L;
+	private long spawnCooldown = Minecraft.getSystemTime();
 
 	@ForgeSubscribe
 	public void onDeath(LivingDeathEvent e) {
@@ -60,46 +61,37 @@ public class EventHandler {
 					if (id == PlayerBeacons.config.decapitationEnchantmentID) {
 						Random random = new Random();
 						if ((random.nextInt()) % (6/lvl) == 0) {
-							ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-							NBTTagCompound tag = new NBTTagCompound();
-							tag.setString("SkullOwner", deadThing.username);
-							itemStack.setTagCompound(tag);
-							e.entityLiving.entityDropItem(itemStack, 1);
+							if (e.isCancelable()) {
+								e.setCanceled(true);
+								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(deadThing.username + " was beheaded by " + attacker.username));
+								ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+								NBTTagCompound tag = new NBTTagCompound();
+								tag.setString("SkullOwner", deadThing.username);
+								itemStack.setTagCompound(tag);
+								e.entityLiving.entityDropItem(itemStack, 1);
+							}
 						}
 						break;
 					}
 				}
 			}
 		}
-
-		//Death by DamageBehead
-		if ((deadEntity instanceof EntityPlayer) && (e.source instanceof DamageBehead)) {
-			EntityPlayer deadThing = (EntityPlayer) deadEntity;
-			ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("SkullOwner", deadThing.username);
-			itemStack.setTagCompound(tag);
-			deadThing.entityDropItem(itemStack, 1);
-		}
 	}
 
-	@SideOnly(Side.SERVER)
 	@ForgeSubscribe
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			if (!entityZombie.isVillager() && (random.nextInt(1001) < 5) && (Minecraft.getSystemTime() - this.spawnCooldown) <= 0) {
+			if (!entityZombie.isVillager() && (random.nextInt(1001) < 25) && (this.spawnCooldown - Minecraft.getSystemTime()) <= 0) {
 				int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
-				if (i != 0) {
-					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
-					ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setString("SkullOwner", player.username);
-					itemStack.setTagCompound(tag);
-					entityZombie.setCurrentItemOrArmor(4, itemStack);
-					this.spawnCooldown = Minecraft.getSystemTime() + 300000L;
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
-				}
+				EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
+				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setString("SkullOwner", player.username);
+				itemStack.setTagCompound(tag);
+				entityZombie.setCurrentItemOrArmor(4, itemStack);
+				this.spawnCooldown = Minecraft.getSystemTime() + 300000L;
+				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
 			}
 		}
 	}

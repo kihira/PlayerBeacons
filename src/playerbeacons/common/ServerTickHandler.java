@@ -8,7 +8,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class ServerTickHandler implements IScheduledTickHandler {
 
@@ -18,22 +21,26 @@ public class ServerTickHandler implements IScheduledTickHandler {
 		cycle++;
 		MinecraftServer mc = MinecraftServer.getServer();
 		for (WorldServer worldServer : mc.worldServers) {
-			for (Object object : worldServer.playerEntities) {
-				EntityPlayer entityPlayer = (EntityPlayer) object;
-				NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldServer, entityPlayer.username);
-				if (nbtTagCompound != null) {
-					int x = nbtTagCompound.getInteger("x");
-					int y = nbtTagCompound.getInteger("y");
-					int z = nbtTagCompound.getInteger("z");
-					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) worldServer.getBlockTileEntity(x, y, z);
-					if (tileEntityPlayerBeacon != null) {
-						tileEntityPlayerBeacon.calcLevels();
-						if (cycle % 2 == 0) {
-							tileEntityPlayerBeacon.calcPylons();
-							tileEntityPlayerBeacon.doCorruption();
-							if (cycle % 4 == 0) worldServer.markBlockForUpdate(x, y, z);
+			if (worldServer.playerEntities != null) {
+				List<Object> playerEntities = new ArrayList<Object>(worldServer.playerEntities);
+				for (Iterator<Object> it = playerEntities.iterator(); it.hasNext();) {
+					EntityPlayer entityPlayer = (EntityPlayer) it.next();
+					NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldServer, entityPlayer.username);
+					if (nbtTagCompound != null) {
+						int x = nbtTagCompound.getInteger("x");
+						int y = nbtTagCompound.getInteger("y");
+						int z = nbtTagCompound.getInteger("z");
+						TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) worldServer.getBlockTileEntity(x, y, z);
+						if (tileEntityPlayerBeacon != null) {
+							tileEntityPlayerBeacon.checkBeacon();
+							if (cycle % 2 == 0) {
+								tileEntityPlayerBeacon.calcPylons();
+								tileEntityPlayerBeacon.doCorruption(false);
+								tileEntityPlayerBeacon.doBuffs();
+								if (cycle % 4 == 0) worldServer.markBlockForUpdate(x, y, z);
+							}
+							if (cycle >= 32000) cycle = 0;
 						}
-						if (cycle >= 32000) cycle = 0;
 					}
 				}
 			}
