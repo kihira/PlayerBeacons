@@ -35,7 +35,7 @@ public class CommandPlayerHead extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender icommandsender, String[] astring) {
-		if ((astring != null) && (astring[0] != null)) {
+		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = icommandsender.func_130014_f_().getPlayerEntityByName(icommandsender.getCommandSenderName());
 			if (player != null) {
 				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
@@ -43,12 +43,12 @@ public class CommandPlayerHead extends CommandBase {
 				tag.setString("SkullOwner", astring[0]);
 				itemStack.setTagCompound(tag);
 				player.entityDropItem(itemStack, 1);
-				notifyAdmins(icommandsender, "commands.playerhead.success", new Object[] {astring[0], player.username});
+				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.username);
 			}
 		}
 		else
 		{
-			throw new WrongUsageException("commands.playerhead.usage", new Object[0]);
+			throw new WrongUsageException("commands.playerhead.usage", astring);
 		}
 	}
 }

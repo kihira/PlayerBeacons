@@ -112,13 +112,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void checkBeacon() {
+		this.levels = 0;
 		if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
-			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord+1, this.zCoord);
+			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
 			//If player head
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
 				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
-					this.levels = 0;
 					for (int i = 1; i <= 4; levels = i++) {
 						int j = this.yCoord - i;
     							if (j < 0) break;
@@ -161,6 +161,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				if (levels - 1 - resCrystals >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - resCrystals, true));
 			}
 		}
+		else
+			this.isActive = false;
 	}
 
 	public float getCorruption() {
@@ -287,28 +289,27 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
-
-			System.out.println("Jump: " + jumpCrystals + " Speed: " + speedCrystals + " Res: " + resCrystals + " Dig: " + digCrystals);
-			calcCorruption();
 		}
 	}
 
-	private void calcCorruption() {
-		float newCorruption = 0;
-		float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
-		int y;
+	public void calcCorruption() {
+		//This should allow up to level number of a single buff or spread across 2 buffs.
+		if (!(((levels * 4) - resCrystals - digCrystals - speedCrystals - jumpCrystals) <= levels)) {
+			float newCorruption = 0;
+			float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
+			int y;
 
-		//TODO Rework
-		y = levels - resCrystals;
-		if (y > 0) newCorruption = newCorruption + (y * modifier);
-		y = levels - digCrystals;
-		if (y > 0) newCorruption = newCorruption + (y * modifier);
-		y = levels - speedCrystals;
-		if (y > 0) newCorruption = newCorruption + (y * modifier);
-		y = levels - resCrystals;
-		if (y > 0) newCorruption = newCorruption + (y * modifier);
+			y = levels - resCrystals;
+			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			y = levels - digCrystals;
+			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			y = levels - speedCrystals;
+			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			y = levels - jumpCrystals;
+			if (y > 0) newCorruption = newCorruption + (y * modifier);
 
-		corruption = corruption + newCorruption;
+			corruption = corruption + newCorruption;
+		}
 	}
 
 	public void doCorruption(boolean alwaysDoCorruption) {
@@ -360,7 +361,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 		if (alwaysDoCorruption) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-			if (player != null) {
+			if ((player != null) && (corruption > 0)) {
 				player.addPotionEffect(new PotionEffect(Potion.wither.id, (int) corruption/250, 1));
 				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption flows through your soul"));
 			}

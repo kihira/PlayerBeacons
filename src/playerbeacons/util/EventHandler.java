@@ -35,7 +35,7 @@ import java.util.Random;
 public class EventHandler {
 
 	private Random random = new Random();
-	private long spawnCooldown = Minecraft.getSystemTime();
+	private long spawnCooldown = System.currentTimeMillis();
 
 	@ForgeSubscribe
 	public void onDeath(LivingDeathEvent e) {
@@ -82,16 +82,19 @@ public class EventHandler {
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			if (!entityZombie.isVillager() && (random.nextInt(1001) < 25) && (this.spawnCooldown - Minecraft.getSystemTime()) <= 0) {
-				int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
-				EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
-				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setString("SkullOwner", player.username);
-				itemStack.setTagCompound(tag);
-				entityZombie.setCurrentItemOrArmor(4, itemStack);
-				this.spawnCooldown = Minecraft.getSystemTime() + 300000L;
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+			if (!entityZombie.isVillager() && (random.nextInt(1001) < 25) && (this.spawnCooldown - System.currentTimeMillis()) <= 0) {
+				if (entityZombie.worldObj.playerEntities.size() > 0) {
+					int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
+					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
+					ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setString("SkullOwner", player.username);
+					itemStack.setTagCompound(tag);
+					entityZombie.setCurrentItemOrArmor(4, itemStack);
+					//15 mins
+					this.spawnCooldown = System.currentTimeMillis() + 900000L;
+					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+				}
 			}
 		}
 	}

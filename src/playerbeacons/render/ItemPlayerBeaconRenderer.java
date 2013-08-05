@@ -55,7 +55,7 @@ public class ItemPlayerBeaconRenderer implements IItemRenderer {
 		GL11.glTranslated(x, y, z);
 		GL11.glScalef(scale, scale, scale);
 		GL11.glRotatef(180.0f, 0f, 0f, 1f);
-		modelPlayerBeacon.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+		modelPlayerBeacon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}

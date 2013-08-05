@@ -110,7 +110,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		if (!world.isRemote) {
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
-				if (!(player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || !(player.capabilities.isCreativeMode) || !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
+				if (!(player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) && !(player.capabilities.isCreativeMode) && !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
 					player.attackEntityFrom(new DamageBehead(), 2);
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§d§oA mystical energy seems to guard this device"));
 				}
