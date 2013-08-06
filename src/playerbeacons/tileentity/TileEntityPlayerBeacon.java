@@ -135,19 +135,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
-			//Wither skellie
-			else if (skull.getSkullType() == 1) {
-				System.out.println("Hello Wither Skeleton!");
-			}
-			else if (skull.getSkullType() == 0) {
-				System.out.println("Hello Skeleton!");
-			}
-			else if (skull.getSkullType() == 2) {
-				System.out.println("Hello Zombie!");
-			}
-			else if (skull.getSkullType() == 4) {
-				System.out.println("Hello Creeper!");
-			}
 			else {
 				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
