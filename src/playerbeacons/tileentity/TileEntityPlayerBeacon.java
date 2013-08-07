@@ -19,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.ForgeChunkManager;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.DigCrystalItem;
 import playerbeacons.item.JumpCrystalItem;
@@ -55,7 +54,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			this.digCrystals = nbtTagCompound.getInteger("digCrystals");
 			this.corruptionLevel = nbtTagCompound.getShort("badstufflevel");
 		}
-		else System.out.println("beacondata in NBT is null");
 	}
 
 	@Override
@@ -300,13 +298,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			int y;
 
 			y = levels - resCrystals;
-			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			if (y > 0) newCorruption = newCorruption + (y * modifier) * PlayerBeacons.config.corruptionMultiplier;
 			y = levels - digCrystals;
-			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			if (y > 0) newCorruption = newCorruption + (y * modifier) * PlayerBeacons.config.corruptionMultiplier;
 			y = levels - speedCrystals;
-			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			if (y > 0) newCorruption = newCorruption + (y * modifier) * PlayerBeacons.config.corruptionMultiplier;
 			y = levels - jumpCrystals;
-			if (y > 0) newCorruption = newCorruption + (y * modifier);
+			if (y > 0) newCorruption = newCorruption + (y * modifier) * PlayerBeacons.config.corruptionMultiplier;
 
 			corruption = corruption + newCorruption;
 		}

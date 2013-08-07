@@ -17,6 +17,7 @@ public class Config {
 	public int digCrystalItemID;
 	public int jumpCrystalItemID;
 	public int resCrystalItemID;
+	public int corruptionMultiplier;
 
 	public int decapitationEnchantmentID;
 
@@ -26,6 +27,7 @@ public class Config {
 	public boolean nightVisionBuffEnabled;
 
 	public boolean enableEasterEgg;
+	public boolean enableZombieHead;
 
 	private Configuration config;
 
@@ -64,10 +66,14 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
-
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Allow Zombies to spawn with player heads", true);
+		enableZombieHead = prop.getBoolean(true);
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
 		prop.comment = "WARNING: This could destroy parts of your world unintentionally";
 		enableEasterEgg = prop.getBoolean(false);
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Corruption Multiplier", false);
+		prop.comment = "Corruption is calculated by (levels - specific crystal amount) + (server diff/4) * multiplier. Set to 0 to disable";
+		corruptionMultiplier = prop.getInt();
 
 		//Buffs
 		prop = config.get("Beacon Buffs", "Swiftness", true);

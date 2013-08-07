@@ -91,7 +91,7 @@ public class EventHandler {
 
 	@ForgeSubscribe
 	public void onEntitySpawn(LivingSpawnEvent e) {
-		if (e.entityLiving instanceof EntityZombie) {
+		if (PlayerBeacons.config.enableZombieHead && e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
 			if (!entityZombie.isVillager() && (random.nextInt(1001) < 25) && (this.spawnCooldown - System.currentTimeMillis()) <= 0) {
 				if (entityZombie.worldObj.playerEntities.size() > 0) {
