@@ -30,6 +30,8 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
 
+import java.util.HashMap;
+
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
@@ -51,6 +53,9 @@ public class PlayerBeacons {
 
 	public static BeaconDataHandler beaconData;
 
+	//Crystal item is the crystal that will debuff the buff. Float is the corruption reduced.
+	public static HashMap<Class<? extends CrystalItem>, Float> corruptionList = new HashMap<Class<? extends CrystalItem>, Float>();
+
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
@@ -60,50 +65,34 @@ public class PlayerBeacons {
 		config = new Config(e.getSuggestedConfigurationFile());
 
 		playerBeaconBlock = new BlockPlayerBeacon(config.playerBeaconBlockID);
-		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
 		GameRegistry.registerBlock(playerBeaconBlock, "playerBeaconBlock");
 		defiledSoulConductorBlock = new BlockDefiledSoulConductor(config.defiledSoulConductorBlockID);
-		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
 		GameRegistry.registerBlock(defiledSoulConductorBlock, "defiledSoulConductorBlock");
 		defiledSoulPylonBlock = new BlockDefiledSoulPylon(config.defiledSoulPylonBlockID);
-		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
 		GameRegistry.registerBlock(defiledSoulPylonBlock, "defiledSoulPylonBlock");
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
-		LanguageRegistry.addName(beheaderItem, "Beheader");
 		GameRegistry.registerItem(beheaderItem, "beheaderItem");
 		crystalItem = new CrystalItem(config.crystalItemID);
-		LanguageRegistry.addName(crystalItem, "Depleted Crystal");
 		GameRegistry.registerItem(crystalItem, "crystalItem");
 		speedCrystalItem = new SpeedCrystalItem(config.speedCrystalItemID);
-		LanguageRegistry.addName(speedCrystalItem, "Speed Crystal");
 		GameRegistry.registerItem(speedCrystalItem, "speedCrystalItem");
 		digCrystalItem = new DigCrystalItem(config.digCrystalItemID);
-		LanguageRegistry.addName(digCrystalItem, "Dig Crystal");
 		GameRegistry.registerItem(digCrystalItem, "digCrystalItem");
 		jumpCrystalItem = new JumpCrystalItem(config.jumpCrystalItemID);
-		LanguageRegistry.addName(jumpCrystalItem, "Jump Crystal");
 		GameRegistry.registerItem(jumpCrystalItem, "jumpCrystalItem");
 		resCrystalItem = new ResCrystalItem(config.resCrystalItemID);
-		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
 		GameRegistry.registerItem(resCrystalItem, "resCrystalItem");
 
 		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID);
-		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
-		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
-		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
-
 		proxy.registerRenderers();
-
 		registerRecipes();
-
+		addCorruption();
+		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
@@ -130,7 +119,34 @@ public class PlayerBeacons {
 		TickRegistry.registerScheduledTickHandler(new ServerTickHandler(), Side.SERVER);
 	}
 
-	public void registerRecipes() {
+	private void addCorruption() {
+		//TODO balance
+		corruptionList.put(PlayerBeacons.crystalItem.getClass(), 5F);
+		corruptionList.put(PlayerBeacons.digCrystalItem.getClass(), 5F);
+		corruptionList.put(PlayerBeacons.speedCrystalItem.getClass(), 5F);
+		corruptionList.put(PlayerBeacons.jumpCrystalItem.getClass(), 5F);
+		corruptionList.put(PlayerBeacons.resCrystalItem.getClass(), 5F);
+	}
+
+	private void addLocalization() {
+		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
+		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
+		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
+		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
+		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
+		LanguageRegistry.addName(jumpCrystalItem, "Jump Crystal");
+		LanguageRegistry.addName(digCrystalItem, "Dig Crystal");
+		LanguageRegistry.addName(speedCrystalItem, "Speed Crystal");
+		LanguageRegistry.addName(crystalItem, "Depleted Crystal");
+		LanguageRegistry.addName(beheaderItem, "Beheader");
+		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
+		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
+		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
+	}
+
+	private void registerRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), "OPO", "MCM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'C', new ItemStack(PlayerBeacons.crystalItem), 'M', new ItemStack(Block.mycelium));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.playerBeaconBlock), "PNP", "GBG", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
