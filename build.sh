@@ -15,5 +15,5 @@ sh recompile.sh
 sh reobfuscate_srg.sh
 cd $WORKSPACE/forge/mcp/reobf/minecraft
 mkdir $WORKSPACE/forge/mcp/reobf/minecraft/playerbeacons/assets
-cp -ar $WORKSPACE/src/assets $WORKSPACE/forge/mcp/reobf/minecraft/playerbeacons/assets
+cp -ar $WORKSPACE/src/assets $WORKSPACE/forge/mcp/reobf/minecraft/playerbeacons/
 zip -r -D -9 $WORKSPACE/builds/PlayerBeacons_$MCVERSION-$MAJOR.$MINOR-build$BUILD_NUMBER.zip *
