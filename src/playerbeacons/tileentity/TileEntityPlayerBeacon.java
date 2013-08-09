@@ -24,6 +24,8 @@ import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class TileEntityPlayerBeacon extends TileEntity {
 
@@ -87,6 +89,11 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				this.owner = player.username;
 				this.isActive = false;
 				this.corruption = 0;
+				crystals.put(PlayerBeacons.crystalItem, 0);
+				crystals.put(PlayerBeacons.resCrystalItem, 0);
+				crystals.put(PlayerBeacons.speedCrystalItem, 0);
+				crystals.put(PlayerBeacons.jumpCrystalItem, 0);
+				crystals.put(PlayerBeacons.digCrystalItem, 0);
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 			}
 		}
@@ -175,7 +182,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcPylons() {
 		if (levels > 0) {
-			HashMap<Item, Integer> crystals = new HashMap<Item, Integer>();
 			crystals.clear();
 			crystals.put(PlayerBeacons.crystalItem, 0);
 			crystals.put(PlayerBeacons.resCrystalItem, 0);
@@ -219,12 +225,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
 			}
+			//TODO Rework this into new corruption system
+			for (Map.Entry<Item, Integer> entry : crystals.entrySet()) {
+				if (entry.getValue() > levels) {
+					crystals.put(entry.getKey(), levels);
+				}
+			}
 		}
 	}
 
 	public void calcCorruption() {
 		//This should allow up to level number of a single buff or spread across 2 buffs.
-		//TODO fix. need to cap each crystal at the level, don't let it go over
 		if (!(((levels * 4) - crystals.get(PlayerBeacons.resCrystalItem) - crystals.get(PlayerBeacons.digCrystalItem) - crystals.get(PlayerBeacons.speedCrystalItem) - crystals.get(PlayerBeacons.jumpCrystalItem)) <= levels)) {
 			float newCorruption = 0;
 			float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
