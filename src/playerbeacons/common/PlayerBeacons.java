@@ -91,7 +91,6 @@ public class PlayerBeacons {
 
 		proxy.registerRenderers();
 		registerRecipes();
-		addCorruption();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
@@ -117,15 +116,6 @@ public class PlayerBeacons {
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
 		TickRegistry.registerScheduledTickHandler(new ServerTickHandler(), Side.SERVER);
-	}
-
-	private void addCorruption() {
-		//TODO balance
-		corruptionList.put(PlayerBeacons.crystalItem.getClass(), 5F);
-		corruptionList.put(PlayerBeacons.digCrystalItem.getClass(), 5F);
-		corruptionList.put(PlayerBeacons.speedCrystalItem.getClass(), 5F);
-		corruptionList.put(PlayerBeacons.jumpCrystalItem.getClass(), 5F);
-		corruptionList.put(PlayerBeacons.resCrystalItem.getClass(), 5F);
 	}
 
 	private void addLocalization() {

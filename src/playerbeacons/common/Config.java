@@ -71,8 +71,8 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
 		prop.comment = "WARNING: This could destroy parts of your world unintentionally";
 		enableEasterEgg = prop.getBoolean(false);
-		prop = config.get(Configuration.CATEGORY_GENERAL, "Corruption Multiplier", false);
-		prop.comment = "Corruption is calculated by (levels - specific crystal amount) + (server diff/4) * multiplier. Set to 0 to disable";
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Corruption Multiplier", 1);
+		prop.comment = "Corruption is calculated by (levels - specific crystal amount) + (server diff/4) * multiplier. Set to 0 to disable. Set to 1 for no additional effect";
 		corruptionMultiplier = prop.getInt();
 
 		//Buffs
