@@ -89,13 +89,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				this.owner = player.username;
 				this.isActive = false;
 				this.corruption = 0;
-				crystals.put(PlayerBeacons.crystalItem, 0);
-				crystals.put(PlayerBeacons.resCrystalItem, 0);
-				crystals.put(PlayerBeacons.speedCrystalItem, 0);
-				crystals.put(PlayerBeacons.jumpCrystalItem, 0);
-				crystals.put(PlayerBeacons.digCrystalItem, 0);
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 			}
+			crystals.put(PlayerBeacons.crystalItem, 0);
+			crystals.put(PlayerBeacons.resCrystalItem, 0);
+			crystals.put(PlayerBeacons.speedCrystalItem, 0);
+			crystals.put(PlayerBeacons.jumpCrystalItem, 0);
+			crystals.put(PlayerBeacons.digCrystalItem, 0);
 		}
 	}
 
