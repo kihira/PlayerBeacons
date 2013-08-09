@@ -93,12 +93,7 @@ public class PlayerBeacons {
 		registerRecipes();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-	}
 
-	@Mod.EventHandler
-	public void serverStart(FMLServerAboutToStartEvent e) {
-		beaconData = new BeaconDataHandler();
-		System.out.println("Loaded beacon data");
 		ItemStack itemStack = makeResearchNotes();
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
@@ -110,6 +105,12 @@ public class PlayerBeacons {
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
 		info = ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH);
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
+	}
+
+	@Mod.EventHandler
+	public void serverStart(FMLServerAboutToStartEvent e) {
+		beaconData = new BeaconDataHandler();
+		System.out.println("Loaded beacon data");
 	}
 
 	@Mod.EventHandler
