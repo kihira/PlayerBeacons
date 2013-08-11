@@ -93,7 +93,8 @@ public class EventHandler {
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (PlayerBeacons.config.enableZombieHead && e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			if (!entityZombie.isVillager() && (random.nextInt(1001) < 25) && (this.spawnCooldown - System.currentTimeMillis()) <= 0) {
+			System.out.println("Zombie Spawned");
+			if (!entityZombie.isVillager() && (random.nextInt(1001) < 5) && (this.spawnCooldown - System.currentTimeMillis()) <= 0) {
 				if (entityZombie.worldObj.playerEntities.size() > 0) {
 					int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
