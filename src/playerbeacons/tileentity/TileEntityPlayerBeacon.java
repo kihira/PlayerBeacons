@@ -256,7 +256,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void doCorruption(boolean alwaysDoCorruption) {
 		if (corruption > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
-			if (worldObj.rand.nextInt(1000) % 369 == 0) {
+			if (worldObj.rand.nextInt(1000) < 5) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					EntityEnderman enderman = new EntityEnderman(worldObj);
@@ -268,7 +268,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				}
 			}
 		}
-		if ((corruption > 900) && (corruptionLevel == 2)) {
+		if ((corruption > 9000) && (corruptionLevel == 2)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
 				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
