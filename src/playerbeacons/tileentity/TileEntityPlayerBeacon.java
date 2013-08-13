@@ -3,8 +3,10 @@ package playerbeacons.tileentity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,18 +15,23 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Vec3;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class TileEntityPlayerBeacon extends TileEntity {
@@ -117,23 +124,44 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.levels = 0;
 		if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
 			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+			for (int i = 1; i <= 4; levels = i++) {
+				int j = this.yCoord - i;
+				if (j < 0) break;
+				boolean flag = true;
+				for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
+					for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
+						if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
+							flag = false;
+							break;
+						}
+					}
+				}
+				if (!flag) break;
+			}
 			//If player head
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
-				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
-					for (int i = 1; i <= 4; levels = i++) {
-						int j = this.yCoord - i;
-    							if (j < 0) break;
-    							boolean flag = true;
-    							for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
-							for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-								if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
-									flag = false;
-									break;
-								}
-							}
+				if (entityPlayer == null || entityPlayer.dimension != worldObj.provider.dimensionId) this.levels = 0;
+			}
+			//Creeper
+			else if ((skull.getSkullType() == 4) && (levels > 0)) {
+				System.out.println("Creeper head");
+				double d0 = (double)(this.levels * 7 + 10);
+				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
+				axisalignedbb.maxY = (double)this.worldObj.getHeight();
+				List list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisalignedbb);
+				Iterator iterator = list.iterator();
+				EntityCreeper entityCreeper;
+				while (iterator.hasNext()){
+					System.out.println("Got Creeper");
+					entityCreeper = (EntityCreeper) iterator.next();
+					Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreeper, 16, 7, entityCreeper.worldObj.getWorldVec3Pool().getVecFromPool(xCoord, yCoord, zCoord));
+					PathNavigate entityPathNavigate = entityCreeper.getNavigator();
+					if (entityPathNavigate != null && vec3 != null) {
+						PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+						if (entityPathEntity != null) {
+							entityPathNavigate.setPath(entityPathEntity, 1.1D);
 						}
-						if (!flag) break;
 					}
 				}
 			}

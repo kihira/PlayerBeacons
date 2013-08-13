@@ -55,7 +55,7 @@ public class ServerTickHandler implements IScheduledTickHandler {
 
 	@Override
 	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.PLAYER);
+		return EnumSet.of(TickType.SERVER);
 	}
 
 	@Override
