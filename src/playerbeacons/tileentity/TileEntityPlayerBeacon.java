@@ -3,11 +3,15 @@ package playerbeacons.tileentity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -144,23 +148,29 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				if (entityPlayer == null || entityPlayer.dimension != worldObj.provider.dimensionId) this.levels = 0;
 			}
 			//Creeper
-			else if ((skull.getSkullType() == 4) && (levels > 0)) {
-				System.out.println("Creeper head");
+			else if (levels > 0) {
+				//TODO this doesn't make much sense here but it works
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
-				List list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisalignedbb);
-				Iterator iterator = list.iterator();
-				EntityCreeper entityCreeper;
-				while (iterator.hasNext()){
-					System.out.println("Got Creeper");
-					entityCreeper = (EntityCreeper) iterator.next();
-					Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreeper, 16, 7, entityCreeper.worldObj.getWorldVec3Pool().getVecFromPool(xCoord, yCoord, zCoord));
-					PathNavigate entityPathNavigate = entityCreeper.getNavigator();
-					if (entityPathNavigate != null && vec3 != null) {
-						PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-						if (entityPathEntity != null) {
-							entityPathNavigate.setPath(entityPathEntity, 1.1D);
+				List list = null;
+				//TODO tell difference between wither and normal skele. Use IEntitySelector?
+				int skullType = skull.getSkullType();
+				if (skullType == 0) list = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
+				else if (skullType == 1) list = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
+				else if (skullType == 2) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisalignedbb);
+				else if (skullType == 4) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisalignedbb);
+				if (list != null) {
+					EntityCreature entityCreature;
+					for (Object aList : list) {
+						entityCreature = (EntityCreature) aList;
+						Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreature, 16, 7, entityCreature.worldObj.getWorldVec3Pool().getVecFromPool(xCoord, yCoord, zCoord));
+						PathNavigate entityPathNavigate = entityCreature.getNavigator();
+						if (entityPathNavigate != null && vec3 != null) {
+							PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+							if (entityPathEntity != null) {
+								entityPathNavigate.setPath(entityPathEntity, 1.1D);
+							}
 						}
 					}
 				}
