@@ -7,7 +7,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -43,20 +45,41 @@ public class EventHandler {
 		Entity deadEntity = e.entity;
 
 		//Death by DamageBehead
-		if ((deadEntity instanceof EntityPlayer) && (e.source instanceof DamageBehead)) {
-			EntityPlayer deadThing = (EntityPlayer) deadEntity;
-			ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("SkullOwner", deadThing.username);
-			itemStack.setTagCompound(tag);
-			deadThing.entityDropItem(itemStack, 1);
-			return;
+		if (e.source instanceof DamageBehead) {
+			if (deadEntity instanceof EntityPlayer) {
+				EntityPlayer deadThing = (EntityPlayer) deadEntity;
+				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setString("SkullOwner", deadThing.username);
+				itemStack.setTagCompound(tag);
+				deadThing.entityDropItem(itemStack, 1);
+				return;
+			}
+			if (deadEntity instanceof EntityZombie) {
+				EntityZombie deadThing = (EntityZombie) deadEntity;
+				ItemStack itemStack = new ItemStack(Item.skull, 1, 2);
+				deadThing.entityDropItem(itemStack, 1);
+				return;
+			}
+			if (deadEntity instanceof EntitySkeleton) {
+				EntitySkeleton deadThing = (EntitySkeleton) deadEntity;
+				ItemStack itemStack;
+				if (deadThing.getSkeletonType() == 1) itemStack = new ItemStack(Item.skull, 1, 1);
+				else itemStack = new ItemStack(Item.skull, 1, 0);
+				deadThing.entityDropItem(itemStack, 1);
+				return;
+			}
+			if (deadEntity instanceof EntityCreeper) {
+				EntityCreeper deadThing = (EntityCreeper) deadEntity;
+				ItemStack itemStack = new ItemStack(Item.skull, 1, 4);
+				deadThing.entityDropItem(itemStack, 1);
+				return;
+			}
 		}
 
 		//Death by enchantment
-		if ((deadEntity instanceof EntityPlayer) && (entity instanceof EntityPlayer)) {
+		if (entity instanceof EntityPlayer) {
 			EntityPlayer attacker = (EntityPlayer) entity;
-			EntityPlayer deadThing = (EntityPlayer) deadEntity;
 			ItemStack item = attacker.getHeldItem();
 			NBTTagList enchantments = null;
 			if (item != null) {
@@ -64,25 +87,44 @@ public class EventHandler {
 					enchantments = attacker.getHeldItem().getEnchantmentTagList();
 				}
 			}
-
-			if (enchantments != null) {
+            if (enchantments != null) {
 				for (int i = 0; i < enchantments.tagCount(); ++i) {
 					short id = ((NBTTagCompound)enchantments.tagAt(i)).getShort("id");
 					short lvl = ((NBTTagCompound)enchantments.tagAt(i)).getShort("lvl");
 					if (id == PlayerBeacons.config.decapitationEnchantmentID) {
 						Random random = new Random();
-						if ((random.nextInt()) % (6/lvl) == 0) {
-							if (e.isCancelable()) {
+						if ((random.nextInt()) % (12/lvl) == 0) {
+							if (deadEntity instanceof EntityZombie) {
+								EntityZombie deadThing = (EntityZombie) deadEntity;
+								ItemStack itemStack = new ItemStack(Item.skull, 1, 2);
+								deadThing.entityDropItem(itemStack, 1);
+								return;
+							}
+							if (deadEntity instanceof EntitySkeleton) {
+								EntitySkeleton deadThing = (EntitySkeleton) deadEntity;
+								ItemStack itemStack;
+								if (deadThing.getSkeletonType() == 1) itemStack = new ItemStack(Item.skull, 1, 1);
+								else itemStack = new ItemStack(Item.skull, 1, 0);
+								deadThing.entityDropItem(itemStack, 1);
+								return;
+							}
+							if (deadEntity instanceof EntityCreeper) {
+								EntityCreeper deadThing = (EntityCreeper) deadEntity;
+								ItemStack itemStack = new ItemStack(Item.skull, 1, 4);
+								deadThing.entityDropItem(itemStack, 1);
+								return;
+							}
+							if (deadEntity instanceof EntityPlayer) {
+								EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
 								e.setCanceled(true);
-								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(deadThing.username + " was beheaded by " + attacker.username));
+								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(deadPlayer.username + " was beheaded by " + attacker.username));
 								ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
 								NBTTagCompound tag = new NBTTagCompound();
-								tag.setString("SkullOwner", deadThing.username);
+								tag.setString("SkullOwner", deadPlayer.username);
 								itemStack.setTagCompound(tag);
 								e.entityLiving.entityDropItem(itemStack, 1);
 							}
 						}
-						break;
 					}
 				}
 			}
@@ -93,7 +135,6 @@ public class EventHandler {
 	public void onEntitySpawn(LivingSpawnEvent e) {
 		if (PlayerBeacons.config.enableZombieHead && e.entityLiving instanceof EntityZombie) {
 			EntityZombie entityZombie = (EntityZombie) e.entity;
-			System.out.println("Zombie Spawned");
 			if (!entityZombie.isVillager() && (random.nextInt(1001) < 5) && (this.spawnCooldown - System.currentTimeMillis()) <= 0) {
 				if (entityZombie.worldObj.playerEntities.size() > 0) {
 					int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
