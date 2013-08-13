@@ -144,8 +144,7 @@ public class EventHandler {
 					tag.setString("SkullOwner", player.username);
 					itemStack.setTagCompound(tag);
 					entityZombie.setCurrentItemOrArmor(4, itemStack);
-					//15 mins
-					this.spawnCooldown = System.currentTimeMillis() + 900000L;
+					this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
 					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
 				}
 			}

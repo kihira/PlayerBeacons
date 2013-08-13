@@ -20,6 +20,7 @@ public class Config {
 	public int corruptionMultiplier;
 
 	public int decapitationEnchantmentID;
+	public int spawnCooldownDuration;
 
 	public boolean swiftnessBuffEnabled;
 	public boolean miningBuffEnabled;
@@ -74,6 +75,9 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Corruption Multiplier", 1);
 		prop.comment = "Corruption is calculated by (levels - specific crystal amount) + (server diff/4) * multiplier. Set to 0 to disable. Set to 1 for no additional effect";
 		corruptionMultiplier = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Time between special zombie spawns", 54000);
+		prop.comment = "Time between chance to spawn a zombie with a player head. Default: 54000 seconds";
+		spawnCooldownDuration = prop.getInt();
 
 		//Buffs
 		prop = config.get("Beacon Buffs", "Swiftness", true);
@@ -84,7 +88,6 @@ public class Config {
 		jumpBuffEnabled = prop.getBoolean(true);
 		prop = config.get("Beacon Buffs", "Night Vision", true);
 		nightVisionBuffEnabled = prop.getBoolean(true);
-
 	}
 
 	private void save() {
