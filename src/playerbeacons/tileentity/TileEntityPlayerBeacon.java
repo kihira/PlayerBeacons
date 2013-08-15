@@ -30,6 +30,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
+import playerbeacons.buff.Buff;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
@@ -190,6 +191,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void doBuffs() {
+		System.out.println("We have " + levels + " levels");
+		for (Buff buff : Buff.buffs) {
+			if (buff.getMinBeaconLevel() <= levels) {
+				System.out.println("Applying " + buff.getName());
+				buff.doBuff(worldObj.getPlayerEntityByName(owner), levels);
+			}
+		}
+		/*
 		if (levels > 0) {
 			this.isActive = true;
 			EntityPlayer player = this.worldObj.getPlayerEntityByName(owner);
@@ -201,8 +210,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				if (levels - 1 - crystals.get(PlayerBeacons.resCrystalItem) >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - crystals.get(PlayerBeacons.resCrystalItem), true));
 			}
 		}
-		else
-			this.isActive = false;
+		else this.isActive = false;
+		*/
 	}
 
 	public float getCorruption() {

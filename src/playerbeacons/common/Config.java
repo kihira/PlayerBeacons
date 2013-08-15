@@ -12,6 +12,7 @@ public class Config {
 	public int defiledSoulPylonBlockID;
 
 	public int beheaderItemID;
+	public int teleporterItemID;
 	public int crystalItemID;
 	public int speedCrystalItemID;
 	public int digCrystalItemID;
@@ -54,6 +55,8 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Teleporter", 20006);
+		teleporterItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Speed Crystal", 20001);
 		speedCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Dig Crystal", 20002);

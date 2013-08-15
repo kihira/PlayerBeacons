@@ -23,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import playerbeacons.block.BlockDefiledSoulConductor;
 import playerbeacons.block.BlockDefiledSoulPylon;
 import playerbeacons.block.BlockPlayerBeacon;
+import playerbeacons.buff.*;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
@@ -43,6 +44,7 @@ public class PlayerBeacons {
 	public static Block defiledSoulPylonBlock;
 
 	public static BeheaderItem beheaderItem;
+	public static TeleporterItem teleporterItem;
 	public static CrystalItem crystalItem;
 	public static SpeedCrystalItem speedCrystalItem;
 	public static DigCrystalItem digCrystalItem;
@@ -52,9 +54,6 @@ public class PlayerBeacons {
 	public static EnchantmentDecapitation enchantmentDecapitation;
 
 	public static BeaconDataHandler beaconData;
-
-	//Crystal item is the crystal that will debuff the buff. Float is the corruption reduced.
-	public static HashMap<Class<? extends CrystalItem>, Float> corruptionList = new HashMap<Class<? extends CrystalItem>, Float>();
 
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -73,6 +72,8 @@ public class PlayerBeacons {
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		GameRegistry.registerItem(beheaderItem, "beheaderItem");
+		teleporterItem = new TeleporterItem(config.teleporterItemID);
+		GameRegistry.registerItem(teleporterItem, "teleporterItem");
 		crystalItem = new CrystalItem(config.crystalItemID);
 		GameRegistry.registerItem(crystalItem, "crystalItem");
 		speedCrystalItem = new SpeedCrystalItem(config.speedCrystalItemID);
@@ -91,6 +92,7 @@ public class PlayerBeacons {
 
 		proxy.registerRenderers();
 		registerRecipes();
+		registerBuffs();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 
@@ -132,9 +134,17 @@ public class PlayerBeacons {
 		LanguageRegistry.addName(speedCrystalItem, "Speed Crystal");
 		LanguageRegistry.addName(crystalItem, "Depleted Crystal");
 		LanguageRegistry.addName(beheaderItem, "Beheader");
+		LanguageRegistry.addName(teleporterItem, "Recall");
 		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
 		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
 		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
+	}
+
+	private void registerBuffs() {
+		Buff.registerBuff(new SpeedBuff());
+		Buff.registerBuff(new JumpBuff());
+		Buff.registerBuff(new DigBuff());
+		Buff.registerBuff(new ResistanceBuff());
 	}
 
 	private void registerRecipes() {
