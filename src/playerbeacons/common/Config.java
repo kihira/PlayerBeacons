@@ -31,6 +31,7 @@ public class Config {
 	public boolean enableZombieHead;
 
 	private Configuration config;
+	public boolean disableCorruption;
 
 
 	public Config(File file) {
@@ -77,6 +78,9 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Time between special zombie spawns", 54000);
 		prop.comment = "Time between chance to spawn a zombie with a player head. Default: 54000 seconds";
 		spawnCooldownDuration = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Disable Corruption", false);
+		prop.comment = "Whether to do corruption calculations or not";
+		disableCorruption = prop.getBoolean(false);
 
 		//Buffs
 		prop = config.get("Beacon Buffs", "Swiftness", true);

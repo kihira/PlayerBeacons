@@ -34,7 +34,7 @@ public class ServerTickHandler implements IScheduledTickHandler {
 						if (tileEntityPlayerBeacon != null) {
 							tileEntityPlayerBeacon.checkBeacon();
 							if (cycle % 2 == 0) {
-								if (PlayerBeacons.config.corruptionMultiplier != 0) {
+								if (!PlayerBeacons.config.disableCorruption) {
 									tileEntityPlayerBeacon.calcPylons();
 									tileEntityPlayerBeacon.calcCorruption();
 									tileEntityPlayerBeacon.doCorruption(false);
