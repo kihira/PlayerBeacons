@@ -33,7 +33,7 @@ import playerbeacons.util.EventHandler;
 
 import java.util.HashMap;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.0")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.1.0")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 

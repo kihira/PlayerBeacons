@@ -1,7 +1,8 @@
 #!/bin/bash
 MCVERSION="1.6.2"
 MAJOR="1"
-MINOR="0"
+MINOR="1"
+MINORMINOR="0"
 
 if [ -d "builds" ]; then
   rm -r builds
@@ -16,4 +17,4 @@ sh reobfuscate_srg.sh
 cd $WORKSPACE/forge/mcp/reobf/minecraft
 mkdir $WORKSPACE/forge/mcp/reobf/minecraft/playerbeacons/assets
 cp -ar $WORKSPACE/src/assets $WORKSPACE/forge/mcp/reobf/minecraft/
-zip -r -D -9 $WORKSPACE/builds/PlayerBeacons_$MCVERSION-$MAJOR.$MINOR-build$BUILD_NUMBER.zip *
+zip -r -D -9 $WORKSPACE/builds/PlayerBeacons_$MCVERSION-$MAJOR.$MINOR.$MINORMINOR.b$BUILD_NUMBER.zip *
