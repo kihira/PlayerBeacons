@@ -3,12 +3,17 @@ package playerbeacons.buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import playerbeacons.item.CrystalItem;
 
 public class JumpBuff extends Buff {
 
+	public JumpBuff(CrystalItem crystalItem) {
+		super(crystalItem);
+	}
+
 	@Override
-	public void doBuff(EntityPlayer player, int beaconLevels) {
-		player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, beaconLevels - 1, true));
+	public void doBuff(EntityPlayer player, int beaconLevels, int crystalCount) {
+		if (crystalCount < beaconLevels) player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, beaconLevels - crystalCount - 1, true));
 	}
 
 	@Override
@@ -18,7 +23,7 @@ public class JumpBuff extends Buff {
 
 	@Override
 	public float getCorruption(int beaconLevel) {
-		return beaconLevel * 2;
+		return beaconLevel * 10;
 	}
 
 	@Override

@@ -141,10 +141,10 @@ public class PlayerBeacons {
 	}
 
 	private void registerBuffs() {
-		Buff.registerBuff(new SpeedBuff());
-		Buff.registerBuff(new JumpBuff());
-		Buff.registerBuff(new DigBuff());
-		Buff.registerBuff(new ResistanceBuff());
+		new SpeedBuff(speedCrystalItem);
+		new JumpBuff(jumpCrystalItem);
+		new DigBuff(digCrystalItem);
+		new ResistanceBuff(resCrystalItem);
 	}
 
 	private void registerRecipes() {

@@ -7,7 +7,7 @@ public class EnchantmentDecapitation extends Enchantment {
 
 	protected EnchantmentDecapitation(int effectID) {
 		super(effectID, 5, EnumEnchantmentType.weapon);
-		setName("Decapitation");
+		setName("decapitation");
 	}
 
 	public int getMaxLevel() {

@@ -7,18 +7,6 @@ public class SpeedCrystalItem extends CrystalItem {
 		super(id);
 		func_111206_d("playerbeacon:lightblueXtal");
 		setUnlocalizedName("speedCrystalItem");
-		corruptionValue = 5f;
-	}
-
-	public Potion getBuffType() {
-		return Potion.moveSpeed;
-	}
-
-	public int getBuffMax() {
-		return 4;
-	}
-
-	public int getBeaconLevelsPerBuffLevel() {
-		return 1;
+		corruptionValue = 10f;
 	}
 }

@@ -46,7 +46,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
-	private HashMap<Item, Integer> crystals = new HashMap<Item, Integer>();
+	private HashMap<CrystalItem, Integer> crystals = new HashMap<CrystalItem, Integer>();
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -74,7 +74,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		par1NBTTagCompound.setFloat("badstuff", corruption);
 		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, crystals.get(PlayerBeacons.resCrystalItem), crystals.get(PlayerBeacons.speedCrystalItem), crystals.get(PlayerBeacons.jumpCrystalItem), crystals.get(PlayerBeacons.digCrystalItem), levels, corruptionLevel);
+			PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, 0, 0, 0, 0, levels, corruptionLevel);
 			NBTTagCompound tagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldObj, owner);
 			if (tagCompound != null) {
 				par1NBTTagCompound.setCompoundTag("beacondata", tagCompound);
@@ -103,11 +103,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				this.corruption = 0;
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 			}
-			crystals.put(PlayerBeacons.crystalItem, 0);
-			crystals.put(PlayerBeacons.resCrystalItem, 0);
-			crystals.put(PlayerBeacons.speedCrystalItem, 0);
-			crystals.put(PlayerBeacons.jumpCrystalItem, 0);
-			crystals.put(PlayerBeacons.digCrystalItem, 0);
 		}
 	}
 
@@ -191,27 +186,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void doBuffs() {
-		System.out.println("We have " + levels + " levels");
 		for (Buff buff : Buff.buffs) {
-			if (buff.getMinBeaconLevel() <= levels) {
-				System.out.println("Applying " + buff.getName());
-				buff.doBuff(worldObj.getPlayerEntityByName(owner), levels);
+			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+			if ((buff.getMinBeaconLevel() <= levels) && crystals.containsKey(buff.getCrystal()) && player != null) {
+				//System.out.println("Applying " + buff.getName());
+				buff.doBuff(player, levels, crystals.get(buff.getCrystal()));
 			}
 		}
-		/*
-		if (levels > 0) {
-			this.isActive = true;
-			EntityPlayer player = this.worldObj.getPlayerEntityByName(owner);
-			if (player != null) {
-				//Do effects
-				if (levels - 1 - crystals.get(PlayerBeacons.speedCrystalItem) >= 0) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 200, levels - 1 - crystals.get(PlayerBeacons.speedCrystalItem), true));
-				if (levels - 1 - crystals.get(PlayerBeacons.jumpCrystalItem) >= 0) player.addPotionEffect(new PotionEffect(Potion.jump.id, 200, levels - 1 - crystals.get(PlayerBeacons.jumpCrystalItem), true));
-				if (levels - 1 - crystals.get(PlayerBeacons.digCrystalItem) >= 0) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, levels - 1 - crystals.get(PlayerBeacons.digCrystalItem), true));
-				if (levels - 1 - crystals.get(PlayerBeacons.resCrystalItem) >= 0) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 200, levels - 1 - crystals.get(PlayerBeacons.resCrystalItem), true));
-			}
-		}
-		else this.isActive = false;
-		*/
 	}
 
 	public float getCorruption() {
@@ -229,18 +210,21 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcPylons() {
 		if (levels > 0) {
+			CrystalItem crystalItem = null;
+			//Reset crystal count and re-add blank values to the list
 			crystals.clear();
-			crystals.put(PlayerBeacons.crystalItem, 0);
-			crystals.put(PlayerBeacons.resCrystalItem, 0);
-			crystals.put(PlayerBeacons.speedCrystalItem, 0);
-			crystals.put(PlayerBeacons.jumpCrystalItem, 0);
-			crystals.put(PlayerBeacons.digCrystalItem, 0);
+			for (Buff buff : Buff.buffs) {
+				if (!crystals.containsKey(buff.getCrystal())) {
+					crystals.put(buff.getCrystal(), 0);
+				}
+			}
 
 			for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystals.put(itemStack.getItem(), crystals.get(itemStack.getItem()) + 1);
+					crystalItem = (CrystalItem) itemStack.getItem();
+					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
 					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
@@ -249,7 +233,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystals.put(itemStack.getItem(), crystals.get(itemStack.getItem()) + 1);
+					crystalItem = (CrystalItem) itemStack.getItem();
+					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
 					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
@@ -258,7 +243,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystals.put(itemStack.getItem(), crystals.get(itemStack.getItem()) + 1);
+					crystalItem = (CrystalItem) itemStack.getItem();
+					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
 					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
@@ -267,13 +253,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystals.put(itemStack.getItem(), crystals.get(itemStack.getItem()) + 1);
+					crystalItem = (CrystalItem) itemStack.getItem();
+					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
 					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
 			}
 			//TODO Rework this into new corruption system
-			for (Map.Entry<Item, Integer> entry : crystals.entrySet()) {
+			for (Map.Entry<CrystalItem, Integer> entry : crystals.entrySet()) {
 				if (entry.getValue() > levels) {
 					crystals.put(entry.getKey(), levels);
 				}
@@ -283,21 +270,21 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcCorruption() {
 		//This should allow up to level number of a single buff or spread across 2 buffs.
-		if (!(((levels * 4) - crystals.get(PlayerBeacons.resCrystalItem) - crystals.get(PlayerBeacons.digCrystalItem) - crystals.get(PlayerBeacons.speedCrystalItem) - crystals.get(PlayerBeacons.jumpCrystalItem)) <= levels)) {
+		if (levels >= 0) {
 			float newCorruption = 0;
-			float modifier = MinecraftServer.getServer().getDifficulty() / 4F;
-			int y;
+			CrystalItem crystalItem;
+			float y;
 
-			y = levels - crystals.get(PlayerBeacons.resCrystalItem);
-			if (y > 0) newCorruption = newCorruption + (y * modifier) + PlayerBeacons.resCrystalItem.getCorruptionValue() * PlayerBeacons.config.corruptionMultiplier;
-			y = levels - crystals.get(PlayerBeacons.digCrystalItem);
-			if (y > 0) newCorruption = newCorruption + (y * modifier) + PlayerBeacons.digCrystalItem.getCorruptionValue() * PlayerBeacons.config.corruptionMultiplier;
-			y = levels - crystals.get(PlayerBeacons.speedCrystalItem);
-			if (y > 0) newCorruption = newCorruption + (y * modifier) + PlayerBeacons.speedCrystalItem.getCorruptionValue() * PlayerBeacons.config.corruptionMultiplier;
-			y = levels - crystals.get(PlayerBeacons.jumpCrystalItem);
-			if (y > 0) newCorruption = newCorruption + (y * modifier) + PlayerBeacons.jumpCrystalItem.getCorruptionValue() * PlayerBeacons.config.corruptionMultiplier;
+			for (Buff buff : Buff.buffs) {
+				if (crystals.containsKey(buff.getCrystal()) && buff.getMinBeaconLevel() <= levels) {
+					crystalItem = buff.getCrystal();
+					y = buff.getCorruption(levels) - (crystalItem.getCorruptionReduction() * crystals.get(buff.getCrystal()));
+					//System.out.println("Generated " + y + " corruption for " + buff.getName());
+					newCorruption = newCorruption + y;
+				}
+			}
 
-			corruption = corruption + newCorruption;
+			corruption = corruption + newCorruption - (levels * 10);
 		}
 	}
 
