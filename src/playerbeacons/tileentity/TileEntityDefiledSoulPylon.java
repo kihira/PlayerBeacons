@@ -61,16 +61,12 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		if (this.crystal != null)
-		{
+		if (this.crystal != null) {
 			ItemStack itemstack = this.crystal;
 			this.crystal= null;
 			return itemstack;
 		}
-		else
-		{
-			return null;
-		}
+		else return null;
 	}
 
 	@Override
@@ -109,13 +105,14 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (i == 0) {
-			if (itemstack.getItem() instanceof CrystalItem) return true;
-		}
-		return false;
+		return i == 0 && itemstack.getItem() instanceof CrystalItem;
 	}
 
 	public boolean isPylonBase() {
-		return worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == PlayerBeacons.config.defiledSoulConductorBlockID;
+		return !worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) && worldObj.getBlockId(xCoord, yCoord - 1, zCoord) != PlayerBeacons.config.defiledSoulPylonBlockID;
+	}
+
+	public boolean isPylonTop() {
+		return !worldObj.isAirBlock(xCoord, yCoord + 1, zCoord) && worldObj.getBlockId(xCoord, yCoord + 1, zCoord) != PlayerBeacons.config.defiledSoulPylonBlockID;
 	}
 }
