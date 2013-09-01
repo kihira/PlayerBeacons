@@ -307,7 +307,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				}
 			}
 		}
-		if ((corruption > 9000) && (corruptionLevel == 2)) {
+		if ((corruption > 15000) && (corruptionLevel == 2)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
 				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
@@ -319,7 +319,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			}
 			return;
 		}
-		if ((corruption > 6000) && (corruptionLevel == 1)) {
+		if ((corruption > 10000) && (corruptionLevel == 1)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
 				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
@@ -331,7 +331,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			}
 			return;
 		}
-		if ((corruption > 3000) && (corruptionLevel == 0)) {
+		if ((corruption > 5000) && (corruptionLevel == 0)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
 				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond"));
