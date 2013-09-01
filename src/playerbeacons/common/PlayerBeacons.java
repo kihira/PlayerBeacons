@@ -44,7 +44,6 @@ public class PlayerBeacons {
 	public static Block defiledSoulPylonBlock;
 
 	public static BeheaderItem beheaderItem;
-	public static TeleporterItem teleporterItem;
 	public static CrystalItem crystalItem;
 	public static SpeedCrystalItem speedCrystalItem;
 	public static DigCrystalItem digCrystalItem;
@@ -72,8 +71,6 @@ public class PlayerBeacons {
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		GameRegistry.registerItem(beheaderItem, "beheaderItem");
-		teleporterItem = new TeleporterItem(config.teleporterItemID);
-		GameRegistry.registerItem(teleporterItem, "teleporterItem");
 		crystalItem = new CrystalItem(config.crystalItemID);
 		GameRegistry.registerItem(crystalItem, "crystalItem");
 		speedCrystalItem = new SpeedCrystalItem(config.speedCrystalItemID);
@@ -134,17 +131,16 @@ public class PlayerBeacons {
 		LanguageRegistry.addName(speedCrystalItem, "Speed Crystal");
 		LanguageRegistry.addName(crystalItem, "Depleted Crystal");
 		LanguageRegistry.addName(beheaderItem, "Beheader");
-		LanguageRegistry.addName(teleporterItem, "Recall");
 		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
 		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
 		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
 	}
 
 	private void registerBuffs() {
-		new SpeedBuff(speedCrystalItem);
-		new JumpBuff(jumpCrystalItem);
-		new DigBuff(digCrystalItem);
-		new ResistanceBuff(resCrystalItem);
+		if (config.swiftnessBuffEnabled) new SpeedBuff(speedCrystalItem);
+		if (config.jumpBuffEnabled) new JumpBuff(jumpCrystalItem);
+		if (config.miningBuffEnabled) new DigBuff(digCrystalItem);
+		if (config.resistanceBuffEnabled) new ResistanceBuff(resCrystalItem);
 	}
 
 	private void registerRecipes() {

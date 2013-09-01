@@ -12,7 +12,6 @@ public class Config {
 	public int defiledSoulPylonBlockID;
 
 	public int beheaderItemID;
-	public int teleporterItemID;
 	public int crystalItemID;
 	public int speedCrystalItemID;
 	public int digCrystalItemID;
@@ -25,7 +24,7 @@ public class Config {
 	public boolean swiftnessBuffEnabled;
 	public boolean miningBuffEnabled;
 	public boolean jumpBuffEnabled;
-	public boolean nightVisionBuffEnabled;
+	public boolean resistanceBuffEnabled;
 
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
@@ -55,8 +54,6 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Teleporter", 20006);
-		teleporterItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Speed Crystal", 20001);
 		speedCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Dig Crystal", 20002);
@@ -89,8 +86,8 @@ public class Config {
 		miningBuffEnabled = prop.getBoolean(true);
 		prop = config.get("Beacon Buffs", "Jump", true);
 		jumpBuffEnabled = prop.getBoolean(true);
-		prop = config.get("Beacon Buffs", "Night Vision", true);
-		nightVisionBuffEnabled = prop.getBoolean(true);
+		prop = config.get("Beacon Buffs", "Resistance", true);
+		resistanceBuffEnabled = prop.getBoolean(true);
 	}
 
 	private void save() {

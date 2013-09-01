@@ -42,7 +42,7 @@ import java.util.Map;
 public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
-	private boolean isActive = false;
+	private boolean hasSkull;
 	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
@@ -54,6 +54,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
+		/*
 		NBTTagCompound nbtTagCompound = par1NBTTagCompound.getCompoundTag("beacondata");
 		if (nbtTagCompound != null) {
 			this.corruption = par1NBTTagCompound.getFloat("badstuff");
@@ -65,6 +66,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			crystals.put(PlayerBeacons.digCrystalItem, nbtTagCompound.getInteger("digCrystals"));
 			this.corruptionLevel = nbtTagCompound.getShort("badstufflevel");
 		}
+		*/
 	}
 
 	@Override
@@ -73,6 +75,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", corruption);
 		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
+		/*
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
 			PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, 0, 0, 0, 0, levels, corruptionLevel);
 			NBTTagCompound tagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldObj, owner);
@@ -80,6 +83,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				par1NBTTagCompound.setCompoundTag("beacondata", tagCompound);
 			}
 		}
+		*/
 	}
 
 	@Override
@@ -99,7 +103,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if (!worldObj.isRemote) {
 			if (player != null) {
 				this.owner = player.username;
-				this.isActive = false;
 				this.corruption = 0;
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
 			}
@@ -110,8 +113,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		return this.owner;
 	}
 
-	public boolean isActive() {
-		return isActive;
+	public boolean hasSkull() {
+		return hasSkull;
 	}
 
 	@Override
@@ -122,8 +125,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void checkBeacon() {
 		this.levels = 0;
-		if (this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.skull.blockID) {
-			TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+		if (this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.skull.blockID) {
+			hasSkull = true;
 			for (int i = 1; i <= 4; levels = i++) {
 				int j = this.yCoord - i;
 				if (j < 0) break;
@@ -138,14 +141,35 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				}
 				if (!flag) break;
 			}
-			//If player head
+		}
+		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
+			worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
+			EntityDragon dragon = new EntityDragon(worldObj);
+			dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
+			dragon.setCustomNameTag(owner + "'s Puppy");
+			worldObj.spawnEntityInWorld(dragon);
+		}
+	}
+
+	public void doEffects() {
+		TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+		//Player Head
+		if (skull != null) {
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
-				if (entityPlayer == null || entityPlayer.dimension != worldObj.provider.dimensionId) this.levels = 0;
+				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
+					for (Buff buff : Buff.buffs) {
+						EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+						if ((buff.getMinBeaconLevel() <= levels) && crystals.containsKey(buff.getCrystal()) && player != null) {
+							//System.out.println("Applying " + buff.getName());
+							buff.doBuff(player, levels, crystals.get(buff.getCrystal()));
+						}
+					}
+				}
 			}
-			//Creeper
+
+			//Mob Head
 			else if (levels > 0) {
-				//TODO this doesn't make much sense here but it works
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
@@ -176,23 +200,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			}
 		}
-		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
-			worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
-			EntityDragon dragon = new EntityDragon(worldObj);
-			dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);
-			dragon.setCustomNameTag(owner + "'s Puppy");
-			worldObj.spawnEntityInWorld(dragon);
-		}
-	}
-
-	public void doBuffs() {
-		for (Buff buff : Buff.buffs) {
-			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-			if ((buff.getMinBeaconLevel() <= levels) && crystals.containsKey(buff.getCrystal()) && player != null) {
-				//System.out.println("Applying " + buff.getName());
-				buff.doBuff(player, levels, crystals.get(buff.getCrystal()));
-			}
-		}
 	}
 
 	public float getCorruption() {
@@ -210,7 +217,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcPylons() {
 		if (levels > 0) {
-			CrystalItem crystalItem = null;
+			CrystalItem crystalItem;
 			//Reset crystal count and re-add blank values to the list
 			crystals.clear();
 			for (Buff buff : Buff.buffs) {
@@ -259,7 +266,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
 				}
 			}
-			//TODO Rework this into new corruption system
 			for (Map.Entry<CrystalItem, Integer> entry : crystals.entrySet()) {
 				if (entry.getValue() > levels) {
 					crystals.put(entry.getKey(), levels);
@@ -269,7 +275,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void calcCorruption() {
-		//This should allow up to level number of a single buff or spread across 2 buffs.
 		if (levels >= 0) {
 			float newCorruption = 0;
 			CrystalItem crystalItem;

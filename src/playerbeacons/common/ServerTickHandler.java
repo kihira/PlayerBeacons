@@ -16,6 +16,7 @@ import java.util.List;
 public class ServerTickHandler implements IScheduledTickHandler {
 
 	private short cycle = 0;
+
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
 		cycle++;
@@ -39,7 +40,7 @@ public class ServerTickHandler implements IScheduledTickHandler {
 									tileEntityPlayerBeacon.calcCorruption();
 									tileEntityPlayerBeacon.doCorruption(false);
 								}
-								tileEntityPlayerBeacon.doBuffs();
+								if (tileEntityPlayerBeacon.hasSkull()) tileEntityPlayerBeacon.doEffects();
 								if (cycle % 4 == 0) worldServer.markBlockForUpdate(x, y, z);
 							}
 							if (cycle >= 32000) cycle = 0;
