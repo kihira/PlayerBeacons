@@ -113,6 +113,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		return this.owner;
 	}
 
+	public void setOwner(String newOwner) {
+		if (newOwner.length() <= 16) this.owner = newOwner;
+	}
+
 	public boolean hasSkull() {
 		return hasSkull;
 	}
