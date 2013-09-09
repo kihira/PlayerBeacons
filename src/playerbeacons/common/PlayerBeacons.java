@@ -115,12 +115,19 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
+		e.registerServerCommand(new CommandPlayerBeacons());
 		TickRegistry.registerScheduledTickHandler(new ServerTickHandler(), Side.SERVER);
 	}
 
 	private void addLocalization() {
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
 		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
+		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.alreadyExists", "The player %1$s already has a beacon bound in this dimension");
+		LanguageRegistry.instance().addStringLocalization("commands.playerhead.notBeacon", "The block (%1$s, %2$s, %3$s) is not a Player Beacon!");
+		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setowner.success", "%1$s changed Player Beacon (%2$s, %3$s, %4$s) owner to %5$s");
+		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setowner.usage", "/pb setowner <username>");
+		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setcorruption.usage", "/pb setcorruption <float: corruption value> <boolean: should adjust corruption level>");
+		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setcorruption.success", "%1$s changed Player Beacon (%2$s, %3$s, %4$s) corruption to %5$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
