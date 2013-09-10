@@ -18,7 +18,7 @@ public class CommandPlayerBeacons extends CommandBase {
 
 	@Override
 	public String getCommandName() {
-		return "playerbeacon";
+		return "playerbeacons";
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CommandPlayerBeacons extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "/playerbeacon <command> [args]";
+		return "/playerbeacons <command> [args]";
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class CommandPlayerBeacons extends CommandBase {
 					else throw new WrongUsageException("commands.playerbeacon.setowner.usage");
 				}
 				else if (astring[0].toLowerCase().equals("setcorruption")) {
-					if (!astring[1].isEmpty() && !astring[2].isEmpty()) {
+					if (astring.length == 3 && !astring[1].isEmpty() && !astring[2].isEmpty()) {
 						try {
 							tileEntity.setCorruption(Float.valueOf(astring[1]), Boolean.getBoolean(astring[2]));
-							notifyAdmins(icommandsender, "commands.playerbeacon.setcorruption.success", targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1], astring[2]);
+							notifyAdmins(icommandsender, "commands.playerbeacon.setcorruption.success", player.username, targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
 						}
 						catch (Exception e) {
 							throw new WrongUsageException("commands.playerbeacon.setcorruption.usage");

@@ -101,6 +101,20 @@ public class BeaconDataHandler {
 		return null;
 	}
 
+	public void addBeaconInformation(World world, String player, NBTTagCompound nbtTagCompound) {
+		if (!beaconList.hasKey(player)) {
+			NBTTagCompound newPlayerData = new NBTTagCompound();
+			beaconList.setCompoundTag(player, newPlayerData);
+		}
+		if (beaconList.hasKey(player)) {
+			NBTTagCompound playerData = beaconList.getCompoundTag(player);
+			if (!playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
+				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), nbtTagCompound);
+				saveData(playerData);
+			}
+		}
+	}
+
 	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short corruptionLevels) {
 		if (!beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();

@@ -114,7 +114,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void setOwner(String newOwner) {
-		if (newOwner.length() <= 16) this.owner = newOwner;
+		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(worldObj, newOwner) == null) {
+			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
+			PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
+			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, newOwner, nbtTagCompound);
+			this.owner = newOwner;
+		}
 	}
 
 	public boolean hasSkull() {
