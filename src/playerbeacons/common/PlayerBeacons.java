@@ -90,6 +90,7 @@ public class PlayerBeacons {
 		proxy.registerRenderers();
 		registerRecipes();
 		registerBuffs();
+		config.loadBuffs();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 
@@ -144,10 +145,10 @@ public class PlayerBeacons {
 	}
 
 	private void registerBuffs() {
-		if (config.swiftnessBuffEnabled) new SpeedBuff(speedCrystalItem);
-		if (config.jumpBuffEnabled) new JumpBuff(jumpCrystalItem);
-		if (config.miningBuffEnabled) new DigBuff(digCrystalItem);
-		if (config.resistanceBuffEnabled) new ResistanceBuff(resCrystalItem);
+		new SpeedBuff(speedCrystalItem);
+		new JumpBuff(jumpCrystalItem);
+		new DigBuff(digCrystalItem);
+		new ResistanceBuff(resCrystalItem);
 	}
 
 	private void registerRecipes() {

@@ -289,11 +289,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					crystalItem = buff.getCrystal();
 					y = buff.getCorruption(levels) - (crystalItem.getCorruptionReduction() * crystals.get(buff.getCrystal()));
 					//System.out.println("Generated " + y + " corruption for " + buff.getName());
-					newCorruption = newCorruption + y;
+					newCorruption += y;
 				}
 			}
-
-			corruption = corruption + newCorruption - (levels * 10);
+			corruption += newCorruption - (levels * 10);
 		}
 	}
 
