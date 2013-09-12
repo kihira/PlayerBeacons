@@ -88,7 +88,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.customParam1);
+		readFromNBT(pkt.data);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -104,13 +104,23 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (player != null) {
 				this.owner = player.username;
 				this.corruption = 0;
-				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
+				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
 			}
 		}
 	}
 
 	public String getOwner() {
 		return this.owner;
+	}
+
+	public void setOwner(String newOwner) {
+		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(worldObj, newOwner) == null) {
+			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
+			PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
+			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, newOwner, nbtTagCompound);
+			this.owner = newOwner;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	public boolean hasSkull() {
@@ -149,6 +159,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			dragon.setCustomNameTag(owner + "'s Puppy");
 			worldObj.spawnEntityInWorld(dragon);
 		}
+		else hasSkull = false;
 	}
 
 	public void doEffects() {
@@ -167,9 +178,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
+			else if (skull.getSkullType() == 3) {
+				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
+				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
+			}
 
 			//Mob Head
-			else if (levels > 0) {
+			else if (levels > 0 && skull.getSkullType() != 3) {
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
@@ -194,10 +209,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						}
 					}
 				}
-			}
-			else {
-				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
-				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			}
 		}
 	}
@@ -285,11 +296,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					crystalItem = buff.getCrystal();
 					y = buff.getCorruption(levels) - (crystalItem.getCorruptionReduction() * crystals.get(buff.getCrystal()));
 					//System.out.println("Generated " + y + " corruption for " + buff.getName());
-					newCorruption = newCorruption + y;
+					newCorruption += y;
 				}
 			}
-
-			corruption = corruption + newCorruption - (levels * 10);
+			corruption += newCorruption - (levels * 10);
 		}
 	}
 
@@ -303,14 +313,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					enderman.setTarget(player);
 					enderman.setScreaming(true);
 					worldObj.spawnEntityInWorld(enderman);
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption has allowed a foul demon to spawn from the end"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption has allowed a foul demon to spawn from the end"));
 				}
 			}
 		}
 		if ((corruption > 15000) && (corruptionLevel == 2)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
 				player.travelToDimension(1);
@@ -322,7 +332,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 10000) && (corruptionLevel == 1)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
 				player.attackEntityFrom(DamageSource.magic, 4);
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
@@ -334,7 +344,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 5000) && (corruptionLevel == 0)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond"));
 				player.attackEntityFrom(DamageSource.magic, 2);
 				corruptionLevel = 1;
 				this.corruption = corruption - worldObj.rand.nextInt(100);
@@ -344,7 +354,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if ((player != null) && (corruption > 0)) {
 				player.addPotionEffect(new PotionEffect(Potion.wither.id, (int) corruption/250, 1));
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption flows through your soul"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
 			}
 		}
 	}

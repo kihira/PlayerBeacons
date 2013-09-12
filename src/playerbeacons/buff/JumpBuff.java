@@ -8,7 +8,7 @@ import playerbeacons.item.CrystalItem;
 public class JumpBuff extends Buff {
 
 	public JumpBuff(CrystalItem crystalItem) {
-		super(crystalItem);
+		super(crystalItem, 10, 1, 1);
 	}
 
 	@Override
@@ -17,13 +17,8 @@ public class JumpBuff extends Buff {
 	}
 
 	@Override
-	public int getMinBeaconLevel() {
-		return 1;
-	}
-
-	@Override
 	public float getCorruption(int beaconLevel) {
-		return beaconLevel * 10;
+		return beaconLevel * corruptionGenerated;
 	}
 
 	@Override

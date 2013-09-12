@@ -2,8 +2,10 @@ package playerbeacons.common;
 
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import playerbeacons.buff.Buff;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class Config {
 
@@ -21,15 +23,10 @@ public class Config {
 	public int decapitationEnchantmentID;
 	public int spawnCooldownDuration;
 
-	public boolean swiftnessBuffEnabled;
-	public boolean miningBuffEnabled;
-	public boolean jumpBuffEnabled;
-	public boolean resistanceBuffEnabled;
-
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
 
-	private Configuration config;
+	private final Configuration config;
 	public boolean disableCorruption;
 
 
@@ -79,15 +76,25 @@ public class Config {
 		prop.comment = "Whether to do corruption calculations or not";
 		disableCorruption = prop.getBoolean(false);
 
-		//Buffs
-		prop = config.get("Beacon Buffs", "Swiftness", true);
-		swiftnessBuffEnabled = prop.getBoolean(true);
-		prop = config.get("Beacon Buffs", "Mining Speed", true);
-		miningBuffEnabled = prop.getBoolean(true);
-		prop = config.get("Beacon Buffs", "Jump", true);
-		jumpBuffEnabled = prop.getBoolean(true);
-		prop = config.get("Beacon Buffs", "Resistance", true);
-		resistanceBuffEnabled = prop.getBoolean(true);
+	}
+
+	public void loadBuffs() {
+		Property prop;
+		for (Buff buff:Buff.buffs) {
+			prop = config.get("Beacon Buffs", buff.getName(), true);
+			if (prop.getBoolean(true)) {
+				prop = config.get("Beacon Buffs", buff.getName() + " Required beacon level", buff.getMinBeaconLevel());
+				buff.setMinBeaconLevel(prop.getInt());
+				prop = config.get("Beacon Buffs", buff.getName() + " Corruption per buff level", (int) buff.getCorruption(buff.getMinBeaconLevel()));
+				buff.setCorruption(prop.getInt());
+				prop = config.get("Beacon Buffs", buff.getName() + " Max buff level", buff.getMaxBuffLevel());
+				buff.setMaxBuffLevel(prop.getInt());
+			}
+			else {
+				Buff.buffs.remove(buff);
+			}
+		}
+		config.save();
 	}
 
 	private void save() {

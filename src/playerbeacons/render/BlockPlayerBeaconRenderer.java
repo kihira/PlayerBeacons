@@ -5,11 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.proxy.ClientProxy;
 
-public class PlayerBeaconRenderer extends TileEntitySpecialRenderer {
+public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
-	private ModelPlayerBeacon model;
+	private final ModelPlayerBeacon model;
 
-	public PlayerBeaconRenderer() {
+	public BlockPlayerBeaconRenderer() {
 		model = new ModelPlayerBeacon();
 	}
 
@@ -17,7 +17,7 @@ public class PlayerBeaconRenderer extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		func_110628_a(ClientProxy.playerBeaconTexture);
+		bindTexture(ClientProxy.playerBeaconTexture);
 		GL11.glTranslated(x + 0.5d, y + 1.8001d, z + 0.5d);
 		GL11.glRotatef(180F, 0F, 0F, 1F);
 		GL11.glScalef(1.2F, 1.2F, 1.2F);

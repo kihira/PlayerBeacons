@@ -23,7 +23,7 @@ public class BeheaderItem extends ItemArmor {
 		super(id, EnumArmorMaterial.IRON, 2, 0);
 		setCreativeTab(CreativeTabs.tabCombat);
 		setUnlocalizedName("Beheader");
-		func_111206_d("playerbeacon:beheader");
+		setTextureName("playerbeacon:beheader");
 		setMaxDamage(200);
 	}
 
@@ -44,7 +44,7 @@ public class BeheaderItem extends ItemArmor {
 		if (!entity.worldObj.isRemote) {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer enemyPlayer = (EntityPlayer) entity;
-				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner") == player.username) {
+				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner").equals(player.username)) {
 					if (!enemyPlayer.capabilities.isCreativeMode) {
 						if (enemyPlayer.getCurrentArmor(0) == null) {
 							if (stack.getItemDamage() == 0) {
@@ -55,12 +55,12 @@ public class BeheaderItem extends ItemArmor {
 								enemyPlayer.setCurrentItemOrArmor(4, itemStack);
 								player.setCurrentItemOrArmor(0, null);
 							}
-							else player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3This device needs to be reset before it can claim a victim"));
+							else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3This device needs to be reset before it can claim a victim"));
 						}
-						else player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3The players helmet prevents you from doing that!"));
+						else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3The players helmet prevents you from doing that!"));
 					}
 				}
-				else player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3You need to bind this device to you"));
+				else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3You need to bind this device to you"));
 			}
 		}
 		return true;
@@ -73,18 +73,18 @@ public class BeheaderItem extends ItemArmor {
 					case 1: {
 						if (itemStack.hasTagCompound()) {
 							String owner = itemStack.getTagCompound().getString("owner");
-							if (owner != null) player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6" + owner + " has clamped a strange device clamp around your head"));
-							else player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6You feel a strange device clamp around your head"));
+							if (owner != null) player.sendChatToPlayer(ChatMessageComponent.createFromText("§6" + owner + " has clamped a strange device clamp around your head"));
+							else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
 						}
-						else player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6You feel a strange device clamp around your head"));
+						else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
 					} break;
 					case 100:
-						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6The device tightens, as you hear it power up"));
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("§6The device tightens, as you hear it power up"));
 						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
 						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
 						break;
 					case 200:
-						player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§6With a quick slash, you suddenly find yourself without your head"));
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("§6With a quick slash, you suddenly find yourself without your head"));
 						player.setCurrentItemOrArmor(4, null);
 						player.attackEntityFrom(new DamageBehead(), 100);
 						break;
@@ -101,7 +101,7 @@ public class BeheaderItem extends ItemArmor {
 					NBTTagCompound tagCompound = new NBTTagCompound();
 					tagCompound.setString("owner", par3EntityPlayer.username);
 					par1ItemStack.setTagCompound(tagCompound);
-					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3This device has now been bound to you"));
+					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3This device has now been bound to you"));
 				}
 				if (par1ItemStack.getItemDamage() != 0) {
 					ItemStack itemStack = new ItemStack(PlayerBeacons.beheaderItem);
@@ -110,7 +110,7 @@ public class BeheaderItem extends ItemArmor {
 					itemStack.setTagCompound(nbtTagCompound);
 					par3EntityPlayer.setCurrentItemOrArmor(0, null);
 					par3EntityPlayer.setCurrentItemOrArmor(0, itemStack);
-					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("§3The device clicks, it seems to have reset"));
+					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3The device clicks, it seems to have reset"));
 					return itemStack;
 				}
 			}

@@ -8,7 +8,7 @@ import playerbeacons.item.CrystalItem;
 public class ResistanceBuff extends Buff {
 
 	public ResistanceBuff(CrystalItem crystalItem) {
-		super(crystalItem);
+		super(crystalItem, 20, 2, 3);
 	}
 
 	@Override
@@ -17,13 +17,8 @@ public class ResistanceBuff extends Buff {
 	}
 
 	@Override
-	public int getMinBeaconLevel() {
-		return 3;
-	}
-
-	@Override
 	public float getCorruption(int beaconLevel) {
-		return (beaconLevel - 2) * 20;
+		return (beaconLevel - 2) * corruptionGenerated;
 	}
 
 	@Override

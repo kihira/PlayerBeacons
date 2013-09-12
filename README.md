@@ -83,6 +83,10 @@ Occasionally, you will rise from the grave. To a degree that is. Zombies will ra
 Now for the fun one everyone loves. The Beheader. Yup. It's a helmet that if you wear it, it will chop your head off. It will even chop off your enemies heads! Just click on them with it and they'll wear it. However those pesky helmets will prevent you from doing that.
 If you do manage to though, they will be notified that it was you who did it and that they are wearing it!
 
+####License
+Source code is available under Public Domain.
+All non-Source Code such as, but not limited to, textures, sounds and binaries are under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB
+
 
 
 

@@ -36,7 +36,7 @@ import java.util.Random;
 
 public class EventHandler {
 
-	private Random random = new Random();
+	private final Random random = new Random();
 	private long spawnCooldown = System.currentTimeMillis();
 
 	@ForgeSubscribe
@@ -47,7 +47,7 @@ public class EventHandler {
 		//Death by DamageBehead
 		if (e.source instanceof DamageBehead) {
 			if (deadEntity instanceof EntityPlayer) {
-				deadEntity.entityDropItem(getHead(3, ((EntityPlayer) deadEntity).username), 1);
+				deadEntity.entityDropItem(Util.getHead(3, ((EntityPlayer) deadEntity).username), 1);
 				return;
 			}
 			if (deadEntity instanceof EntityZombie) {
@@ -56,11 +56,11 @@ public class EventHandler {
 				return;
 			}
 			if (deadEntity instanceof EntitySkeleton) {
-				deadEntity.entityDropItem(getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+				deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
 				return;
 			}
 			if (deadEntity instanceof EntityCreeper) {
-				deadEntity.entityDropItem(getHead(4, null), 1);
+				deadEntity.entityDropItem(Util.getHead(4, null), 1);
 				return;
 			}
 		}
@@ -83,22 +83,22 @@ public class EventHandler {
 						Random random = new Random();
 						if ((random.nextInt()) % (12/lvl) == 0) {
 							if (deadEntity instanceof EntityZombie) {
-								deadEntity.entityDropItem(getHead(2, null), 1);
+								deadEntity.entityDropItem(Util.getHead(2, null), 1);
 								return;
 							}
 							if (deadEntity instanceof EntitySkeleton) {
-								deadEntity.entityDropItem(getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+								deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
 								return;
 							}
 							if (deadEntity instanceof EntityCreeper) {
-								deadEntity.entityDropItem(getHead(4, null), 1);
+								deadEntity.entityDropItem(Util.getHead(4, null), 1);
 								return;
 							}
 							if (deadEntity instanceof EntityPlayer) {
 								EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
 								e.setCanceled(true);
-								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(deadPlayer.username + " was beheaded by " + attacker.username));
-								e.entityLiving.entityDropItem(getHead(3, deadPlayer.username), 1);
+								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(deadPlayer.username + " was beheaded by " + attacker.username));
+								e.entityLiving.entityDropItem(Util.getHead(3, deadPlayer.username), 1);
 							}
 						}
 					}
@@ -115,9 +115,9 @@ public class EventHandler {
 				if (entityZombie.worldObj.playerEntities.size() > 0) {
 					int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
-					entityZombie.setCurrentItemOrArmor(4, getHead(3, player.username));
+					entityZombie.setCurrentItemOrArmor(4, Util.getHead(3, player.username));
 					this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oA chill runs down your spine, you feel oddly attached to something"));
 				}
 			}
 		}
@@ -192,15 +192,5 @@ public class EventHandler {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glPopMatrix();
-	}
-
-	private ItemStack getHead(int skullType, String owner) {
-		ItemStack itemStack = new ItemStack(Item.skull, 1, skullType);
-		if (owner != null) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("SkullOwner", owner);
-			itemStack.setTagCompound(tag);
-		}
-		return itemStack;
 	}
 }

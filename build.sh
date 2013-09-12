@@ -2,7 +2,7 @@
 MCVERSION="1.6.2"
 MAJOR="1"
 MINOR="1"
-MINORMINOR="0"
+MINORMINOR="1"
 
 if [ -d "builds" ]; then
   rm -r builds

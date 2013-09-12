@@ -8,8 +8,8 @@ import playerbeacons.proxy.ClientProxy;
 
 public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
-	private ModelPylon model;
-	private ModelCrystalPort modelCrystalPortDefault;
+	private final ModelPylon model;
+	private final ModelCrystalPort modelCrystalPortDefault;
 
 	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();
@@ -53,12 +53,12 @@ public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 	private void renderPylonItem(float x, float y, float z, float scale) {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.pylonTexture);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(ClientProxy.pylonTexture);
 		GL11.glTranslated(x, y, z);
 		GL11.glScalef(scale, scale, scale);
 		GL11.glRotatef(180.0f, 0f, 0f, 1f);
 		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.pylonCrystalPortTexture);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(ClientProxy.pylonCrystalPortTexture);
 		modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
