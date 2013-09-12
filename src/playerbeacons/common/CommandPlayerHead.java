@@ -36,7 +36,7 @@ public class CommandPlayerHead extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender icommandsender, String[] astring) {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
-			EntityPlayer player = icommandsender.func_130014_f_().getPlayerEntityByName(icommandsender.getCommandSenderName());
+			EntityPlayer player = icommandsender.getEntityWorld().getPlayerEntityByName(icommandsender.getCommandSenderName());
 			if (player != null) {
 				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
 				NBTTagCompound tag = new NBTTagCompound();

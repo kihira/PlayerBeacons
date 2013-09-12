@@ -51,7 +51,7 @@ public class ItemPlayerBeaconRenderer implements IItemRenderer {
 	private void renderPlayerBeaconItem(float x, float y, float z, float scale) {
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ClientProxy.playerBeaconTexture);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(ClientProxy.playerBeaconTexture);
 		GL11.glTranslated(x, y, z);
 		GL11.glScalef(scale, scale, scale);
 		GL11.glRotatef(180.0f, 0f, 0f, 1f);

@@ -16,7 +16,7 @@ public class BlockDefiledSoulConductor extends Block {
 		setResistance(100.0F);
 		setCreativeTab(CreativeTabs.tabDecorations);
 		setUnlocalizedName("Defiled Soul Conductor");
-		func_111022_d("playerbeacon:pyramidBrick");
+		setTextureName("playerbeacon:pyramidBrick");
 	}
 
 	public boolean isBeaconBase(World worldObj, int x, int y, int z, int beaconX, int beaconY, int beaconZ) {

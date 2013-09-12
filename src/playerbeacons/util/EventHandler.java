@@ -97,7 +97,7 @@ public class EventHandler {
 							if (deadEntity instanceof EntityPlayer) {
 								EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
 								e.setCanceled(true);
-								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(deadPlayer.username + " was beheaded by " + attacker.username));
+								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(deadPlayer.username + " was beheaded by " + attacker.username));
 								e.entityLiving.entityDropItem(getHead(3, deadPlayer.username), 1);
 							}
 						}
@@ -117,7 +117,7 @@ public class EventHandler {
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
 					entityZombie.setCurrentItemOrArmor(4, getHead(3, player.username));
 					this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oA chill runs down your spine, you feel oddly attached to something"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oA chill runs down your spine, you feel oddly attached to something"));
 				}
 			}
 		}

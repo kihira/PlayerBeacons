@@ -40,24 +40,24 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			GL11.glTranslated(x + 0.5d, y + 1.5001d, z + 0.5d);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
-			func_110628_a(ClientProxy.pylonTextureBase);
+			bindTexture(ClientProxy.pylonTextureBase);
 			modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		else if (tileEntityDefiledSoulPylon.isPylonTop()) {
 			GL11.glTranslated(x + 0.5d, y - 0.5d, z + 0.5d);
 			GL11.glRotatef(0F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
-			func_110628_a(ClientProxy.pylonTextureBase);
+			bindTexture(ClientProxy.pylonTextureBase);
 			modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		else {
 			GL11.glTranslated(x + 0.5d, y + 1.5001d, z + 0.5d);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
-			func_110628_a(ClientProxy.pylonTexture);
+			bindTexture(ClientProxy.pylonTexture);
 			modelPylon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-			func_110628_a(ClientProxy.pylonCrystalPortTexture);
+			bindTexture(ClientProxy.pylonCrystalPortTexture);
 			if (itemStack != null) {
 				if (itemStack.getItem() instanceof DigCrystalItem) modelCrystalPortDig.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (itemStack.getItem() instanceof JumpCrystalItem) modelCrystalPortJump.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);

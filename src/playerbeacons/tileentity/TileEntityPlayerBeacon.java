@@ -88,7 +88,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.customParam1);
+		readFromNBT(pkt.data);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -159,6 +159,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			dragon.setCustomNameTag(owner + "'s Puppy");
 			worldObj.spawnEntityInWorld(dragon);
 		}
+		else hasSkull = false;
 	}
 
 	public void doEffects() {
@@ -312,14 +313,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					enderman.setTarget(player);
 					enderman.setScreaming(true);
 					worldObj.spawnEntityInWorld(enderman);
-					player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption has allowed a foul demon to spawn from the end"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption has allowed a foul demon to spawn from the end"));
 				}
 			}
 		}
 		if ((corruption > 15000) && (corruptionLevel == 2)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
 				player.travelToDimension(1);
@@ -331,7 +332,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 10000) && (corruptionLevel == 1)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
 				player.attackEntityFrom(DamageSource.magic, 4);
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
@@ -343,7 +344,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		if ((corruption > 5000) && (corruptionLevel == 0)) {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if (player != null) {
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYou feel an unknown force grasp at you from the beyond"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond"));
 				player.attackEntityFrom(DamageSource.magic, 2);
 				corruptionLevel = 1;
 				this.corruption = corruption - worldObj.rand.nextInt(100);
@@ -353,7 +354,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 			if ((player != null) && (corruption > 0)) {
 				player.addPotionEffect(new PotionEffect(Potion.wither.id, (int) corruption/250, 1));
-				player.sendChatToPlayer(ChatMessageComponent.func_111066_d("§4§oYour corruption flows through your soul"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
 			}
 		}
 	}

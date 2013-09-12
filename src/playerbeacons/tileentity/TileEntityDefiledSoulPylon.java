@@ -32,7 +32,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.customParam1);
+		readFromNBT(pkt.data);
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
