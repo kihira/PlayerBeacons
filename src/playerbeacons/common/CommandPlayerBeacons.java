@@ -41,8 +41,11 @@ public class CommandPlayerBeacons extends CommandBase {
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
-
-		return par2ArrayOfStr.length == 1 ? getListOfStringsMatchingLastWord(par2ArrayOfStr, MinecraftServer.getServer().getAllUsernames()) : null;
+		if (par2ArrayOfStr.length == 1) return getListOfStringsMatchingLastWord(par2ArrayOfStr, "setowner", "setcorruption");
+		else if (par2ArrayOfStr.length == 2) {
+			if (par2ArrayOfStr[0].toLowerCase().equals("setowner")) return getListOfStringsMatchingLastWord(par2ArrayOfStr, MinecraftServer.getServer().getAllUsernames());
+		}
+		return null;
 	}
 
 	@Override

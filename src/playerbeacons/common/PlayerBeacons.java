@@ -110,7 +110,7 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerAboutToStartEvent e) {
 		beaconData = new BeaconDataHandler();
-		System.out.println("Loaded beacon data");
+		System.out.println("[PlayerBeacons] Loaded beacon data");
 	}
 
 	@Mod.EventHandler

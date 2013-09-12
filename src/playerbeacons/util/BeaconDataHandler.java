@@ -110,7 +110,7 @@ public class BeaconDataHandler {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (!playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), nbtTagCompound);
-				saveData(playerData);
+				saveData(beaconList);
 			}
 		}
 	}

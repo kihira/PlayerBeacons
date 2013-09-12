@@ -119,6 +119,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
 			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, newOwner, nbtTagCompound);
 			this.owner = newOwner;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -176,9 +177,13 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
+			else if (skull.getSkullType() == 3) {
+				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
+				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
+			}
 
 			//Mob Head
-			else if (levels > 0) {
+			else if (levels > 0 && skull.getSkullType() != 3) {
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
@@ -203,10 +208,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						}
 					}
 				}
-			}
-			else {
-				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
-				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			}
 		}
 	}
