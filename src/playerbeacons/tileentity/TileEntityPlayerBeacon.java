@@ -104,7 +104,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (player != null) {
 				this.owner = player.username;
 				this.corruption = 0;
-				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, 0, 0, 0, 0, (short) 0);
+				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
 			}
 		}
 	}

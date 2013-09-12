@@ -6,10 +6,10 @@ import net.minecraft.entity.Entity;
 
 public class ModelCrystalPort extends ModelBase {
 
-	ModelRenderer crystalport1;
-	ModelRenderer crystalport2;
-	ModelRenderer crystalport3;
-	ModelRenderer crystalport4;
+	private final ModelRenderer crystalport1;
+	private final ModelRenderer crystalport2;
+	private final ModelRenderer crystalport3;
+	private final ModelRenderer crystalport4;
 
 	public ModelCrystalPort(int textureYOffset) {
 
@@ -19,25 +19,21 @@ public class ModelCrystalPort extends ModelBase {
 		crystalport1 = new ModelRenderer(this, 0, textureYOffset);
 		crystalport1.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport1.setRotationPoint(0F, 13F, 4.5F);
-		crystalport1.setTextureSize(64, 32);
 		crystalport1.mirror = true;
 		setRotation(crystalport1, 0F, 0F, 0F);
 		crystalport2 = new ModelRenderer(this, 0, textureYOffset);
 		crystalport2.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport2.setRotationPoint(4.5F, 13F, 0F);
-		crystalport2.setTextureSize(64, 32);
 		crystalport2.mirror = true;
 		setRotation(crystalport2, 0F, 1.570796F, 0F);
 		crystalport3 = new ModelRenderer(this, 0, textureYOffset);
 		crystalport3.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport3.setRotationPoint(0F, 13F, -4.5F);
-		crystalport3.setTextureSize(64, 32);
 		crystalport3.mirror = true;
 		setRotation(crystalport3, 0F, 3.141593F, 0F);
 		crystalport4 = new ModelRenderer(this, 0, textureYOffset);
 		crystalport4.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport4.setRotationPoint(-4.5F, 13F, 0F);
-		crystalport4.setTextureSize(64, 32);
 		crystalport4.mirror = true;
 		setRotation(crystalport4, 0F, -1.570796F, 0F);
 	}
@@ -57,7 +53,7 @@ public class ModelCrystalPort extends ModelBase {
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
+	private void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
 		super.setRotationAngles(f, f1, f2, f3, f4, f5, null);
 	}
 }

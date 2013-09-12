@@ -24,8 +24,8 @@ public class ServerTickHandler implements IScheduledTickHandler {
 		for (WorldServer worldServer : mc.worldServers) {
 			if (worldServer.playerEntities != null) {
 				List<Object> playerEntities = new ArrayList<Object>(worldServer.playerEntities);
-				for (Iterator<Object> it = playerEntities.iterator(); it.hasNext();) {
-					EntityPlayer entityPlayer = (EntityPlayer) it.next();
+				for (Object playerEntity : playerEntities) {
+					EntityPlayer entityPlayer = (EntityPlayer) playerEntity;
 					NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldServer, entityPlayer.username);
 					if (nbtTagCompound != null) {
 						int x = nbtTagCompound.getInteger("x");

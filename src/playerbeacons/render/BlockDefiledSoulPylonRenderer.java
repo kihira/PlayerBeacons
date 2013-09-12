@@ -10,13 +10,13 @@ import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 
 public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
-	private ModelPylonBase modelPylonBase;
-	private ModelPylon modelPylon;
-	private ModelCrystalPort modelCrystalPortDefault;
-	private ModelCrystalPort modelCrystalPortDig;
-	private ModelCrystalPort modelCrystalPortJump;
-	private ModelCrystalPort modelCrystalPortSpeed;
-	private ModelCrystalPort modelCrystalPortRes;
+	private final ModelPylonBase modelPylonBase;
+	private final ModelPylon modelPylon;
+	private final ModelCrystalPort modelCrystalPortDefault;
+	private final ModelCrystalPort modelCrystalPortDig;
+	private final ModelCrystalPort modelCrystalPortJump;
+	private final ModelCrystalPort modelCrystalPortSpeed;
+	private final ModelCrystalPort modelCrystalPortRes;
 
 	public BlockDefiledSoulPylonRenderer() {
 		modelPylon = new ModelPylon();

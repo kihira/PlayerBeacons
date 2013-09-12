@@ -55,7 +55,7 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short corruptionLevels) {
+	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int levels, short corruptionLevels) {
 		if (beaconList.hasKey(player)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(player);
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
@@ -65,10 +65,6 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
 				playerDataWorld.setFloat("badstuff", corruption);
-				playerDataWorld.setInteger("resCrystals", resCrystals);
-				playerDataWorld.setInteger("speedCrystals", speedCrystals);
-				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
-				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
 				playerDataWorld.setShort("badstufflevel", corruptionLevels);
 				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
@@ -79,16 +75,14 @@ public class BeaconDataHandler {
 		return false;
 	}
 
-	public boolean deleteBeaconInformation(World world, String username) {
+	public void deleteBeaconInformation(World world, String username) {
 		if (beaconList.hasKey(username)) {
 			NBTTagCompound playerData = beaconList.getCompoundTag(username);
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				playerData.removeTag(String.valueOf(world.provider.dimensionId));
 				saveData(beaconList);
-				return true;
 			}
 		}
-		return false;
 	}
 
 	public NBTTagCompound loadBeaconInformation(World world, String username) {
@@ -115,7 +109,7 @@ public class BeaconDataHandler {
 		}
 	}
 
-	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int resCrystals, int speedCrystals, int jumpCrystals, int digCrystals, int levels, short corruptionLevels) {
+	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int levels, short corruptionLevels) {
 		if (!beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
 			beaconList.setCompoundTag(player, newPlayerData);
@@ -129,10 +123,6 @@ public class BeaconDataHandler {
 				playerDataWorld.setInteger("z", z);
 				playerDataWorld.setBoolean("inactive", isActive);
 				playerDataWorld.setFloat("badstuff", corruption);
-				playerDataWorld.setInteger("resCrystals", resCrystals);
-				playerDataWorld.setInteger("speedCrystals", speedCrystals);
-				playerDataWorld.setInteger("jumpCrystals", jumpCrystals);
-				playerDataWorld.setInteger("digCrystals", digCrystals);
 				playerDataWorld.setInteger("levels", levels);
 				playerDataWorld.setShort("badstufflevel", corruptionLevels);
 				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);

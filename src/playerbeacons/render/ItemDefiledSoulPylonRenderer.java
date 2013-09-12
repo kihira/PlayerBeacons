@@ -8,8 +8,8 @@ import playerbeacons.proxy.ClientProxy;
 
 public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
-	private ModelPylon model;
-	private ModelCrystalPort modelCrystalPortDefault;
+	private final ModelPylon model;
+	private final ModelCrystalPort modelCrystalPortDefault;
 
 	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();

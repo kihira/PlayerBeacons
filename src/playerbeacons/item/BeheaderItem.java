@@ -44,7 +44,7 @@ public class BeheaderItem extends ItemArmor {
 		if (!entity.worldObj.isRemote) {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer enemyPlayer = (EntityPlayer) entity;
-				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner") == player.username) {
+				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner").equals(player.username)) {
 					if (!enemyPlayer.capabilities.isCreativeMode) {
 						if (enemyPlayer.getCurrentArmor(0) == null) {
 							if (stack.getItemDamage() == 0) {

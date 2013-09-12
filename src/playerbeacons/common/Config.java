@@ -26,7 +26,7 @@ public class Config {
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
 
-	private Configuration config;
+	private final Configuration config;
 	public boolean disableCorruption;
 
 

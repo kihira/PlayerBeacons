@@ -5,11 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.proxy.ClientProxy;
 
-public class PlayerBeaconRenderer extends TileEntitySpecialRenderer {
+public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
-	private ModelPlayerBeacon model;
+	private final ModelPlayerBeacon model;
 
-	public PlayerBeaconRenderer() {
+	public BlockPlayerBeaconRenderer() {
 		model = new ModelPlayerBeacon();
 	}
 

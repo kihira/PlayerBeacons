@@ -10,6 +10,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
+import playerbeacons.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class CommandPlayerBeacons extends CommandBase {
 	public void processCommand(ICommandSender icommandsender, String[] astring) {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = getCommandSenderAsPlayer(icommandsender);
-			MovingObjectPosition targetBlock = getBlockLookAt(player, 4);
+			MovingObjectPosition targetBlock = Util.getBlockLookAt(player, 4);
 			System.out.println(targetBlock.blockX + " " + targetBlock.blockY + " " + targetBlock.blockZ);
 			if (player.worldObj.getBlockId(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ) == PlayerBeacons.config.playerBeaconBlockID) {
 				System.out.println("Got a player beacon!");
@@ -86,12 +87,5 @@ public class CommandPlayerBeacons extends CommandBase {
 			else throw new WrongUsageException("commands.playerhead.notBeacon", targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ);
 		}
 		else throw new WrongUsageException("commands.playerhead.usage", (Object) astring);
-	}
-
-	private MovingObjectPosition getBlockLookAt(EntityPlayer player, double maxBlockDistance) {
-		Vec3 vec3 = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + (player.worldObj.isRemote ? 0.0D : (player.getEyeHeight() - 0.09D)), player.posZ);
-		Vec3 vec31 = player.getLookVec();
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * maxBlockDistance, vec31.yCoord * maxBlockDistance, vec31.zCoord * maxBlockDistance);
-		return player.worldObj.clip(vec3, vec32);
 	}
 }

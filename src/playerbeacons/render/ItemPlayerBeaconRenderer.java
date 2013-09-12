@@ -9,7 +9,7 @@ import playerbeacons.proxy.ClientProxy;
 
 public class ItemPlayerBeaconRenderer implements IItemRenderer {
 
-	private ModelPlayerBeacon modelPlayerBeacon;
+	private final ModelPlayerBeacon modelPlayerBeacon;
 
 	public ItemPlayerBeaconRenderer() {
 		modelPlayerBeacon = new ModelPlayerBeacon();
