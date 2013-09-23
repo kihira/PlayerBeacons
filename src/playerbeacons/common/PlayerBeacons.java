@@ -50,7 +50,7 @@ public class PlayerBeacons {
 	public static JumpCrystalItem jumpCrystalItem;
 	public static ResCrystalItem resCrystalItem;
 
-	public static EnchantmentDecapitation enchantmentDecapitation;
+	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 
 	public static BeaconDataHandler beaconData;
 
@@ -82,8 +82,6 @@ public class PlayerBeacons {
 		resCrystalItem = new ResCrystalItem(config.resCrystalItemID);
 		GameRegistry.registerItem(resCrystalItem, "resCrystalItem");
 
-		enchantmentDecapitation = new EnchantmentDecapitation(config.decapitationEnchantmentID);
-
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
@@ -93,6 +91,8 @@ public class PlayerBeacons {
 		config.loadBuffs();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
+
+		new EnchantmentDecapitation(config.decapitationEnchantmentID);
 
 		ItemStack itemStack = makeResearchNotes();
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);
@@ -133,6 +133,7 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
+		LanguageRegistry.instance().addStringLocalization("itemGroup.playerBeacons", "Player Beacons");
 		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
 		LanguageRegistry.addName(jumpCrystalItem, "Jump Crystal");
 		LanguageRegistry.addName(digCrystalItem, "Dig Crystal");

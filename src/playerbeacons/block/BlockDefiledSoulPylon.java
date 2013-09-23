@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 
@@ -22,7 +23,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		super(id, Material.rock);
 		setHardness(8f);
 		setResistance(100.0F);
-		setCreativeTab(CreativeTabs.tabDecorations);
+		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
 		setUnlocalizedName("Defiled Soul Pylon");
 		setTextureName("playerbeacon:pyramidBrick");
 		setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);

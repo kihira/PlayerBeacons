@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.world.World;
+import playerbeacons.common.PlayerBeacons;
 
 public class BlockDefiledSoulConductor extends Block {
 
@@ -14,7 +15,7 @@ public class BlockDefiledSoulConductor extends Block {
 		super(id, Material.rock);
 		setHardness(15f);
 		setResistance(100.0F);
-		setCreativeTab(CreativeTabs.tabDecorations);
+		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
 		setUnlocalizedName("Defiled Soul Conductor");
 		setTextureName("playerbeacon:pyramidBrick");
 	}

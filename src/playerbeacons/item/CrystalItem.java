@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import playerbeacons.buff.Buff;
+import playerbeacons.common.PlayerBeacons;
 
 public class CrystalItem extends Item {
 
@@ -15,7 +16,7 @@ public class CrystalItem extends Item {
 		//This equals one day in real time. Change it depending on how fast we calculate bad stuff
 		setMaxDamage(43200);
 		setMaxStackSize(1);
-		setCreativeTab(CreativeTabs.tabMaterials);
+		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
 		setTextureName("playerbeacon:grayXtal");
 		setUnlocalizedName("Depleted Crystal");
 		corruptionValue = 10f;

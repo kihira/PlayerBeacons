@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
@@ -138,7 +139,7 @@ public class EventHandler {
 					int z = tileEntityPlayerBeacon.zCoord;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
 					String owner = tileEntityPlayerBeacon.getOwner();
-					if (movingObject.blockX == x && movingObject.blockY == y && movingObject.blockZ == z) {
+					//if (movingObject.blockX == x && movingObject.blockY == y && movingObject.blockZ == z) {
 						double viewX = movingObject.blockX - RenderManager.renderPosX;
 						double viewY = movingObject.blockY - RenderManager.renderPosY;
 						double viewZ = movingObject.blockZ - RenderManager.renderPosZ;
@@ -147,11 +148,25 @@ public class EventHandler {
 						else if (corruption >= 6000) string = "Corruption: §c" + String.valueOf(corruption);
 						else if (corruption >= 3000) string = "Corruption: §e" + String.valueOf(corruption);
 						else string = "Corruption: " + String.valueOf(corruption);
-						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
+
+						double angle = Math.atan2(x - mc.thePlayer.posX, z - mc.thePlayer.posZ) - Math.PI/2;
+						double xCoord = Math.sin(angle) * 1;
+						double zCoord = Math.cos(angle) * 1;
+
+						Potion potion = Potion.potionTypes[1];
+						int l = potion.getStatusIconIndex();
+						//this.drawTexturedModalRect(i + 6, j + 7, 0 + l % 8 * 18, 198 + l / 8 * 18, 18, 18);
+
+						/*
+						renderLabel(string, (float) (viewX + 0.5F + xCoord), (float) viewY + 1.5F, (float) (viewZ + 0.5F + zCoord));
+						renderLabel("test 1", (float) (viewX + 0.5F + xCoord), (float) viewY + 1.3F, (float) (viewZ + 0.5F + zCoord));
+						renderLabel("test 2", (float) (viewX + 0.5F + xCoord), (float) viewY + 1.1F, (float) (viewZ + 0.5F + zCoord));
+						renderLabel("test 3", (float) (viewX + 0.5F + xCoord), (float) viewY + 0.9F, (float) (viewZ + 0.5F + zCoord));
+						*/
 						if (owner.equals(" ")) owner = "§kNo-one";
 						string = "Bound to: §4" + owner;
-						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
-					}
+						//renderLabel(string, (float) xCoord + 0.5F, (float) viewY + 2.0F, (float) zCoord + 0.5F);
+					//}
 				}
 			}
 		}
@@ -160,7 +175,7 @@ public class EventHandler {
 	private void renderLabel(String string, float viewX, float viewY, float viewZ) {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		RenderManager renderManager = RenderManager.instance;
-		float f1 = 0.016666668F * 1.6F;
+		float f1 = 0.016666668F * 1.4F;
 		GL11.glPushMatrix();
 		GL11.glTranslatef(viewX, viewY, viewZ);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
@@ -172,6 +187,7 @@ public class EventHandler {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		/*
 		Tessellator tessellator = Tessellator.instance;
 		byte b0 = 0;
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -184,10 +200,15 @@ public class EventHandler {
 		tessellator.addVertex((double)(j + 1), (double)(-1 + b0), 0.0D);
 		tessellator.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, 553648127);
+		*/
+		//fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, 553648127); //align center
+		//fontRenderer.drawString(string, -fontRenderer.getStringWidth(string), 0, 553648127); //align right
+		fontRenderer.drawString(string, 0, 0, 553648127); //align left
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
-		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1);
+		//fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1); //align center
+		//fontRenderer.drawString(string, -fontRenderer.getStringWidth(string), 0, -1);
+		fontRenderer.drawString(string, 0, 0, -1);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
