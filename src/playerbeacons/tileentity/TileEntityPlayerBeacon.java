@@ -34,10 +34,7 @@ import playerbeacons.buff.Buff;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TileEntityPlayerBeacon extends TileEntity {
 
@@ -54,19 +51,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
-		/*
-		NBTTagCompound nbtTagCompound = par1NBTTagCompound.getCompoundTag("beacondata");
-		if (nbtTagCompound != null) {
-			this.corruption = par1NBTTagCompound.getFloat("badstuff");
-			this.isActive = nbtTagCompound.getBoolean("isActive");
-			this.levels = nbtTagCompound.getInteger("levels");
-			crystals.put(PlayerBeacons.resCrystalItem, nbtTagCompound.getInteger("resCrystals"));
-			crystals.put(PlayerBeacons.speedCrystalItem, nbtTagCompound.getInteger("speedCrystals"));
-			crystals.put(PlayerBeacons.jumpCrystalItem, nbtTagCompound.getInteger("jumpCrystals"));
-			crystals.put(PlayerBeacons.digCrystalItem, nbtTagCompound.getInteger("digCrystals"));
-			this.corruptionLevel = nbtTagCompound.getShort("badstufflevel");
-		}
-		*/
 	}
 
 	@Override
@@ -75,15 +59,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", corruption);
 		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
-		/*
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			PlayerBeacons.beaconData.updateBeaconInformation(worldObj, owner, xCoord, yCoord, zCoord, isActive, corruption, 0, 0, 0, 0, levels, corruptionLevel);
-			NBTTagCompound tagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldObj, owner);
-			if (tagCompound != null) {
-				par1NBTTagCompound.setCompoundTag("beacondata", tagCompound);
-			}
-		}
-		*/
 	}
 
 	@Override
@@ -164,8 +139,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void doEffects() {
 		TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-		//Player Head
 		if (skull != null) {
+			//Owner's Head
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
 				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
@@ -182,20 +157,24 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord, this.zCoord));
 				worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			}
-
 			//Mob Head
-			else if (levels > 0 && skull.getSkullType() != 3) {
+			else if (levels > 0) {
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
 				List list = null;
-				//TODO tell difference between wither and normal skele. Use IEntitySelector?
 				int skullType = skull.getSkullType();
-				if (skullType == 0) list = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
-				else if (skullType == 1) list = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
+				if (skullType == 0 || skullType == 1) {
+					List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
+					list = new ArrayList<Object>();
+					for (Object object:list1) {
+						EntitySkeleton skeleton = (EntitySkeleton) object;
+						if (skeleton.getSkeletonType() == skullType) list.add(object);
+					}
+				}
 				else if (skullType == 2) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisalignedbb);
 				else if (skullType == 4) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisalignedbb);
-				if (list != null) {
+				if (list != null && !list.isEmpty()) {
 					EntityCreature entityCreature;
 					for (Object aList : list) {
 						entityCreature = (EntityCreature) aList;
@@ -220,8 +199,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	public void setCorruption(float newCorruption, boolean adjustLevel) {
 		if (newCorruption >= 0) corruption = newCorruption;
 		if (adjustLevel) {
-			if (newCorruption >= 3000) corruptionLevel = 1;
-			else if (newCorruption >= 6000) corruptionLevel = 2;
+			if (newCorruption >= 5000) corruptionLevel = 1;
+			else if (newCorruption >= 10000) corruptionLevel = 2;
 			else corruptionLevel = 0;
 		}
 	}
@@ -299,7 +278,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					newCorruption += y;
 				}
 			}
-			corruption += newCorruption - (levels * 10);
+			setCorruption(corruption + newCorruption - (levels * 10), true);
 		}
 	}
 
@@ -325,7 +304,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 600));
 				player.travelToDimension(1);
 				corruptionLevel = 0;
-				this.corruption = corruption - worldObj.rand.nextInt(900);
+				this.corruption = corruption - worldObj.rand.nextInt(9000);
 			}
 			return;
 		}
@@ -337,7 +316,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 600));
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 300));
 				corruptionLevel = 2;
-				this.corruption = corruption - worldObj.rand.nextInt(200);
+				this.corruption = corruption - worldObj.rand.nextInt(2000);
 			}
 			return;
 		}
@@ -347,7 +326,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond"));
 				player.attackEntityFrom(DamageSource.magic, 2);
 				corruptionLevel = 1;
-				this.corruption = corruption - worldObj.rand.nextInt(100);
+				this.corruption = corruption - worldObj.rand.nextInt(1000);
 			}
 		}
 		if (alwaysDoCorruption) {

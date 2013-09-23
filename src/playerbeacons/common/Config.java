@@ -65,6 +65,7 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Allow Zombies to spawn with player heads", true);
+		prop.comment = "WARNING: Mobs wearing heads do not despawn and may build up over time.";
 		enableZombieHead = prop.getBoolean(true);
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
 		prop.comment = "WARNING: This could destroy parts of your world unintentionally";

@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import playerbeacons.util.Util;
 
 import java.util.List;
 
@@ -16,11 +17,6 @@ public class CommandPlayerHead extends CommandBase {
 	@Override
 	public String getCommandName() {
 		return "playerhead";
-	}
-
-	@Override
-	public int getRequiredPermissionLevel() {
-		return 2;
 	}
 
 	@Override
@@ -38,17 +34,10 @@ public class CommandPlayerHead extends CommandBase {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = icommandsender.getEntityWorld().getPlayerEntityByName(icommandsender.getCommandSenderName());
 			if (player != null) {
-				ItemStack itemStack = new ItemStack(Item.skull, 1, 3);
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setString("SkullOwner", astring[0]);
-				itemStack.setTagCompound(tag);
-				player.entityDropItem(itemStack, 1);
+				player.entityDropItem(Util.getHead(3, astring[0]), 1);
 				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.username);
 			}
 		}
-		else
-		{
-			throw new WrongUsageException("commands.playerhead.usage", astring);
-		}
+		else throw new WrongUsageException("commands.playerhead.usage", astring);
 	}
 }
