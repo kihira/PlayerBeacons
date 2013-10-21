@@ -4,10 +4,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.render.BlockDefiledSoulPylonRenderer;
-import playerbeacons.render.BlockPlayerBeaconRenderer;
-import playerbeacons.render.ItemDefiledSoulPylonRenderer;
-import playerbeacons.render.ItemPlayerBeaconRenderer;
+import playerbeacons.render.*;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 

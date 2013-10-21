@@ -3,12 +3,11 @@ package playerbeacons.buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import playerbeacons.item.CrystalItem;
 
 public class DigBuff extends Buff {
 
-	public DigBuff(CrystalItem crystalItem) {
-		super(crystalItem, 10, 1, 1);
+	public DigBuff() {
+		super("dig", 10, 1, 1);
 	}
 
 	@Override

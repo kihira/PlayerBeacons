@@ -1,29 +1,25 @@
 package playerbeacons.buff;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import playerbeacons.item.CrystalItem;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Buff {
 
-	public static ArrayList<Buff> buffs = new ArrayList<Buff>();
+	public static HashMap<String, Buff> buffs = new HashMap<String, Buff>();
 
-	protected CrystalItem crystalItem;
 	protected float corruptionGenerated;
 	protected int maxBuffLevel;
 	protected int minBeaconLevel;
 
-	public Buff(CrystalItem crystalItem, float corruptionGenerated, int maxBuffLevel, int minBeaconLevel) {
-		if (!buffs.contains(this)) {
-			buffs.add(this);
-			this.crystalItem = crystalItem;
+	public Buff(String simpleName, float corruptionGenerated, int maxBuffLevel, int minBeaconLevel) {
+		if (!buffs.containsKey(simpleName)) {
+			buffs.put(simpleName, this);
 			this.corruptionGenerated = corruptionGenerated;
 			this.maxBuffLevel = maxBuffLevel;
 			this.minBeaconLevel = minBeaconLevel;
 		}
-		else throw new IllegalArgumentException("Buff " + this.getName() + " is already registered");
+		else throw new IllegalArgumentException("Buff " + simpleName + " is already registered");
 	}
 
 	public abstract String getName();
@@ -35,9 +31,6 @@ public abstract class Buff {
 	}
 	public int getMaxBuffLevel() {
 		return maxBuffLevel;
-	}
-	public CrystalItem getCrystal() {
-		return crystalItem;
 	}
 	public void setCorruption(float newCorruption) {
 		corruptionGenerated = newCorruption;

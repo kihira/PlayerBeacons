@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,10 +27,9 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.CrystalItem;
+import playerbeacons.item.NewCrystalItem;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
-import java.util.List;
 import java.util.Random;
 
 public class EventHandler {
@@ -129,7 +127,7 @@ public class EventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		MovingObjectPosition movingObject = mc.objectMouseOver;
 		if (movingObject != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
+			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof NewCrystalItem)) {
 				TileEntity tileEntity = mc.theWorld.getBlockTileEntity(movingObject.blockX , movingObject.blockY, movingObject.blockZ);
 				if (tileEntity != null && tileEntity instanceof TileEntityPlayerBeacon) {
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;

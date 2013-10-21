@@ -13,19 +13,19 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 	private final ModelPylonBase modelPylonBase;
 	private final ModelPylon modelPylon;
 	private final ModelCrystalPort modelCrystalPortDefault;
-	private final ModelCrystalPort modelCrystalPortDig;
-	private final ModelCrystalPort modelCrystalPortJump;
-	private final ModelCrystalPort modelCrystalPortSpeed;
-	private final ModelCrystalPort modelCrystalPortRes;
+	private final ModelCrystalPort modelCrystalPortBrown;
+	private final ModelCrystalPort modelCrystalPortGreen;
+	private final ModelCrystalPort modelCrystalPortLightBlue;
+	private final ModelCrystalPort modelCrystalPortBlack;
 
 	public BlockDefiledSoulPylonRenderer() {
 		modelPylon = new ModelPylon();
 		modelPylonBase = new ModelPylonBase();
 		modelCrystalPortDefault = new ModelCrystalPort(0);
-		modelCrystalPortDig = new ModelCrystalPort(24);
-		modelCrystalPortJump = new ModelCrystalPort(6);
-		modelCrystalPortSpeed = new ModelCrystalPort(12);
-		modelCrystalPortRes = new ModelCrystalPort(18);
+		modelCrystalPortBrown = new ModelCrystalPort(24);
+		modelCrystalPortGreen = new ModelCrystalPort(6);
+		modelCrystalPortLightBlue = new ModelCrystalPort(12);
+		modelCrystalPortBlack = new ModelCrystalPort(18);
 	}
 
 	@Override
@@ -59,10 +59,11 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 			bindTexture(ClientProxy.pylonCrystalPortTexture);
 			if (itemStack != null) {
-				if (itemStack.getItem() instanceof DigCrystalItem) modelCrystalPortDig.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof JumpCrystalItem) modelCrystalPortJump.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof SpeedCrystalItem) modelCrystalPortSpeed.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof ResCrystalItem) modelCrystalPortRes.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				//TODO make this dynamic and customizable?
+				if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("brown")) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("green")) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("lightblue")) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("black")) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
 			else {

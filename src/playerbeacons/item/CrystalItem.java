@@ -1,15 +1,15 @@
 package playerbeacons.item;
 
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import playerbeacons.buff.Buff;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
 
-public class CrystalItem extends Item {
+import java.util.List;
 
-	protected float corruptionValue;
+public class CrystalItem extends Item {
 
 	public CrystalItem(int id) {
 		super(id);
@@ -18,11 +18,29 @@ public class CrystalItem extends Item {
 		setMaxStackSize(1);
 		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
 		setTextureName("playerbeacon:grayXtal");
-		setUnlocalizedName("Depleted Crystal");
-		corruptionValue = 10f;
+		setUnlocalizedName("crystalitem");
 	}
 
-	public float getCorruptionReduction() {
-		return corruptionValue;
+	@Override
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+		if (!par2World.isRemote) {
+			ItemStack itemStack = new ItemStack(PlayerBeacons.newCrystalItem);
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			NBTTagCompound tagCompound1 = new NBTTagCompound();
+			if (par1ItemStack.itemID == PlayerBeacons.digCrystalItem.itemID) tagCompound1.setString("CrystalName", "brown");
+			else if (par1ItemStack.itemID == PlayerBeacons.jumpCrystalItem.itemID) tagCompound1.setString("CrystalName", "green");
+			else if (par1ItemStack.itemID == PlayerBeacons.speedCrystalItem.itemID) tagCompound1.setString("CrystalName", "lightblue");
+			else if (par1ItemStack.itemID == PlayerBeacons.resCrystalItem.itemID) tagCompound1.setString("CrystalName", "black");
+			else tagCompound1.setString("CrystalName" ,"depleted");
+			tagCompound.setCompoundTag("PlayerBeacons", tagCompound1);
+			itemStack.setTagCompound(tagCompound);
+			par3EntityPlayer.setCurrentItemOrArmor(0, itemStack);
+		}
+		return par1ItemStack;
+	}
+
+	@Override
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+		par3List.add("DEPRECIATED: Right click whilst holding to update");
 	}
 }

@@ -5,6 +5,5 @@ public class DigCrystalItem extends CrystalItem {
 		super(id);
 		setTextureName("playerbeacon:brownXtal");
 		setUnlocalizedName("digCrystalItem");
-		corruptionValue = 10f;
 	}
 }

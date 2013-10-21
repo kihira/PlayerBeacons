@@ -3,12 +3,11 @@ package playerbeacons.buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import playerbeacons.item.CrystalItem;
 
 public class SpeedBuff extends Buff {
 
-	public SpeedBuff(CrystalItem crystalItem) {
-		super(crystalItem, 10, 1, 1);
+	public SpeedBuff() {
+		super("speed", 10, 1, 1);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 public class CreativeTabPlayerBeacons extends CreativeTabs {
 
 	public CreativeTabPlayerBeacons() {
-		super("playerBeacons");
+		super("playerbeacons");
 	}
 
 	public int getTabIconItemIndex() {

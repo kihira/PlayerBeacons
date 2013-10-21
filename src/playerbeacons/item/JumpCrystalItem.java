@@ -5,6 +5,5 @@ public class JumpCrystalItem extends CrystalItem {
 		super(id);
 		setTextureName("playerbeacon:greenXtal");
 		setUnlocalizedName("jumpCrystalItem");
-		corruptionValue = 10f;
 	}
 }

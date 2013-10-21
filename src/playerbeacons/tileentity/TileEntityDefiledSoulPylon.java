@@ -9,7 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.CrystalItem;
+import playerbeacons.item.NewCrystalItem;
 
 public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory {
 
@@ -105,7 +105,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		return i == 0 && itemstack.getItem() instanceof CrystalItem;
+		return i == 0 && itemstack.getItem() instanceof NewCrystalItem;
 	}
 
 	public boolean isPylonBase() {

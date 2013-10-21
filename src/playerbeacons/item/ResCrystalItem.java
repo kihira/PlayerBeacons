@@ -5,6 +5,5 @@ public class ResCrystalItem extends CrystalItem {
 		super(id);
 		setTextureName("playerbeacon:redXtal");
 		setUnlocalizedName("resCrystalItem");
-		corruptionValue = 10f;
 	}
 }

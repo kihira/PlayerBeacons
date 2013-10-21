@@ -6,6 +6,7 @@ import playerbeacons.buff.Buff;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Config {
 
@@ -19,6 +20,7 @@ public class Config {
 	public int digCrystalItemID;
 	public int jumpCrystalItemID;
 	public int resCrystalItemID;
+	public int newCrystalItemID;
 
 	public int decapitationEnchantmentID;
 	public int spawnCooldownDuration;
@@ -52,15 +54,22 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Speed Crystal", 20001);
+		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		speedCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Dig Crystal", 20002);
+		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		digCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Jump Crystal", 20003);
+		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		jumpCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Resistance Crystal", 20004);
+		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		resCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Depleted Crystal", 20005);
+		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		crystalItemID = prop.getInt();
+		prop = config.get(Configuration.CATEGORY_ITEM, "Crystal", 20100);
+		newCrystalItemID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
@@ -81,15 +90,16 @@ public class Config {
 
 	public void loadBuffs() {
 		Property prop;
-		for (Buff buff:Buff.buffs) {
-			prop = config.get("Beacon Buffs", buff.getName(), true);
+		for (Map.Entry<String, Buff> buff : Buff.buffs.entrySet()) {
+			Buff buffValue = buff.getValue();
+			prop = config.get("Beacon Buffs", buffValue.getName(), true);
 			if (prop.getBoolean(true)) {
-				prop = config.get("Beacon Buffs", buff.getName() + " Required beacon level", buff.getMinBeaconLevel());
-				buff.setMinBeaconLevel(prop.getInt());
-				prop = config.get("Beacon Buffs", buff.getName() + " Corruption per buff level", (int) buff.getCorruption(buff.getMinBeaconLevel()));
-				buff.setCorruption(prop.getInt());
-				prop = config.get("Beacon Buffs", buff.getName() + " Max buff level", buff.getMaxBuffLevel());
-				buff.setMaxBuffLevel(prop.getInt());
+				prop = config.get("Beacon Buffs", buffValue.getName() + " Required beacon level", buffValue.getMinBeaconLevel());
+				buffValue.setMinBeaconLevel(prop.getInt());
+				prop = config.get("Beacon Buffs", buffValue.getName() + " Corruption per buff level", (int) buffValue.getCorruption(buffValue.getMinBeaconLevel()));
+				buffValue.setCorruption(prop.getInt());
+				prop = config.get("Beacon Buffs", buffValue.getName() + " Max buff level", buffValue.getMaxBuffLevel());
+				buffValue.setMaxBuffLevel(prop.getInt());
 			}
 			else {
 				Buff.buffs.remove(buff);

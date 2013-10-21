@@ -33,6 +33,7 @@ import net.minecraft.util.Vec3;
 import playerbeacons.buff.Buff;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
+import playerbeacons.item.NewCrystalItem;
 
 import java.util.*;
 
@@ -43,7 +44,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
-	private HashMap<CrystalItem, Integer> crystals = new HashMap<CrystalItem, Integer>();
+	private HashMap<String, Integer> crystals = new HashMap<String, Integer>();
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -144,11 +145,14 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
 				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
-					for (Buff buff : Buff.buffs) {
-						EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-						if ((buff.getMinBeaconLevel() <= levels) && crystals.containsKey(buff.getCrystal()) && player != null) {
-							//System.out.println("Applying " + buff.getName());
-							buff.doBuff(player, levels, crystals.get(buff.getCrystal()));
+					for (Object crystal : NewCrystalItem.crystalList) {
+						for (Object obj : NewCrystalItem.getBuffs(crystal.toString())) {
+							Buff buff = Buff.buffs.get(obj.toString());
+							EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+							if ((buff.getMinBeaconLevel() <= levels) && crystals.containsKey(crystal.toString()) && player != null) {
+								//System.out.println("Applying " + buff.getName());
+								buff.doBuff(player, levels, crystals.get(crystal.toString()));
+							}
 						}
 					}
 				}
@@ -207,56 +211,72 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcPylons() {
 		if (levels > 0) {
-			CrystalItem crystalItem;
+			String crystalName;
 			//Reset crystal count and re-add blank values to the list
 			crystals.clear();
-			for (Buff buff : Buff.buffs) {
-				if (!crystals.containsKey(buff.getCrystal())) {
-					crystals.put(buff.getCrystal(), 0);
+			for (Object obj : NewCrystalItem.crystalList) {
+				if (!crystals.containsKey(obj.toString())) {
+					crystals.put(obj.toString(), 0);
 				}
 			}
 
 			for (int y = 0; ((this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID) && ( y < (1 + levels))); y++) {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystalItem = (CrystalItem) itemStack.getItem();
-					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
-					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+				if ((itemStack != null) && itemStack.getItem() instanceof CrystalItem) itemStack = updateCrystal(itemStack);
+				if ((itemStack != null) && (itemStack.getItem() instanceof NewCrystalItem)) {
+					crystalName = NewCrystalItem.getSimpleCrystalName(itemStack);
+					crystals.put(crystalName, crystals.get(crystalName) + 1);
+					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, NewCrystalItem.makeCrystal("depleted"));
+					else {
+						itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						tileEntityDefiledSoulPylon.setInventorySlotContents(0, itemStack);
+					}
 				}
 			}
 			for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord - levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystalItem = (CrystalItem) itemStack.getItem();
-					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
-					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+				if ((itemStack != null) && itemStack.getItem() instanceof CrystalItem) itemStack = updateCrystal(itemStack);
+				if ((itemStack != null) && (itemStack.getItem() instanceof NewCrystalItem)) {
+					crystalName = NewCrystalItem.getSimpleCrystalName(itemStack);
+					crystals.put(crystalName, crystals.get(crystalName) + 1);
+					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, NewCrystalItem.makeCrystal("depleted"));
+					else {
+						itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						tileEntityDefiledSoulPylon.setInventorySlotContents(0, itemStack);
+					}
 				}
 			}
 			for (int y = 0; (this.worldObj.getBlockId(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord + levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystalItem = (CrystalItem) itemStack.getItem();
-					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
-					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+				if ((itemStack != null) && itemStack.getItem() instanceof CrystalItem) itemStack = updateCrystal(itemStack);
+				if ((itemStack != null) && (itemStack.getItem() instanceof NewCrystalItem)) {
+					crystalName = NewCrystalItem.getSimpleCrystalName(itemStack);
+					crystals.put(crystalName, crystals.get(crystalName) + 1);
+					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, NewCrystalItem.makeCrystal("depleted"));
+					else {
+						itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						tileEntityDefiledSoulPylon.setInventorySlotContents(0, itemStack);
+					}
 				}
 			}
 			for (int y = 0; (this.worldObj.getBlockId(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels) == PlayerBeacons.config.defiledSoulPylonBlockID && ( y < (1 + levels))); y++) {
 				TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) worldObj.getBlockTileEntity(this.xCoord - levels, this.yCoord - levels + 1 + y, this.zCoord + levels);
 				ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-				if ((itemStack != null) && (itemStack.getItem() instanceof CrystalItem)) {
-					crystalItem = (CrystalItem) itemStack.getItem();
-					crystals.put(crystalItem, crystals.get(crystalItem) + 1);
-					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-					else itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+				if ((itemStack != null) && itemStack.getItem() instanceof CrystalItem) itemStack = updateCrystal(itemStack);
+				if ((itemStack != null) && (itemStack.getItem() instanceof NewCrystalItem)) {
+					crystalName = NewCrystalItem.getSimpleCrystalName(itemStack);
+					crystals.put(crystalName, crystals.get(crystalName) + 1);
+					if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) tileEntityDefiledSoulPylon.setInventorySlotContents(0, NewCrystalItem.makeCrystal("depleted"));
+					else {
+						itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+						tileEntityDefiledSoulPylon.setInventorySlotContents(0, itemStack);
+					}
 				}
 			}
-			for (Map.Entry<CrystalItem, Integer> entry : crystals.entrySet()) {
+			for (Map.Entry<String, Integer> entry : crystals.entrySet()) {
 				if (entry.getValue() > levels) {
 					crystals.put(entry.getKey(), levels);
 				}
@@ -264,18 +284,33 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
+	private ItemStack updateCrystal(ItemStack itemStack) {
+		ItemStack newItemStack = new ItemStack(PlayerBeacons.newCrystalItem);
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		NBTTagCompound tagCompound1 = new NBTTagCompound();
+		if (itemStack.itemID == PlayerBeacons.digCrystalItem.itemID) tagCompound1.setString("CrystalName", "brown");
+		else if (itemStack.itemID == PlayerBeacons.jumpCrystalItem.itemID) tagCompound1.setString("CrystalName", "green");
+		else if (itemStack.itemID == PlayerBeacons.speedCrystalItem.itemID) tagCompound1.setString("CrystalName", "lightblue");
+		else if (itemStack.itemID == PlayerBeacons.resCrystalItem.itemID) tagCompound1.setString("CrystalName", "black");
+		else tagCompound1.setString("CrystalName" ,"depleted");
+		tagCompound.setCompoundTag("PlayerBeacons", tagCompound1);
+		newItemStack.setTagCompound(tagCompound);
+		return newItemStack;
+	}
+
 	public void calcCorruption() {
 		if (levels >= 0) {
 			float newCorruption = 0;
-			CrystalItem crystalItem;
 			float y;
 
-			for (Buff buff : Buff.buffs) {
-				if (crystals.containsKey(buff.getCrystal()) && buff.getMinBeaconLevel() <= levels) {
-					crystalItem = buff.getCrystal();
-					y = buff.getCorruption(levels) - (crystalItem.getCorruptionReduction() * crystals.get(buff.getCrystal()));
-					//System.out.println("Generated " + y + " corruption for " + buff.getName());
-					newCorruption += y;
+			for (Object crystal : NewCrystalItem.crystalList) {
+				for (Object obj : NewCrystalItem.getBuffs(crystal.toString())) {
+					Buff buff = Buff.buffs.get(obj.toString());
+					if (buff.getMinBeaconLevel() <= levels) {
+						y = buff.getCorruption(levels) - (NewCrystalItem.getCorruptionReduction(crystal.toString()) * crystals.get(crystal.toString()));
+						//System.out.println("Generated " + y + " corruption for " + buff.getName());
+						newCorruption += y;
+					}
 				}
 			}
 			setCorruption(corruption + newCorruption - (levels * 10), true);

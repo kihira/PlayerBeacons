@@ -3,12 +3,11 @@ package playerbeacons.buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import playerbeacons.item.CrystalItem;
 
 public class ResistanceBuff extends Buff {
 
-	public ResistanceBuff(CrystalItem crystalItem) {
-		super(crystalItem, 20, 2, 3);
+	public ResistanceBuff() {
+		super("resistance", 20, 2, 3);
 	}
 
 	@Override

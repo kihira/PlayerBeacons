@@ -3,12 +3,11 @@ package playerbeacons.buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import playerbeacons.item.CrystalItem;
 
 public class JumpBuff extends Buff {
 
-	public JumpBuff(CrystalItem crystalItem) {
-		super(crystalItem, 10, 1, 1);
+	public JumpBuff() {
+		super("jump", 10, 1, 1);
 	}
 
 	@Override

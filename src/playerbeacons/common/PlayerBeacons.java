@@ -49,6 +49,7 @@ public class PlayerBeacons {
 	public static DigCrystalItem digCrystalItem;
 	public static JumpCrystalItem jumpCrystalItem;
 	public static ResCrystalItem resCrystalItem;
+	public static NewCrystalItem newCrystalItem;
 
 	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 
@@ -81,16 +82,19 @@ public class PlayerBeacons {
 		GameRegistry.registerItem(jumpCrystalItem, "jumpCrystalItem");
 		resCrystalItem = new ResCrystalItem(config.resCrystalItemID);
 		GameRegistry.registerItem(resCrystalItem, "resCrystalItem");
+		newCrystalItem = new NewCrystalItem(config.newCrystalItemID);
+		GameRegistry.registerItem(newCrystalItem, "newCrystalItem");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
-		proxy.registerRenderers();
 		registerRecipes();
 		registerBuffs();
 		config.loadBuffs();
 		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
+
+		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
 
@@ -133,7 +137,12 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
 		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
 		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
-		LanguageRegistry.instance().addStringLocalization("itemGroup.playerBeacons", "Player Beacons");
+		LanguageRegistry.instance().addStringLocalization("itemGroup.playerbeacons", "Player Beacons");
+		LanguageRegistry.instance().addStringLocalization("item.crystalitem.brown.name", "Brown Crystal");
+		LanguageRegistry.instance().addStringLocalization("item.crystalitem.lightblue.name", "Light Blue Crystal");
+		LanguageRegistry.instance().addStringLocalization("item.crystalitem.black.name", "Black Crystal");
+		LanguageRegistry.instance().addStringLocalization("item.crystalitem.green.name", "Green Crystal");
+		LanguageRegistry.instance().addStringLocalization("item.crystalitem.depleted.name", "Depleted Crystal");
 		LanguageRegistry.addName(resCrystalItem, "Resistance Crystal");
 		LanguageRegistry.addName(jumpCrystalItem, "Jump Crystal");
 		LanguageRegistry.addName(digCrystalItem, "Dig Crystal");
@@ -146,10 +155,10 @@ public class PlayerBeacons {
 	}
 
 	private void registerBuffs() {
-		new SpeedBuff(speedCrystalItem);
-		new JumpBuff(jumpCrystalItem);
-		new DigBuff(digCrystalItem);
-		new ResistanceBuff(resCrystalItem);
+		new SpeedBuff();
+		new JumpBuff();
+		new DigBuff();
+		new ResistanceBuff();
 	}
 
 	private void registerRecipes() {
