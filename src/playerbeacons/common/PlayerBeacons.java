@@ -11,7 +11,6 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,15 +22,16 @@ import net.minecraftforge.common.MinecraftForge;
 import playerbeacons.block.BlockDefiledSoulConductor;
 import playerbeacons.block.BlockDefiledSoulPylon;
 import playerbeacons.block.BlockPlayerBeacon;
-import playerbeacons.buff.*;
+import playerbeacons.buff.DigBuff;
+import playerbeacons.buff.JumpBuff;
+import playerbeacons.buff.ResistanceBuff;
+import playerbeacons.buff.SpeedBuff;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
-
-import java.util.HashMap;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.1.1")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
@@ -88,7 +88,15 @@ public class PlayerBeacons {
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
-		registerRecipes();
+		//Thaumcraft Intergration
+		/*
+		try {
+			Class fake = Class.forName("thaumcraft.common.lib.research.ResearchManager");
+		} catch(Exception ex) {
+			registerRecipes();
+		}
+		*/
+
 		registerBuffs();
 		config.loadBuffs();
 		addLocalization();
@@ -161,14 +169,33 @@ public class PlayerBeacons {
 		new ResistanceBuff();
 	}
 
+	private void registerThaumcraftResearch() {
+		//ResearchCategories.registerCategory();
+	}
+
+	private	void registerThaumcraftRecipes() {
+		//TODO balance
+		/*
+		AspectList aspectList = new AspectList();
+		ItemStack[] itemStacks = new ItemStack[2];
+		aspectList.add(Aspect.DARKNESS, 2);
+		aspectList.add(Aspect.ELDRITCH, 4);
+		aspectList.add(Aspect.EXCHANGE, 8);
+		itemStacks[0] = new ItemStack(Item.eyeOfEnder, 4);
+		itemStacks[1] = new ItemStack(PlayerBeacons.crystalItem);
+		itemStacks[2] = new ItemStack(Block.mycelium, 2);
+		ThaumcraftApi.addInfusionCraftingRecipe(null, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), 5, aspectList, new ItemStack(Block.obsidian), null);
+		*/
+	}
+
 	private void registerRecipes() {
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), "OPO", "MCM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'C', new ItemStack(PlayerBeacons.crystalItem), 'M', new ItemStack(Block.mycelium));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), "OPO", "MCM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'C', new ItemStack(PlayerBeacons.newCrystalItem), 'M', new ItemStack(Block.mycelium));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.playerBeaconBlock), "PNP", "GBG", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.speedCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.crystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.digCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 3), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.crystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.jumpCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 6), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.crystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.resCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 8), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.crystalItem));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.speedCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.digCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 3), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.jumpCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 6), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.resCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 8), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Item.eyeOfEnder), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.ingotIron));
 	}
 
