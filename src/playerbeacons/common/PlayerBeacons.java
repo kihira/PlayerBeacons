@@ -97,6 +97,7 @@ public class PlayerBeacons {
 		}
 		*/
 
+		registerRecipes();
 		registerBuffs();
 		config.loadBuffs();
 		addLocalization();
@@ -192,10 +193,10 @@ public class PlayerBeacons {
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), "OPO", "MCM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'C', new ItemStack(PlayerBeacons.newCrystalItem), 'M', new ItemStack(Block.mycelium));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.playerBeaconBlock), "PNP", "GBG", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.speedCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.digCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 3), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.jumpCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 6), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.resCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 8), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(NewCrystalItem.makeCrystal("lightblue"), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(NewCrystalItem.makeCrystal("brown"), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 3), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(NewCrystalItem.makeCrystal("green"), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 6), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
+		GameRegistry.addShapedRecipe(NewCrystalItem.makeCrystal("black"), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 8), 'G', new ItemStack(Block.glass), 'C', new ItemStack(PlayerBeacons.newCrystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Item.eyeOfEnder), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.ingotIron));
 	}
 
