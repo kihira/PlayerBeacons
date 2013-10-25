@@ -2,9 +2,7 @@ package playerbeacons.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;

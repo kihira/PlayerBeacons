@@ -39,6 +39,7 @@ import playerbeacons.util.EventHandler;
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
+	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 	public static Config config;
 
 	public static Block playerBeaconBlock;
@@ -51,8 +52,6 @@ public class PlayerBeacons {
 	public static BrownCrystalItem brownCrystalItem;
 	public static GreenCrystalItem greenCrystalItem;
 	public static BlackCrystalItem blackCrystalItem;
-
-	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 
 	public static BeaconDataHandler beaconData;
 

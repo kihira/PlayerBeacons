@@ -300,7 +300,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					if (buff.getMinBeaconLevel() <= levels) {
 						y = buff.getCorruption(levels) - throttle.getCorruptionThrottle(buff, levels, throttleHashMap.get(throttle));
 						//System.out.println("Generated " + y + " corruption for " + buff.getName());
-						newCorruption += y;
+						if (y > 0) newCorruption += y;
 					}
 				}
 			}
