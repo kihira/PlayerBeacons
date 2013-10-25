@@ -5,11 +5,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import playerbeacons.api.ICrystal;
+import playerbeacons.api.buff.Buff;
+import playerbeacons.api.throttle.IThrottle;
 import playerbeacons.common.PlayerBeacons;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CrystalItem extends Item {
+public class CrystalItem extends Item implements ICrystal {
 
 	public CrystalItem(int id) {
 		super(id);
@@ -22,25 +26,28 @@ public class CrystalItem extends Item {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if (!par2World.isRemote) {
-			ItemStack itemStack = new ItemStack(PlayerBeacons.newCrystalItem);
-			NBTTagCompound tagCompound = new NBTTagCompound();
-			NBTTagCompound tagCompound1 = new NBTTagCompound();
-			if (par1ItemStack.itemID == PlayerBeacons.digCrystalItem.itemID) tagCompound1.setString("CrystalName", "brown");
-			else if (par1ItemStack.itemID == PlayerBeacons.jumpCrystalItem.itemID) tagCompound1.setString("CrystalName", "green");
-			else if (par1ItemStack.itemID == PlayerBeacons.speedCrystalItem.itemID) tagCompound1.setString("CrystalName", "lightblue");
-			else if (par1ItemStack.itemID == PlayerBeacons.resCrystalItem.itemID) tagCompound1.setString("CrystalName", "black");
-			else tagCompound1.setString("CrystalName" ,"depleted");
-			tagCompound.setCompoundTag("PlayerBeacons", tagCompound1);
-			itemStack.setTagCompound(tagCompound);
-			par3EntityPlayer.setCurrentItemOrArmor(0, itemStack);
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+		List buffList = getAffectedBuffs();
+		if (buffList != null) {
+			par3List.add("Throttles Buffs: ");
+			for (Object obj:buffList) {
+				par3List.add(Buff.buffs.get(obj.toString()).getName());
+			}
 		}
-		return par1ItemStack;
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		par3List.add("DEPRECIATED: Right click whilst holding to update");
+	public float getCorruptionThrottle(Buff buff, int beaconLevel, int throttleCount) {
+		return 10f * throttleCount;
+	}
+
+	@Override
+	public float getCorruptionReduction(float currentCorruption, int currentCorruptionLevel, int beaconLevel) {
+		return 0;
+	}
+
+	@Override
+	public List<String> getAffectedBuffs() {
+		return null;
 	}
 }

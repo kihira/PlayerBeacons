@@ -2,10 +2,9 @@ package playerbeacons.common;
 
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
-import playerbeacons.buff.Buff;
+import playerbeacons.api.buff.Buff;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Config {

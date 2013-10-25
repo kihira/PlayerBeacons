@@ -16,7 +16,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.NewCrystalItem;
+import playerbeacons.item.CrystalItem;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;
@@ -28,7 +28,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		setHardness(8f);
 		setResistance(100.0F);
 		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setUnlocalizedName("Player Beacon Block");
+		setUnlocalizedName("Player Beacon");
 		setTextureName("playerbeacon:pyramidBrick");
 	}
 
@@ -76,13 +76,13 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (entityPlayer.getCurrentItemOrArmor(0) != null) {
 				if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.emerald.itemID) {
 					entityPlayer.setCurrentItemOrArmor(0, null);
-					EntityItem item = new EntityItem(world, x, y + 0.5, z, NewCrystalItem.makeCrystal("depleted"));
+					EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
 					entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3§oAn energy from the beacon flows into the emerald forging a mysterious crystal"));
 					world.spawnEntityInWorld(item);
 					return true;
 				}
 				//If they right click with depleted, disperse all corruption
-				else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof NewCrystalItem) {
+				else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
 					entityPlayer.setCurrentItemOrArmor(0, null);
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
 					tileEntityPlayerBeacon.doCorruption(true);

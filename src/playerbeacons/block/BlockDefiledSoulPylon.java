@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.NewCrystalItem;
+import playerbeacons.item.CrystalItem;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 			if (!tileEntityDefiledSoulPylon.isPylonBase() && !tileEntityDefiledSoulPylon.isPylonTop()) {
 				ItemStack itemStack = entityPlayer.getCurrentItemOrArmor(0);
 				if (itemStack != null) {
-					if (itemStack.getItem() instanceof NewCrystalItem) {
+					if (itemStack.getItem() instanceof CrystalItem) {
 						if (tileEntityDefiledSoulPylon.getStackInSlot(0) == null) {
 							tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentItemOrArmor(0));
 							tileEntityDefiledSoulPylon.updateContainingBlockInfo();

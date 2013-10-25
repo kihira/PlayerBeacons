@@ -27,6 +27,7 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
+import playerbeacons.item.CrystalItem;
 import playerbeacons.item.NewCrystalItem;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
@@ -127,7 +128,7 @@ public class EventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		MovingObjectPosition movingObject = mc.objectMouseOver;
 		if (movingObject != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof NewCrystalItem)) {
+			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
 				TileEntity tileEntity = mc.theWorld.getBlockTileEntity(movingObject.blockX , movingObject.blockY, movingObject.blockZ);
 				if (tileEntity != null && tileEntity instanceof TileEntityPlayerBeacon) {
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;

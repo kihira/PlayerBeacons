@@ -59,11 +59,18 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 			bindTexture(ClientProxy.pylonCrystalPortTexture);
 			if (itemStack != null) {
-				//TODO make this dynamic and customizable?
+				//TODO Update this to new API. Use similar system to potions/thaumcraft aspects?
+				/*
 				if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("brown")) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("green")) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("lightblue")) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("black")) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				*/
+				if (itemStack.getItem() instanceof BrownCrystalItem) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (itemStack.getItem() instanceof GreenCrystalItem) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (itemStack.getItem() instanceof LightBlueCrystalItem) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (itemStack.getItem() instanceof BlackCrystalItem) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
 			else {

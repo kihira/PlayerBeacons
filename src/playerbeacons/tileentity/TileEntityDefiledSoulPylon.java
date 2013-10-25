@@ -8,10 +8,11 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import playerbeacons.api.ICrystal;
+import playerbeacons.api.throttle.IThrottleContainer;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.NewCrystalItem;
 
-public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory {
+public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, IThrottleContainer {
 
 	private ItemStack crystal;
 
@@ -105,7 +106,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		return i == 0 && itemstack.getItem() instanceof NewCrystalItem;
+		return i == 0 && itemstack.getItem() instanceof ICrystal;
 	}
 
 	public boolean isPylonBase() {
