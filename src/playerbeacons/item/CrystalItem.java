@@ -3,14 +3,10 @@ package playerbeacons.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import playerbeacons.api.ICrystal;
+import playerbeacons.api.throttle.ICrystal;
 import playerbeacons.api.buff.Buff;
-import playerbeacons.api.throttle.IThrottle;
 import playerbeacons.common.PlayerBeacons;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CrystalItem extends Item implements ICrystal {

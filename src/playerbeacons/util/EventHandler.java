@@ -28,7 +28,6 @@ import org.lwjgl.opengl.GL11;
 import playerbeacons.common.DamageBehead;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.CrystalItem;
-import playerbeacons.item.NewCrystalItem;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;

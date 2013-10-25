@@ -6,7 +6,8 @@ import java.util.HashMap;
 
 /**
  * Base class for any Buff's. Extend this class and call a new instance of your Buff
- * and the buff will be automatically registered
+ * and the buff will be automatically registered. The buff will automatically be added
+ * to the PlayerBeacons config file, you don't need to offer options to edit values
  */
 public abstract class Buff {
 

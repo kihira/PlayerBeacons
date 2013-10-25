@@ -31,11 +31,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import playerbeacons.api.throttle.IThrottle;
 import playerbeacons.api.throttle.IThrottleContainer;
-import playerbeacons.api.PlayerBeaconsApi;
 import playerbeacons.api.buff.Buff;
 import playerbeacons.api.throttle.Throttle;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.item.CrystalItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +47,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
-	//private HashMap<String, Integer> crystals = new HashMap<String, Integer>();
-	private HashMap<IThrottle, Integer> throttlesList = new HashMap<IThrottle, Integer>();
+	private HashMap<IThrottle, Integer> throttleHashMap = new HashMap<IThrottle, Integer>();
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -156,32 +153,15 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 						if ((buff.getMinBeaconLevel() <= levels) && (player != null)) {
 							int i = 0;
-							for (Map.Entry<String, IThrottle> entry2 : Throttle.throttleHashMap.entrySet()) {
-								String name = entry2.getKey();
-								IThrottle throttle = entry2.getValue();
-								if (throttle.getAffectedBuffs(name).contains(entry.getKey())) {
-									System.out.println("Detected a viable throttle!");
-									i = i + throttlesList.get(throttle);
+							for (IThrottle throttle : Throttle.throttleList) {
+								if (throttle.getAffectedBuffs().contains(entry.getKey())) {
+									i = i + throttleHashMap.get(throttle);
 								}
 							}
-							System.out.println("Applying " + buff.getName() + " with " + i + " crystals throttling");
+							//System.out.println("Applying " + buff.getName() + " with " + i + " crystals throttling");
 							buff.doBuff(player, levels, i);
 						}
 					}
-					/*
-					for (Map.Entry<String, IThrottle> entry : Throttle.throttleHashMap.entrySet()) {
-						String name = entry.getKey();
-						IThrottle throttle = entry.getValue();
-						for (Object obj : throttle.getAffectedBuffs(name)) {
-							Buff buff = Buff.buffs.get(obj.toString());
-							EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-							if ((buff.getMinBeaconLevel() <= levels) && (player != null)) {
-								//System.out.println("Applying " + buff.getName());
-								buff.doBuff(player, levels, throttlesList.get(throttle));
-							}
-						}
-					}
-					*/
 				}
 			}
 			else if (skull.getSkullType() == 3) {
@@ -238,9 +218,9 @@ public class TileEntityPlayerBeacon extends TileEntity {
 
 	public void calcPylons() {
 		if (levels > 0) {
-			throttlesList.clear();
-			for (Map.Entry<String, IThrottle> entry : Throttle.throttleHashMap.entrySet()) {
-				throttlesList.put(entry.getValue(), 0);
+			throttleHashMap.clear();
+			for (IThrottle throttle : Throttle.throttleList) {
+				throttleHashMap.put(throttle, 0);
 			}
 			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
 				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
@@ -248,7 +228,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
 						ItemStack itemStack = iInventory.getStackInSlot(i);
 						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttlesList.put(item, throttlesList.get(item)+1);
+						throttleHashMap.put(item, throttleHashMap.get(item)+1);
 						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 						else {
 							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
@@ -261,10 +241,9 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels);
 				for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
 					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-						System.out.println("Got a throttle!");
 						ItemStack itemStack = iInventory.getStackInSlot(i);
 						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttlesList.put(item, throttlesList.get(item)+1);
+						throttleHashMap.put(item, throttleHashMap.get(item)+1);
 						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 						else {
 							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
@@ -279,7 +258,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					if ((iInventory.getStackInSlot(i) != null) && (iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
 						ItemStack itemStack = iInventory.getStackInSlot(i);
 						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttlesList.put(item, throttlesList.get(item)+1);
+						throttleHashMap.put(item, throttleHashMap.get(item)+1);
 						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 						else {
 							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
@@ -294,7 +273,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
 						ItemStack itemStack = iInventory.getStackInSlot(i);
 						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttlesList.put(item, throttlesList.get(item)+1);
+						throttleHashMap.put(item, throttleHashMap.get(item)+1);
 						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 						else {
 							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
@@ -303,10 +282,10 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
-			for (Map.Entry<IThrottle, Integer> entry : throttlesList.entrySet()) {
-				if (entry.getValue() > levels) throttlesList.put(entry.getKey(), levels);
+			for (Map.Entry<IThrottle, Integer> entry : throttleHashMap.entrySet()) {
+				if (entry.getValue() > levels) throttleHashMap.put(entry.getKey(), levels);
 			}
-			System.out.println(throttlesList);
+			System.out.println(throttleHashMap);
 		}
 	}
 
@@ -315,13 +294,11 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			float newCorruption = 0;
 			float y;
 
-			for (Map.Entry<String, IThrottle> entry : Throttle.throttleHashMap.entrySet()) {
-				String name = entry.getKey();
-				IThrottle throttle = entry.getValue();
-				for (Object obj : throttle.getAffectedBuffs(name)) {
+			for (IThrottle throttle: Throttle.throttleList) {
+				for (Object obj : throttle.getAffectedBuffs()) {
 					Buff buff = Buff.buffs.get(obj.toString());
 					if (buff.getMinBeaconLevel() <= levels) {
-						y = buff.getCorruption(levels) - throttle.getCorruptionThrottle(name, buff, levels, throttlesList.get(throttle));
+						y = buff.getCorruption(levels) - throttle.getCorruptionThrottle(buff, levels, throttleHashMap.get(throttle));
 						//System.out.println("Generated " + y + " corruption for " + buff.getName());
 						newCorruption += y;
 					}

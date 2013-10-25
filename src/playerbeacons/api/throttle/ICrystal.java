@@ -1,4 +1,4 @@
-package playerbeacons.api;
+package playerbeacons.api.throttle;
 
 import playerbeacons.api.throttle.IThrottle;
 

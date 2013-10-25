@@ -1,13 +1,14 @@
 package playerbeacons.api.throttle;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Throttle {
 
-	public static HashMap<String, IThrottle> throttleHashMap = new HashMap<String, IThrottle>();
+	public static List<IThrottle> throttleList = new ArrayList<IThrottle>();
 
-	public static void registerThrottle(String simpleName, IThrottle throttle) {
-		if (!throttleHashMap.containsKey(simpleName)) throttleHashMap.put(simpleName, throttle);
-		else throw new IllegalArgumentException("[PlayerBeacons] A throttle has already been registered with the name: " + simpleName);
+	public static void registerThrottle(IThrottle throttle) {
+		if (!throttleList.contains(throttle)) throttleList.add(throttle);
+		else System.out.println("[PlayerBeacons] That throttle has already been registered: " + throttle);
 	}
 }

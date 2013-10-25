@@ -164,10 +164,10 @@ public class PlayerBeacons {
 	}
 
 	private void registerThrottles() {
-		Throttle.registerThrottle("lightblue", lightBlueCrystalItem);
-		Throttle.registerThrottle("green", greenCrystalItem);
-		Throttle.registerThrottle("black", blackCrystalItem);
-		Throttle.registerThrottle("brown", brownCrystalItem);
+		Throttle.registerThrottle(lightBlueCrystalItem);
+		Throttle.registerThrottle(greenCrystalItem);
+		Throttle.registerThrottle(blackCrystalItem);
+		Throttle.registerThrottle(brownCrystalItem);
 	}
 
 	private void registerBuffs() {

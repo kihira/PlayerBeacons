@@ -19,7 +19,6 @@ public class Config {
 	public int digCrystalItemID;
 	public int jumpCrystalItemID;
 	public int resCrystalItemID;
-	public int newCrystalItemID;
 
 	public int decapitationEnchantmentID;
 	public int spawnCooldownDuration;
@@ -52,23 +51,16 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
 		beheaderItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Speed Crystal", 20001);
-		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
+		prop = config.get(Configuration.CATEGORY_ITEM, "Light Blue Crystal", 20001);
 		speedCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Dig Crystal", 20002);
-		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
+		prop = config.get(Configuration.CATEGORY_ITEM, "Brown Crystal", 20002);
 		digCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Jump Crystal", 20003);
-		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
+		prop = config.get(Configuration.CATEGORY_ITEM, "Green Crystal", 20003);
 		jumpCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Resistance Crystal", 20004);
-		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
+		prop = config.get(Configuration.CATEGORY_ITEM, "Black Crystal", 20004);
 		resCrystalItemID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_ITEM, "Depleted Crystal", 20005);
-		prop.comment = "WARNING: WILL BE DEPRECIATED IN 1.7";
 		crystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Crystal", 20100);
-		newCrystalItemID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
@@ -104,7 +96,7 @@ public class Config {
 				Buff.buffs.remove(buff);
 			}
 		}
-		config.save();
+		save();
 	}
 
 	private void save() {
