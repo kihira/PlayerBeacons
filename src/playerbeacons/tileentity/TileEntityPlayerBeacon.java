@@ -173,7 +173,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				double d0 = (double)(this.levels * 7 + 10);
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(d0, d0, d0);
 				axisalignedbb.maxY = (double)this.worldObj.getHeight();
-				List list = null;
+				List<Object> list = null;
 				int skullType = skull.getSkullType();
 				if (skullType == 0 || skullType == 1) {
 					List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);

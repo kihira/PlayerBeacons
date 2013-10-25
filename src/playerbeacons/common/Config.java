@@ -93,7 +93,7 @@ public class Config {
 				buffValue.setMaxBuffLevel(prop.getInt());
 			}
 			else {
-				Buff.buffs.remove(buff);
+				Buff.buffs.remove(buff.getKey());
 			}
 		}
 		save();
