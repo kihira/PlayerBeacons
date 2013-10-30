@@ -285,7 +285,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			for (Map.Entry<IThrottle, Integer> entry : throttleHashMap.entrySet()) {
 				if (entry.getValue() > levels) throttleHashMap.put(entry.getKey(), levels);
 			}
-			System.out.println(throttleHashMap);
 		}
 	}
 
