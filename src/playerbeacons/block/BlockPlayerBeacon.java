@@ -28,7 +28,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		setHardness(8f);
 		setResistance(100.0F);
 		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setUnlocalizedName("Player Beacon");
+		setUnlocalizedName("playerBeacon");
 		setTextureName("playerbeacon:pyramidBrick");
 	}
 

@@ -40,14 +40,14 @@ public class ThaumcraftHandler {
 
 	private void registerCraftingRecipes() {
 		crystalRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.crystalItem, 2), new AspectList().add(Aspect.TRAP, 4).add(Aspect.EXCHANGE, 4), "cPO", "CEv", "oPV", 'c', ItemApi.getItem("itemShard", 0), 'C', ItemApi.getItem("itemShard", 1), 'o', ItemApi.getItem("itemShard", 2), 'O', ItemApi.getItem("itemShard", 3), 'v', ItemApi.getItem("itemShard", 4), 'V', ItemApi.getItem("itemShard", 5), 'P', new ItemStack(Item.enderPearl), 'E', new ItemStack(Item.emerald));
-		defiledConductorBlockRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), new AspectList().add(Aspect.EXCHANGE, 4), "OPO", "MMM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.enderPearl), 'C' , 'M', ItemApi.getBlock("arcaneStone", 0));
+		defiledConductorBlockRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), new AspectList().add(Aspect.EXCHANGE, 4), "OPO", "MMM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.enderPearl), 'M', ItemApi.getBlock("blockCosmeticSolid", 6));
 		defiledPylonBlockRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), new AspectList(), "OPO", "G G", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.enderPearl), 'G', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Item.enderPearl), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.ingotIron));
 	}
 
 	private void registerInfusionRecipes() {
 		ItemStack[] itemStacks = new ItemStack[8];
-		for (int i = 0; i <= 8; i++) {
+		for (int i = 0; i < 8; i++) {
 			if (i % 2 == 0) itemStacks[i] = new ItemStack(PlayerBeacons.defiledSoulConductorBlock);
 			else itemStacks[i] = new ItemStack(Item.enderPearl);
 		}

@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "pack_format": 1,
+    "description": "Player Beacons Mod"
+  },
+  "language": {
+    "en_US": {
+      "name": "English",
+      "region": "US",
+      "bidirectional": false
+    }
+  }
+}

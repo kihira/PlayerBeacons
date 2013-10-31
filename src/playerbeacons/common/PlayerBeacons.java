@@ -95,7 +95,6 @@ public class PlayerBeacons {
 		registerThrottles();
 		registerBuffs();
 		config.loadBuffs();
-		addLocalization();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 
 		proxy.registerRenderers();
@@ -138,39 +137,6 @@ public class PlayerBeacons {
 		e.registerServerCommand(new CommandPlayerHead());
 		e.registerServerCommand(new CommandPlayerBeacons());
 		TickRegistry.registerScheduledTickHandler(new ServerTickHandler(), Side.SERVER);
-	}
-
-	private void addLocalization() {
-		LanguageRegistry.instance().addStringLocalization("commands.playerhead.usage", "/playerhead <playername> | Playername is case sensitive!");
-		LanguageRegistry.instance().addStringLocalization("commands.playerhead.success", "Given a playerhead (%1$s) to %2$s");
-		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.alreadyExists", "The player %1$s already has a beacon bound in this dimension");
-		LanguageRegistry.instance().addStringLocalization("commands.playerhead.notBeacon", "The block (%1$s, %2$s, %3$s) is not a Player Beacon!");
-		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setowner.success", "%1$s changed Player Beacon (%2$s, %3$s, %4$s) owner to %5$s");
-		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setowner.usage", "/pb setowner <username>");
-		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setcorruption.usage", "/pb setcorruption <float: corruption value> <boolean: should adjust corruption level>");
-		LanguageRegistry.instance().addStringLocalization("commands.playerbeacon.setcorruption.success", "%1$s changed Player Beacon (%2$s, %3$s, %4$s) corruption to %5$s");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead", "%1$s was beheaded");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead.player", "%1$s was beheaded by %2$s");
-		LanguageRegistry.instance().addStringLocalization("death.attack.behead.item", "%1$s was beheaded by %2$s with %3$s");
-		LanguageRegistry.instance().addStringLocalization("enchantment.decapitation", "Decapitation");
-		LanguageRegistry.instance().addStringLocalization("itemGroup.playerbeacons", "Player Beacons");
-		LanguageRegistry.instance().addStringLocalization("item.crystalitem.brown.name", "Brown Crystal");
-		LanguageRegistry.instance().addStringLocalization("item.crystalitem.lightblue.name", "Light Blue Crystal");
-		LanguageRegistry.instance().addStringLocalization("item.crystalitem.black.name", "Black Crystal");
-		LanguageRegistry.instance().addStringLocalization("item.crystalitem.green.name", "Green Crystal");
-		LanguageRegistry.instance().addStringLocalization("item.crystalitem.depleted.name", "Depleted Crystal");
-		LanguageRegistry.instance().addStringLocalization("research.crystal.page.0", "A test page");
-		LanguageRegistry.instance().addStringLocalization("tc.research_name.PB_CRYSTAL", "Crystals");
-		LanguageRegistry.instance().addStringLocalization("tc.research_text.PB_CRYSTAL", "[PB] Careful, they're sharp!");
-		LanguageRegistry.addName(blackCrystalItem, "Black Crystal");
-		LanguageRegistry.addName(greenCrystalItem, "Green Crystal");
-		LanguageRegistry.addName(brownCrystalItem, "Brown Crystal");
-		LanguageRegistry.addName(lightBlueCrystalItem, "Light Blue Crystal");
-		LanguageRegistry.addName(crystalItem, "Depleted Crystal");
-		LanguageRegistry.addName(beheaderItem, "Beheader");
-		LanguageRegistry.addName(defiledSoulPylonBlock, "Defiled Soul Pylon");
-		LanguageRegistry.addName(defiledSoulConductorBlock, "Defiled Soul Conductor");
-		LanguageRegistry.addName(playerBeaconBlock, "Player Beacon");
 	}
 
 	private void registerThrottles() {

@@ -23,7 +23,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		setHardness(8f);
 		setResistance(100.0F);
 		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setUnlocalizedName("Defiled Soul Pylon");
+		setUnlocalizedName("defiledSoulPylon");
 		setTextureName("playerbeacon:pyramidBrick");
 		setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}

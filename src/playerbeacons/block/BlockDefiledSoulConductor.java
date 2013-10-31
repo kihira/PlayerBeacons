@@ -14,7 +14,7 @@ public class BlockDefiledSoulConductor extends Block {
 		setHardness(15f);
 		setResistance(100.0F);
 		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setUnlocalizedName("Defiled Soul Conductor");
+		setUnlocalizedName("defiledSoulConductor");
 		setTextureName("playerbeacon:pyramidBrick");
 	}
 
