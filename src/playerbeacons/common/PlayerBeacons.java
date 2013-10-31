@@ -1,10 +1,9 @@
 package playerbeacons.common;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -16,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,8 +34,14 @@ import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
+import playerbeacons.util.ThaumcraftHandler;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.research.ResearchCategories;
+import thaumcraft.api.research.ResearchItem;
+import thaumcraft.api.research.ResearchPage;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.1.1")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.1.1", dependencies = "after:Thaumcraft;")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
@@ -86,17 +92,7 @@ public class PlayerBeacons {
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
-		//Thaumcraft Intergration
-		/*
-		try {
-			Class fake = Class.forName("thaumcraft.common.lib.research.ResearchManager");
-		} catch(Exception ex) {
-			registerRecipes();
-		}
-		*/
-
 		registerThrottles();
-		registerRecipes();
 		registerBuffs();
 		config.loadBuffs();
 		addLocalization();
@@ -117,6 +113,18 @@ public class PlayerBeacons {
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
 		info = ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH);
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
+	}
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent e) {
+		//Thaumcraft Intergration
+		if (Loader.isModLoaded("Thaumcraft")) {
+			System.out.println("[PlayerBeacons] Thaumcraft detected, enabling integration");
+			new ThaumcraftHandler();
+		}
+		else {
+			registerRecipes();
+		}
 	}
 
 	@Mod.EventHandler
@@ -151,6 +159,9 @@ public class PlayerBeacons {
 		LanguageRegistry.instance().addStringLocalization("item.crystalitem.black.name", "Black Crystal");
 		LanguageRegistry.instance().addStringLocalization("item.crystalitem.green.name", "Green Crystal");
 		LanguageRegistry.instance().addStringLocalization("item.crystalitem.depleted.name", "Depleted Crystal");
+		LanguageRegistry.instance().addStringLocalization("research.crystal.page.0", "A test page");
+		LanguageRegistry.instance().addStringLocalization("tc.research_name.PB_CRYSTAL", "Crystals");
+		LanguageRegistry.instance().addStringLocalization("tc.research_text.PB_CRYSTAL", "[PB] Careful, they're sharp!");
 		LanguageRegistry.addName(blackCrystalItem, "Black Crystal");
 		LanguageRegistry.addName(greenCrystalItem, "Green Crystal");
 		LanguageRegistry.addName(brownCrystalItem, "Brown Crystal");
@@ -174,25 +185,6 @@ public class PlayerBeacons {
 		new JumpBuff();
 		new DigBuff();
 		new ResistanceBuff();
-	}
-
-	private void registerThaumcraftResearch() {
-		//ResearchCategories.registerCategory();
-	}
-
-	private	void registerThaumcraftRecipes() {
-		//TODO balance
-		/*
-		AspectList aspectList = new AspectList();
-		ItemStack[] itemStacks = new ItemStack[2];
-		aspectList.add(Aspect.DARKNESS, 2);
-		aspectList.add(Aspect.ELDRITCH, 4);
-		aspectList.add(Aspect.EXCHANGE, 8);
-		itemStacks[0] = new ItemStack(Item.eyeOfEnder, 4);
-		itemStacks[1] = new ItemStack(PlayerBeacons.crystalItem);
-		itemStacks[2] = new ItemStack(Block.mycelium, 2);
-		ThaumcraftApi.addInfusionCraftingRecipe(null, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), 5, aspectList, new ItemStack(Block.obsidian), null);
-		*/
 	}
 
 	private void registerRecipes() {
