@@ -1,8 +1,8 @@
 #!/bin/bash
-MCVERSION="1.6.2"
+MCVERSION="1.6.4"
 MAJOR="1"
-MINOR="1"
-MINORMINOR="1"
+MINOR="2"
+MINORMINOR="0"
 
 if [ -d "builds" ]; then
   rm -r builds

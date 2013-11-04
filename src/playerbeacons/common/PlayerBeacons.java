@@ -41,7 +41,7 @@ import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.api.research.ResearchPage;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.1.1", dependencies = "after:Thaumcraft;")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0", dependencies = "after:Thaumcraft;")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
