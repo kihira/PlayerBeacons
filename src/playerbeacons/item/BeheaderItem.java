@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import playerbeacons.common.DamageBehead;
@@ -44,7 +45,7 @@ public class BeheaderItem extends ItemArmor {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer enemyPlayer = (EntityPlayer) entity;
 				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner").equals(player.username)) {
-					if (!enemyPlayer.capabilities.isCreativeMode) {
+					if (!enemyPlayer.capabilities.isCreativeMode && MinecraftServer.getServer().isPVPEnabled()) {
 						if (enemyPlayer.getCurrentArmor(0) == null) {
 							if (stack.getItemDamage() == 0) {
 								NBTTagCompound nbtTagCompound = new NBTTagCompound();
@@ -69,14 +70,14 @@ public class BeheaderItem extends ItemArmor {
 		if (!world.isRemote) {
 			if (!player.capabilities.isCreativeMode) {
 				switch (itemStack.getItemDamage()) {
-					case 1: {
+					case 1:
 						if (itemStack.hasTagCompound()) {
 							String owner = itemStack.getTagCompound().getString("owner");
 							if (owner != null) player.sendChatToPlayer(ChatMessageComponent.createFromText("§6" + owner + " has clamped a strange device clamp around your head"));
 							else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
 						}
 						else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
-					} break;
+						break;
 					case 100:
 						player.sendChatToPlayer(ChatMessageComponent.createFromText("§6The device tightens, as you hear it power up"));
 						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
@@ -127,9 +128,7 @@ public class BeheaderItem extends ItemArmor {
 			String owner = itemStack.getTagCompound().getString("owner");
 			list.add("Owner: §4" + owner);
 		}
-		else {
-			list.add("Right click to bind");
-		}
+		else list.add("Right click to bind");
 	}
 
 	public int getItemEnchantability() {
