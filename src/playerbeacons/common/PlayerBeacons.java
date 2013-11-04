@@ -117,7 +117,7 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		//Thaumcraft Intergration
-		if (Loader.isModLoaded("Thaumcraft")) {
+		if (Loader.isModLoaded("Thaumcraft") && config.enableThaumcraft) {
 			System.out.println("[PlayerBeacons] Thaumcraft detected, enabling integration");
 			new ThaumcraftHandler();
 		}

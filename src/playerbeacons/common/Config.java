@@ -22,12 +22,13 @@ public class Config {
 
 	public int decapitationEnchantmentID;
 	public int spawnCooldownDuration;
+	public boolean disableCorruption;
+	public boolean enableThaumcraft;
 
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
 
 	private final Configuration config;
-	public boolean disableCorruption;
 
 
 	public Config(File file) {
@@ -76,7 +77,8 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Disable Corruption", false);
 		prop.comment = "Whether to do corruption calculations or not";
 		disableCorruption = prop.getBoolean(false);
-
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Thaumcraft Intergration", true);
+		prop.comment = "If this is enabled and Thaumcraft is detected, the default recipes will be replaced with TC research and recipes";
 	}
 
 	public void loadBuffs() {
