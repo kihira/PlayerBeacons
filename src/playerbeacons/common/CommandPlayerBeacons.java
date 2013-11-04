@@ -54,9 +54,7 @@ public class CommandPlayerBeacons extends CommandBase {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = getCommandSenderAsPlayer(icommandsender);
 			MovingObjectPosition targetBlock = Util.getBlockLookAt(player, 4);
-			System.out.println(targetBlock.blockX + " " + targetBlock.blockY + " " + targetBlock.blockZ);
 			if (player.worldObj.getBlockId(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ) == PlayerBeacons.config.playerBeaconBlockID) {
-				System.out.println("Got a player beacon!");
 				TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) player.worldObj.getBlockTileEntity(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ);
 				if (astring[0].toLowerCase().equals("setowner")) {
 					if (astring.length == 2 && astring[1].length() <= 16) {
@@ -64,10 +62,7 @@ public class CommandPlayerBeacons extends CommandBase {
 							tileEntity.setOwner(astring[1]);
 							notifyAdmins(icommandsender, "commands.playerbeacon.setowner.success", player.username, targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
 						}
-						else {
-							System.out.println(PlayerBeacons.beaconData.loadBeaconInformation(player.worldObj, astring[1]));
-							throw new CommandException("commands.playerbeacon.alreadyExists", astring[1]);
-						}
+						else throw new CommandException("commands.playerbeacon.alreadyExists", astring[1]);
 					}
 					else throw new WrongUsageException("commands.playerbeacon.setowner.usage");
 				}

@@ -20,7 +20,6 @@ public class BeaconDataHandler {
 	private void loadData() {
 
 		File mainFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat");
-		System.out.println(mainFile.toString());
 
 		if (mainFile.exists()) {
 			try {

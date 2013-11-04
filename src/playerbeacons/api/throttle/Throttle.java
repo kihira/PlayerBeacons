@@ -1,5 +1,7 @@
 package playerbeacons.api.throttle;
 
+import playerbeacons.common.PlayerBeacons;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,6 @@ public class Throttle {
 
 	public static void registerThrottle(IThrottle throttle) {
 		if (!throttleList.contains(throttle)) throttleList.add(throttle);
-		else System.out.println("[PlayerBeacons] That throttle has already been registered: " + throttle);
+		else PlayerBeacons.logger.warning("That throttle has already been registered: " + throttle);
 	}
 }

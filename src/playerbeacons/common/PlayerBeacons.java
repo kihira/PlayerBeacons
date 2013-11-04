@@ -41,12 +41,17 @@ import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.api.research.ResearchPage;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0", dependencies = "after:Thaumcraft;")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
 	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 	public static Config config;
+	public static BeaconDataHandler beaconData;
+	public static final Logger logger = Logger.getLogger("PlayerBeacons");
 
 	public static Block playerBeaconBlock;
 	public static Block defiledSoulConductorBlock;
@@ -58,8 +63,6 @@ public class PlayerBeacons {
 	public static BrownCrystalItem brownCrystalItem;
 	public static GreenCrystalItem greenCrystalItem;
 	public static BlackCrystalItem blackCrystalItem;
-
-	public static BeaconDataHandler beaconData;
 
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -116,9 +119,9 @@ public class PlayerBeacons {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		//Thaumcraft Intergration
+		//Thaumcraft Integration
 		if (Loader.isModLoaded("Thaumcraft") && config.enableThaumcraft) {
-			System.out.println("[PlayerBeacons] Thaumcraft detected, enabling integration");
+			logger.info("Thaumcraft detected, enabling integration");
 			new ThaumcraftHandler();
 		}
 		else {
@@ -129,7 +132,7 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerAboutToStartEvent e) {
 		beaconData = new BeaconDataHandler();
-		System.out.println("[PlayerBeacons] Loaded beacon data");
+		logger.info("Loaded beacon data");
 	}
 
 	@Mod.EventHandler
