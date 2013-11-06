@@ -68,9 +68,9 @@ public class ThaumcraftHandler {
 		researchItem = new ResearchItem(KEY_DIMENSION, "BASICS", new AspectList(), 0, 2, 0, new ItemStack(Item.enderPearl)).setRound().setAutoUnlock();
 		researchItem.setPages(new ResearchPage("research.pbdimensional.page.0")).registerResearchItem();
 		researchItem = new ResearchItem(KEY_BEACON, "BASICS", new AspectList().add(Aspect.ELDRITCH, 6).add(Aspect.SOUL, 4), -1, 4, 2, new ItemStack(PlayerBeacons.playerBeaconBlock)).setParents(KEY_DIMENSION).setParentsHidden("ARCANESTONE");
-		researchItem.setPages(new ResearchPage("research.pbbeacon.page.0"), new ResearchPage(beaconRecipe), new ResearchPage(defiledConductorBlockRecipe), new ResearchPage(defiledPylonBlockRecipe)).registerResearchItem();
-		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 6).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 4), -2, 6, 1, new ItemStack(PlayerBeacons.crystalItem)).setRound().setParents(KEY_BEACON);
-		researchItem.setPages(new ResearchPage("research.pbcrystal.page.0"), new ResearchPage(crystalRecipe), new ResearchPage(brownCrystalRecipe), new ResearchPage(greenCrystalRecipe), new ResearchPage(lightBlueCrystalRecipe), new ResearchPage(blackCrystalRecipe)).registerResearchItem();
+		researchItem.setPages(new ResearchPage("research.pbbeacon.page.0"), new ResearchPage("research.pbbeacon.page.1"), new ResearchPage(beaconRecipe), new ResearchPage(defiledConductorBlockRecipe), new ResearchPage("research.pbbeacon.page.2")).registerResearchItem();
+		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 6).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 4), -2, 6, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON);
+		researchItem.setPages(new ResearchPage("research.pbcrystal.page.0"), new ResearchPage(defiledPylonBlockRecipe), new ResearchPage(crystalRecipe), new ResearchPage(brownCrystalRecipe), new ResearchPage(greenCrystalRecipe), new ResearchPage(lightBlueCrystalRecipe), new ResearchPage(blackCrystalRecipe)).registerResearchItem();
 
 	}
 }

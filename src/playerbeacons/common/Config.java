@@ -79,6 +79,7 @@ public class Config {
 		disableCorruption = prop.getBoolean(false);
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Thaumcraft Intergration", true);
 		prop.comment = "If this is enabled and Thaumcraft is detected, the default recipes will be replaced with TC research and recipes";
+		enableThaumcraft = prop.getBoolean(true);
 	}
 
 	public void loadBuffs() {
