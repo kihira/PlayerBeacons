@@ -34,13 +34,18 @@ import playerbeacons.api.throttle.IThrottleContainer;
 import playerbeacons.api.buff.Buff;
 import playerbeacons.api.throttle.Throttle;
 import playerbeacons.common.PlayerBeacons;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.nodes.INode;
+import thaumcraft.api.nodes.NodeModifier;
+import thaumcraft.api.nodes.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileEntityPlayerBeacon extends TileEntity {
+public class TileEntityPlayerBeacon extends TileEntity implements INode {
 
 	private String owner = " ";
 	private boolean hasSkull;
@@ -49,12 +54,21 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	private int levels = 0;
 	private HashMap<IThrottle, Integer> throttleHashMap = new HashMap<IThrottle, Integer>();
 
+	//TC
+	private short visBase = 150;
+	private NodeType nodeType = NodeType.TAINTED;
+	private NodeModifier nodeModifier = null;
+	private AspectList aspectList = new AspectList();
+
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
+		if (par1NBTTagCompound.hasKey("Aspects")) {
+			this.aspectList.readFromNBT(par1NBTTagCompound);
+		}
 	}
 
 	@Override
@@ -63,6 +77,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", corruption);
 		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
+		this.aspectList.writeToNBT(par1NBTTagCompound);
 	}
 
 	@Override
@@ -144,7 +159,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	public void doEffects() {
 		TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
 		if (skull != null) {
-			//Owner's Head
 			if (skull.getExtraType().equals(this.owner)) {
 				EntityPlayer entityPlayer = worldObj.getPlayerEntityByName(this.owner);
 				if (entityPlayer != null && entityPlayer.dimension == worldObj.provider.dimensionId) {
@@ -154,9 +168,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						if ((buff.getMinBeaconLevel() <= levels) && (player != null)) {
 							int i = 0;
 							for (IThrottle throttle : Throttle.throttleList) {
-								if (throttle.getAffectedBuffs().contains(entry.getKey())) {
-									i = i + throttleHashMap.get(throttle);
-								}
+								if (throttle.getAffectedBuffs().contains(entry.getKey())) i = i + throttleHashMap.get(throttle);
 							}
 							//System.out.println("Applying " + buff.getName() + " with " + i + " crystals throttling");
 							buff.doBuff(player, levels, i);
@@ -193,9 +205,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 						PathNavigate entityPathNavigate = entityCreature.getNavigator();
 						if (entityPathNavigate != null && vec3 != null) {
 							PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-							if (entityPathEntity != null) {
-								entityPathNavigate.setPath(entityPathEntity, 1.1D);
-							}
+							if (entityPathEntity != null) entityPathNavigate.setPath(entityPathEntity, 1.1D);
 						}
 					}
 				}
@@ -223,67 +233,35 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				throttleHashMap.put(throttle, 0);
 			}
 			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
-				for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
-					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-						ItemStack itemStack = iInventory.getStackInSlot(i);
-						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttleHashMap.put(item, throttleHashMap.get(item)+1);
-						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-						else {
-							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-							iInventory.setInventorySlotContents(i, itemStack);
-						}
-					}
-				}
+				doPylon(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
 			}
 			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels);
-				for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
-					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-						ItemStack itemStack = iInventory.getStackInSlot(i);
-						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttleHashMap.put(item, throttleHashMap.get(item)+1);
-						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-						else {
-							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-							iInventory.setInventorySlotContents(i, itemStack);
-						}
-					}
-				}
+				doPylon(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels);
 			}
 			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord + levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord + levels);
-				for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
-					if ((iInventory.getStackInSlot(i) != null) && (iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-						ItemStack itemStack = iInventory.getStackInSlot(i);
-						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttleHashMap.put(item, throttleHashMap.get(item)+1);
-						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-						else {
-							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-							iInventory.setInventorySlotContents(i, itemStack);
-						}
-					}
-				}
+				doPylon(xCoord + levels, yCoord - levels + 1 + y, zCoord + levels);
 			}
 			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord + levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord + levels);
-				for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
-					if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-						ItemStack itemStack = iInventory.getStackInSlot(i);
-						IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-						throttleHashMap.put(item, throttleHashMap.get(item)+1);
-						if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-						else {
-							itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-							iInventory.setInventorySlotContents(i, itemStack);
-						}
-					}
-				}
+				doPylon(xCoord - levels, yCoord - levels + 1 + y, zCoord + levels);
 			}
 			for (Map.Entry<IThrottle, Integer> entry : throttleHashMap.entrySet()) {
 				if (entry.getValue() > levels) throttleHashMap.put(entry.getKey(), levels);
+			}
+		}
+	}
+
+	private void doPylon(int x, int y, int z) {
+		IInventory iInventory = (IInventory) worldObj.getBlockTileEntity(x, y, z);
+		for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
+			if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
+				ItemStack itemStack = iInventory.getStackInSlot(i);
+				IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
+				throttleHashMap.put(item, throttleHashMap.get(item)+1);
+				if (itemStack.getItemDamage()+1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
+				else {
+					itemStack.setItemDamage(itemStack.getItemDamage() + 1);
+					iInventory.setInventorySlotContents(i, itemStack);
+				}
 			}
 		}
 	}
@@ -361,5 +339,88 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
 			}
 		}
+	}
+
+	@Override
+	public String getId() {
+		return Integer.toString(this.worldObj.provider.dimensionId) + Integer.toString(this.xCoord) + Integer.toString(this.yCoord) + Integer.toString(this.zCoord);
+	}
+
+	@Override
+	public NodeType getNodeType() {
+		return this.nodeType;
+	}
+
+	@Override
+	public void setNodeType(NodeType nodeType) {
+		this.nodeType = nodeType;
+	}
+
+	@Override
+	public void setNodeModifier(NodeModifier nodeModifier) {
+	 	this.nodeModifier = nodeModifier;
+	}
+
+	@Override
+	public NodeModifier getNodeModifier() {
+		return this.nodeModifier;
+	}
+
+	@Override
+	public int getNodeVisBase() {
+		return this.visBase;
+	}
+
+	@Override
+	public void setNodeVisBase(short nodeVisBase) {
+	 	this.visBase = nodeVisBase;
+	}
+
+	@Override
+	public AspectList getAspects() {
+		return this.aspectList;
+	}
+
+	@Override
+	public void setAspects(AspectList aspects) {
+		this.aspectList = aspects;
+	}
+
+	@Override
+	public boolean doesContainerAccept(Aspect tag) {
+		return false;
+	}
+
+	@Override
+	public int addToContainer(Aspect tag, int amount) {
+		int left = amount + this.aspectList.getAmount(tag) - this.visBase;
+		left = left > 0 ? left : 0;
+		this.aspectList.add(tag, amount - left);
+		return left;
+	}
+
+	@Override
+	public boolean takeFromContainer(Aspect tag, int amount) {
+		return this.aspectList.reduce(tag, amount);
+	}
+
+	@Override
+	public boolean takeFromContainer(AspectList ot) {
+		return false;
+	}
+
+	@Override
+	public boolean doesContainerContainAmount(Aspect tag, int amount) {
+		return this.aspectList.getAmount(tag) >= amount;
+	}
+
+	@Override
+	public boolean doesContainerContain(AspectList ot) {
+		return false;
+	}
+
+	@Override
+	public int containerContains(Aspect tag) {
+		return this.aspectList.getAmount(tag);
 	}
 }
