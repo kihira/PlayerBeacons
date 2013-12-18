@@ -59,17 +59,17 @@ public class ThaumcraftHandler {
 		brownCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.brownCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.EARTH, 10));
 		greenCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.greenCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.MOTION, 10));
 		lightBlueCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.lightBlueCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.TRAVEL, 10));
-		blackCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.blackCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.ARMOR, 10));
+		blackCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.redCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.ARMOR, 10));
 	}
 
 	private void registerResearch() {
 		ResearchItem researchItem;
 
-		researchItem = new ResearchItem(KEY_DIMENSION, "BASICS", new AspectList(), 0, 2, 0, new ItemStack(Item.enderPearl)).setRound().setAutoUnlock();
+		researchItem = new ResearchItem(KEY_DIMENSION, "BASICS", new AspectList(), -2, 7, 0, new ItemStack(Item.enderPearl)).setRound().setAutoUnlock();
 		researchItem.setPages(new ResearchPage("research.pbdimensional.page.0")).registerResearchItem();
-		researchItem = new ResearchItem(KEY_BEACON, "BASICS", new AspectList().add(Aspect.ELDRITCH, 6).add(Aspect.SOUL, 4), -1, 4, 2, new ItemStack(PlayerBeacons.playerBeaconBlock)).setParents(KEY_DIMENSION).setParentsHidden("ARCANESTONE");
+		researchItem = new ResearchItem(KEY_BEACON, "BASICS", new AspectList().add(Aspect.ELDRITCH, 6).add(Aspect.SOUL, 4), 0, 7, 2, new ItemStack(PlayerBeacons.playerBeaconBlock)).setParents(KEY_DIMENSION).setParentsHidden("ARCANESTONE");
 		researchItem.setPages(new ResearchPage("research.pbbeacon.page.0"), new ResearchPage("research.pbbeacon.page.1"), new ResearchPage(beaconRecipe), new ResearchPage(defiledConductorBlockRecipe), new ResearchPage("research.pbbeacon.page.2")).registerResearchItem();
-		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 6).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 4), -2, 6, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON);
+		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 6).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 4), 2, 7, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON);
 		researchItem.setPages(new ResearchPage("research.pbcrystal.page.0"), new ResearchPage(defiledPylonBlockRecipe), new ResearchPage(crystalRecipe), new ResearchPage(brownCrystalRecipe), new ResearchPage(greenCrystalRecipe), new ResearchPage(lightBlueCrystalRecipe), new ResearchPage(blackCrystalRecipe)).registerResearchItem();
 
 	}

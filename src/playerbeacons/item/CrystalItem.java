@@ -46,4 +46,9 @@ public class CrystalItem extends Item implements ICrystal {
 	public List<String> getAffectedBuffs() {
 		return null;
 	}
+
+	@Override
+	public double[] getRGBA() {
+		return null;
+	}
 }

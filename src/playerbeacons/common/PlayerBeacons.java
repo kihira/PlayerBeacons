@@ -3,10 +3,12 @@ package playerbeacons.common;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
@@ -15,11 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
-import playerbeacons.api.PlayerBeaconsApi;
 import playerbeacons.api.throttle.Throttle;
 import playerbeacons.block.BlockDefiledSoulConductor;
 import playerbeacons.block.BlockDefiledSoulPylon;
@@ -35,13 +35,7 @@ import playerbeacons.tileentity.TileEntityPlayerBeacon;
 import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
 import playerbeacons.util.ThaumcraftHandler;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.research.ResearchCategories;
-import thaumcraft.api.research.ResearchItem;
-import thaumcraft.api.research.ResearchPage;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0", dependencies = "after:Thaumcraft;")
@@ -62,7 +56,7 @@ public class PlayerBeacons {
 	public static LightBlueCrystalItem lightBlueCrystalItem;
 	public static BrownCrystalItem brownCrystalItem;
 	public static GreenCrystalItem greenCrystalItem;
-	public static BlackCrystalItem blackCrystalItem;
+	public static RedCrystalItem redCrystalItem;
 
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -89,8 +83,8 @@ public class PlayerBeacons {
 		GameRegistry.registerItem(brownCrystalItem, "brownCrystalItem");
 		greenCrystalItem = new GreenCrystalItem(config.jumpCrystalItemID);
 		GameRegistry.registerItem(greenCrystalItem, "greenCrystalItem");
-		blackCrystalItem = new BlackCrystalItem(config.resCrystalItemID);
-		GameRegistry.registerItem(blackCrystalItem, "blackCrystalItem");
+		redCrystalItem = new RedCrystalItem(config.resCrystalItemID);
+		GameRegistry.registerItem(redCrystalItem, "redCrystalItem");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
@@ -145,7 +139,7 @@ public class PlayerBeacons {
 	private void registerThrottles() {
 		Throttle.registerThrottle(lightBlueCrystalItem);
 		Throttle.registerThrottle(greenCrystalItem);
-		Throttle.registerThrottle(blackCrystalItem);
+		Throttle.registerThrottle(redCrystalItem);
 		Throttle.registerThrottle(brownCrystalItem);
 	}
 
@@ -163,7 +157,7 @@ public class PlayerBeacons {
 		GameRegistry.addShapedRecipe(new ItemStack(lightBlueCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(brownCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 3), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(greenCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 6), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
-		GameRegistry.addShapedRecipe(new ItemStack(blackCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
+		GameRegistry.addShapedRecipe(new ItemStack(redCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Item.eyeOfEnder), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.ingotIron));
 	}
 

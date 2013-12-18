@@ -270,7 +270,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements INode {
 		if (levels >= 0) {
 			float newCorruption = 0;
 			float y;
-
 			for (IThrottle throttle: Throttle.throttleList) {
 				for (Object obj : throttle.getAffectedBuffs()) {
 					Buff buff = Buff.buffs.get(obj.toString());

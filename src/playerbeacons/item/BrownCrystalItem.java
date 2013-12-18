@@ -16,4 +16,9 @@ public class BrownCrystalItem extends CrystalItem {
 		list.add("dig");
 		return list;
 	}
+
+	@Override
+	public double[] getRGBA() {
+		return new double[]{0.5, 0.4, 0.3, 1};
+	}
 }

@@ -16,4 +16,9 @@ public class GreenCrystalItem extends CrystalItem {
 		list.add("jump");
 		return list;
 	}
+
+	@Override
+	public double[] getRGBA() {
+		return new double[]{0.45, 0.6, 0.45, 1};
+	}
 }

@@ -16,4 +16,9 @@ public class LightBlueCrystalItem extends CrystalItem {
 		list.add("speed");
 		return list;
 	}
+
+	@Override
+	public double[] getRGBA() {
+		return new double[]{0.5, 0.5, 1, 1};
+	}
 }

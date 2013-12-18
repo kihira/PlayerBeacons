@@ -4,9 +4,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
+import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.*;
 import playerbeacons.proxy.ClientProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
+import playerbeacons.util.Util;
 
 public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
@@ -60,21 +62,34 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			bindTexture(ClientProxy.pylonCrystalPortTexture);
 			if (itemStack != null) {
 				//TODO Update this to new API. Use similar system to potions/thaumcraft aspects?
-				/*
-				if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("brown")) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("green")) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("lightblue")) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (NewCrystalItem.getSimpleCrystalName(itemStack).equals("black")) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				*/
 				if (itemStack.getItem() instanceof BrownCrystalItem) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (itemStack.getItem() instanceof GreenCrystalItem) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else if (itemStack.getItem() instanceof LightBlueCrystalItem) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof BlackCrystalItem) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+				else if (itemStack.getItem() instanceof RedCrystalItem) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
 			else {
 				modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+			}
+			if ((tileentity.worldObj.isAirBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord)) && (tileEntityDefiledSoulPylon.getStackInSlot(0) != null)) {
+				for (int i = 0; i < 5; i++) {
+					if (tileentity.worldObj.getBlockId(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock.blockID) {
+						Util.drawLightning(0, 0, 0, i, -2, -i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
+						break;
+					}
+					if (tileentity.worldObj.getBlockId(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock.blockID) {
+						Util.drawLightning(0, 0, 0, -i, -2, -i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
+						break;
+					}
+					if (tileentity.worldObj.getBlockId(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock.blockID) {
+						Util.drawLightning(0, 0, 0, -i, -2, i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
+						break;
+					}
+					if (tileentity.worldObj.getBlockId(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock.blockID) {
+						Util.drawLightning(0, 0, 0, i, -2, i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
+						break;
+					}
+				}
 			}
 		}
 		GL11.glDisable(GL11.GL_BLEND);
