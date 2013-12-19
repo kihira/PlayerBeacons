@@ -113,9 +113,12 @@ public class EventHandler {
 				if (entityZombie.worldObj.playerEntities.size() > 0) {
 					int i = random.nextInt(entityZombie.worldObj.playerEntities.size());
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
-					entityZombie.setCurrentItemOrArmor(4, Util.getHead(3, player.username));
-					this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oA chill runs down your spine, you feel oddly attached to something"));
+					//spawn within 50 blocks and similar y level
+					if ((player.getDistanceToEntity(entityZombie) < 50) && (player.posY - entityZombie.posY < 5)) {
+						entityZombie.setCurrentItemOrArmor(4, Util.getHead(3, player.username));
+						this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oA chill runs down your spine, you feel oddly attached to something"));
+					}
 				}
 			}
 		}
