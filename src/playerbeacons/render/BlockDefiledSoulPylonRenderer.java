@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
+import playerbeacons.common.Config;
 import playerbeacons.common.PlayerBeacons;
 import playerbeacons.item.*;
 import playerbeacons.proxy.ClientProxy;
@@ -71,7 +72,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			else {
 				modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
-			if ((tileentity.worldObj.isAirBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord)) && (tileEntityDefiledSoulPylon.getStackInSlot(0) != null)) {
+			if ((PlayerBeacons.config.enableLightning) && (tileentity.worldObj.isAirBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord)) && (tileEntityDefiledSoulPylon.getStackInSlot(0) != null)) {
 				for (int i = 0; i < 5; i++) {
 					if (tileentity.worldObj.getBlockId(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock.blockID) {
 						Util.drawLightning(0, 0, 0, i, -2, -i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());

@@ -24,6 +24,7 @@ public class Config {
 	public int spawnCooldownDuration;
 	public boolean disableCorruption;
 	public boolean enableThaumcraft;
+	public boolean enableLightning;
 
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
@@ -80,6 +81,9 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Thaumcraft Intergration", true);
 		prop.comment = "If this is enabled and Thaumcraft is detected, the default recipes will be replaced with TC research and recipes";
 		enableThaumcraft = prop.getBoolean(true);
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy lightning", false);
+		prop.comment = "EXPERIMENTAL. This feature isn't finished so is disabled by default";
+		enableLightning = prop.getBoolean(false);
 	}
 
 	public void loadBuffs() {
