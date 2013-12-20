@@ -52,7 +52,7 @@ public class ThaumcraftHandler {
 			if (i % 2 == 0) itemStacks[i] = new ItemStack(PlayerBeacons.defiledSoulConductorBlock);
 			else itemStacks[i] = new ItemStack(Item.enderPearl);
 		}
-		beaconRecipe = ThaumcraftApi.addInfusionCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.playerBeaconBlock), 10, new AspectList().add(Aspect.SOUL, 30).add(Aspect.ELDRITCH, 30).add(Aspect.EXCHANGE, 20).add(Aspect.AURA, 20), new ItemStack(Block.beacon), itemStacks);
+		beaconRecipe = ThaumcraftApi.addInfusionCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.playerBeaconBlock), 7, new AspectList().add(Aspect.SOUL, 30).add(Aspect.ELDRITCH, 30).add(Aspect.EXCHANGE, 20).add(Aspect.AURA, 20), new ItemStack(Block.beacon), itemStacks);
 	}
 
 	private void registerCrucibleRecipes() {
