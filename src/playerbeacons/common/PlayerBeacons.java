@@ -156,7 +156,7 @@ public class PlayerBeacons {
 	}
 
 	private void registerRecipes() {
-		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulConductorBlock, 4), "OPO", "MCM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'C', new ItemStack(crystalItem), 'M', new ItemStack(Block.mycelium));
+		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulConductorBlock, 4), "OOO", "MPM", "OOO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.eyeOfEnder), 'M', new ItemStack(Block.mycelium));
 		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold));
 		GameRegistry.addShapedRecipe(new ItemStack(playerBeaconBlock), "PNP", "GBG", "OOO", 'O', new ItemStack(defiledSoulConductorBlock), 'P', new ItemStack(Item.eyeOfEnder), 'G', new ItemStack(Item.ingotGold), 'N', new ItemStack(Item.netherStar), 'B', new ItemStack(Block.beacon));
 		GameRegistry.addShapedRecipe(new ItemStack(lightBlueCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Item.dyePowder, 1, 12), 'G', new ItemStack(Block.glass), 'C', new ItemStack(crystalItem));
