@@ -36,6 +36,8 @@ import playerbeacons.util.BeaconDataHandler;
 import playerbeacons.util.EventHandler;
 import playerbeacons.util.ThaumcraftHandler;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Logger;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0", dependencies = "after:Thaumcraft;")
@@ -57,6 +59,8 @@ public class PlayerBeacons {
 	public static BrownCrystalItem brownCrystalItem;
 	public static GreenCrystalItem greenCrystalItem;
 	public static RedCrystalItem redCrystalItem;
+
+	public static boolean isChristmas = false;
 
 	@SidedProxy(clientSide = "playerbeacons.proxy.ClientProxy", serverSide = "playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -93,10 +97,11 @@ public class PlayerBeacons {
 		registerBuffs();
 		config.loadBuffs();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
+
+		if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 25 && Calendar.getInstance().get(Calendar.MONTH) == 12) isChristmas = true;
 
 		ItemStack itemStack = makeResearchNotes();
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);
