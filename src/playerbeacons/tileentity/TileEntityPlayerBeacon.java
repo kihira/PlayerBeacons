@@ -29,23 +29,18 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
+import playerbeacons.api.buff.Buff;
 import playerbeacons.api.throttle.IThrottle;
 import playerbeacons.api.throttle.IThrottleContainer;
-import playerbeacons.api.buff.Buff;
 import playerbeacons.api.throttle.Throttle;
 import playerbeacons.common.PlayerBeacons;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.nodes.INode;
-import thaumcraft.api.nodes.NodeModifier;
-import thaumcraft.api.nodes.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileEntityPlayerBeacon extends TileEntity implements INode {
+public class TileEntityPlayerBeacon extends TileEntity {
 
 	private String owner = " ";
 	private boolean hasSkull;
@@ -54,21 +49,12 @@ public class TileEntityPlayerBeacon extends TileEntity implements INode {
 	private int levels = 0;
 	private HashMap<IThrottle, Integer> throttleHashMap = new HashMap<IThrottle, Integer>();
 
-	//TC
-	private short visBase = 150;
-	private NodeType nodeType = NodeType.TAINTED;
-	private NodeModifier nodeModifier = null;
-	private AspectList aspectList = new AspectList();
-
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
-		if (par1NBTTagCompound.hasKey("Aspects")) {
-			this.aspectList.readFromNBT(par1NBTTagCompound);
-		}
 	}
 
 	@Override
@@ -77,7 +63,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements INode {
 		par1NBTTagCompound.setString("owner", owner);
 		par1NBTTagCompound.setFloat("badstuff", corruption);
 		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
-		this.aspectList.writeToNBT(par1NBTTagCompound);
 	}
 
 	@Override
@@ -338,88 +323,5 @@ public class TileEntityPlayerBeacon extends TileEntity implements INode {
 				player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
 			}
 		}
-	}
-
-	@Override
-	public String getId() {
-		return Integer.toString(this.worldObj.provider.dimensionId) + Integer.toString(this.xCoord) + Integer.toString(this.yCoord) + Integer.toString(this.zCoord);
-	}
-
-	@Override
-	public NodeType getNodeType() {
-		return this.nodeType;
-	}
-
-	@Override
-	public void setNodeType(NodeType nodeType) {
-		this.nodeType = nodeType;
-	}
-
-	@Override
-	public void setNodeModifier(NodeModifier nodeModifier) {
-	 	this.nodeModifier = nodeModifier;
-	}
-
-	@Override
-	public NodeModifier getNodeModifier() {
-		return this.nodeModifier;
-	}
-
-	@Override
-	public int getNodeVisBase() {
-		return this.visBase;
-	}
-
-	@Override
-	public void setNodeVisBase(short nodeVisBase) {
-	 	this.visBase = nodeVisBase;
-	}
-
-	@Override
-	public AspectList getAspects() {
-		return this.aspectList;
-	}
-
-	@Override
-	public void setAspects(AspectList aspects) {
-		this.aspectList = aspects;
-	}
-
-	@Override
-	public boolean doesContainerAccept(Aspect tag) {
-		return false;
-	}
-
-	@Override
-	public int addToContainer(Aspect tag, int amount) {
-		int left = amount + this.aspectList.getAmount(tag) - this.visBase;
-		left = left > 0 ? left : 0;
-		this.aspectList.add(tag, amount - left);
-		return left;
-	}
-
-	@Override
-	public boolean takeFromContainer(Aspect tag, int amount) {
-		return this.aspectList.reduce(tag, amount);
-	}
-
-	@Override
-	public boolean takeFromContainer(AspectList ot) {
-		return false;
-	}
-
-	@Override
-	public boolean doesContainerContainAmount(Aspect tag, int amount) {
-		return this.aspectList.getAmount(tag) >= amount;
-	}
-
-	@Override
-	public boolean doesContainerContain(AspectList ot) {
-		return false;
-	}
-
-	@Override
-	public int containerContains(Aspect tag) {
-		return this.aspectList.getAmount(tag);
 	}
 }
