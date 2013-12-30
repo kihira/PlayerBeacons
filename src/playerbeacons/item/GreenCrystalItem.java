@@ -6,7 +6,6 @@ import java.util.List;
 public class GreenCrystalItem extends CrystalItem {
 	public GreenCrystalItem(int id) {
 		super(id);
-		setTextureName("playerbeacon:greenXtal");
 		setUnlocalizedName("greenCrystalItem");
 	}
 
