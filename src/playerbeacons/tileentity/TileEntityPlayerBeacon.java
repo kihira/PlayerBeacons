@@ -112,6 +112,25 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		super.invalidate();
 	}
 
+	private boolean isCloneConstruct() {
+		if (this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.skull.blockID) return false;
+		//Check 5x5 underneath and above
+		for (int i = -2; i <= 2; i++) {
+			for (int j = -2; j <= 2; j++) {
+				if (worldObj.getBlockId(this.xCoord + i, this.yCoord - 1, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock.blockID) return false;
+				if (worldObj.getBlockId(this.xCoord + i, this.yCoord + 3, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock.blockID) return false;
+			}
+		}
+		//Check pylons
+		for (int i = 0; i <= 3; i++) {
+			if (worldObj.getBlockId(this.xCoord + 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
+			if (worldObj.getBlockId(this.xCoord + 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
+			if (worldObj.getBlockId(this.xCoord - 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
+			if (worldObj.getBlockId(this.xCoord - 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
+		}
+		return true;
+	}
+
 	public void checkBeacon() {
 		this.levels = 0;
 		if (this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.skull.blockID) {
@@ -130,8 +149,15 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				}
 				if (!flag) break;
 			}
+			return;
 		}
-		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord+1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
+		AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord), (double) (this.yCoord + 1), (double) (this.zCoord));
+		List entities = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
+		if ((entities != null) && (this.isCloneConstruct())) {
+			EntityPlayer entityPlayer = (EntityPlayer) entities.get(0);
+
+		}
+		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
 			worldObj.destroyBlock(xCoord, yCoord + 1, zCoord, false);
 			EntityDragon dragon = new EntityDragon(worldObj);
 			dragon.setLocationAndAngles(xCoord, yCoord + 20, zCoord, 0, 0);

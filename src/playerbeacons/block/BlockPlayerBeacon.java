@@ -114,15 +114,11 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 			if (tagCompound != null) {
 				EntityPlayer player = (EntityPlayer) par5EntityLivingBase;
-				if (tileEntity instanceof TileEntityPlayerBeacon) {
-					((TileEntityPlayerBeacon) tileEntity).initialSetup(null);
-				}
+				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup(null);
 				player.sendChatToPlayer(ChatMessageComponent.createFromText("§e§oYour soul is already bound to this dimension, rendering the beacon unbound"));
 			}
 			else {
-				if (tileEntity instanceof TileEntityPlayerBeacon) {
-					((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
-				}
+				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
 			}
 		}
 	}
