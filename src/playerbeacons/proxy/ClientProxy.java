@@ -1,6 +1,8 @@
 package playerbeacons.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import playerbeacons.common.PlayerBeacons;
@@ -24,5 +26,11 @@ public class ClientProxy extends CommonProxy {
 		BlockDefiledSoulPylonRenderer blockDefiledSoulPylonRenderer = new BlockDefiledSoulPylonRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDefiledSoulPylon.class, blockDefiledSoulPylonRenderer);
 		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());
+
+		//Replace skull renderer
+		TileEntityRenderer.instance.specialRendererMap.remove(TileEntitySkull.class);
+		BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
+		//MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());
 	}
 }
