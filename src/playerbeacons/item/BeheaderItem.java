@@ -24,6 +24,7 @@ public class BeheaderItem extends ItemArmor {
 		super(id, EnumArmorMaterial.IRON, 2, 0);
 		setUnlocalizedName("beheader");
 		setTextureName("playerbeacon:beheader");
+		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
 		setMaxDamage(200);
 	}
 
