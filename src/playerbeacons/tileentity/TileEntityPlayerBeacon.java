@@ -297,7 +297,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void doCorruption(boolean alwaysDoCorruption) {
-		System.out.println(corruption + " " + corruptionLevel);
 		if (corruption > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
 			if (worldObj.rand.nextInt(1000) < 5) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
