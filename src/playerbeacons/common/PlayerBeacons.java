@@ -40,7 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0", dependencies = "after:Thaumcraft;")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0a", dependencies = "after:Thaumcraft;")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
