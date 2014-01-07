@@ -75,9 +75,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		if (!world.isRemote) {
 			if (entityPlayer.getCurrentItemOrArmor(0) != null) {
 				if (entityPlayer.getCurrentItemOrArmor(0).getItem().itemID == Item.emerald.itemID) {
-					entityPlayer.setCurrentItemOrArmor(0, null);
+					ItemStack itemStack = entityPlayer.getCurrentItemOrArmor(0);
+					if (itemStack.stackSize == 1) entityPlayer.setCurrentItemOrArmor(0, null);
+					else entityPlayer.setCurrentItemOrArmor(0, new ItemStack(Item.emerald, itemStack.stackSize - 1));
 					EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
-					entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3§oAn energy from the beacon flows into the emerald forging a mysterious crystal"));
 					world.spawnEntityInWorld(item);
 					return true;
 				}
