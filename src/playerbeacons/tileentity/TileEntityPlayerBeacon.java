@@ -83,6 +83,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 			if (player != null) {
 				this.owner = player.username;
 				this.corruption = 0;
+				this.corruptionLevel = 0;
 				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
 			}
 		}
@@ -291,11 +292,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 					}
 				}
 			}
-			setCorruption(corruption + newCorruption - (levels * 10), true);
+			setCorruption(corruption + newCorruption - (levels * 10), false);
 		}
 	}
 
 	public void doCorruption(boolean alwaysDoCorruption) {
+		System.out.println(corruption + " " + corruptionLevel);
 		if (corruption > 0 && MinecraftServer.getServer().getDifficulty() > 0) {
 			if (worldObj.rand.nextInt(1000) < 5) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
