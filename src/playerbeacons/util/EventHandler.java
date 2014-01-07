@@ -144,9 +144,9 @@ public class EventHandler {
 						double viewY = movingObject.blockY - RenderManager.renderPosY;
 						double viewZ = movingObject.blockZ - RenderManager.renderPosZ;
 						String string;
-						if (corruption >= 9000) string = "Corruption: §4" + String.valueOf(corruption);
-						else if (corruption >= 6000) string = "Corruption: §c" + String.valueOf(corruption);
-						else if (corruption >= 3000) string = "Corruption: §e" + String.valueOf(corruption);
+						if (corruption >= 15000) string = "Corruption: §4" + String.valueOf(corruption);
+						else if (corruption >= 10000) string = "Corruption: §c" + String.valueOf(corruption);
+						else if (corruption >= 5000) string = "Corruption: §e" + String.valueOf(corruption);
 						else string = "Corruption: " + String.valueOf(corruption);
 						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
 						if (owner.equals(" ")) owner = "§kNo-one";
