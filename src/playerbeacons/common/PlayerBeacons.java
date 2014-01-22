@@ -3,10 +3,7 @@ package playerbeacons.common;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -28,6 +25,7 @@ import playerbeacons.buff.DigBuff;
 import playerbeacons.buff.JumpBuff;
 import playerbeacons.buff.ResistanceBuff;
 import playerbeacons.buff.SpeedBuff;
+import playerbeacons.client.HUDPlayerBeacon;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
@@ -37,7 +35,6 @@ import playerbeacons.util.EventHandler;
 import playerbeacons.util.ThaumcraftHandler;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Logger;
 
 @Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0a", dependencies = "after:Thaumcraft;")
@@ -116,6 +113,11 @@ public class PlayerBeacons {
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
 	}
 
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent e) {
+        FMLInterModComms.sendMessage("Waila", "register", "playerbeacons.client.HUDPlayerBeacon.callbackRegister");
+    }
+
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		//Thaumcraft Integration
@@ -126,6 +128,7 @@ public class PlayerBeacons {
 		else {
 			registerRecipes();
 		}
+        System.out.println(HUDPlayerBeacon.class.toString());
 	}
 
 	@Mod.EventHandler
