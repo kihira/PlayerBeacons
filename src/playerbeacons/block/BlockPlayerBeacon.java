@@ -84,7 +84,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				}
 				//If they right click with depleted, disperse all corruption
 				else if (entityPlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem) {
-					entityPlayer.setCurrentItemOrArmor(0, null);
+                    entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getBlockTileEntity(x, y, z);
 					tileEntityPlayerBeacon.doCorruption(true);
 					tileEntityPlayerBeacon.setCorruption(0, true);
