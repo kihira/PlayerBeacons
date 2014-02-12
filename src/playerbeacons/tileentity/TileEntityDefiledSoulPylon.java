@@ -44,6 +44,11 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
 	}
 
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
+
 	@Override
 	public int getSizeInventory() {
 		return 1;

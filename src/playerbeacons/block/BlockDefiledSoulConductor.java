@@ -18,6 +18,10 @@ public class BlockDefiledSoulConductor extends Block {
 		setTextureName("playerbeacon:pyramidBrick");
 	}
 
+    public String getItemIconName() {
+        return null;
+    }
+
 	public boolean isBeaconBase(World worldObj, int x, int y, int z, int beaconX, int beaconY, int beaconZ) {
 		return true;
 	}

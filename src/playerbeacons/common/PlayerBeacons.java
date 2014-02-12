@@ -18,11 +18,8 @@ import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import playerbeacons.api.throttle.Throttle;
-import playerbeacons.block.BlockDefiledSoulConductor;
-import playerbeacons.block.BlockDefiledSoulPylon;
-import playerbeacons.block.BlockPlayerBeacon;
+import playerbeacons.block.*;
 import playerbeacons.buff.*;
-import playerbeacons.client.HUDPlayerBeacon;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
@@ -67,9 +64,9 @@ public class PlayerBeacons {
 		playerBeaconBlock = new BlockPlayerBeacon(config.playerBeaconBlockID);
 		GameRegistry.registerBlock(playerBeaconBlock, "playerBeaconBlock");
 		defiledSoulConductorBlock = new BlockDefiledSoulConductor(config.defiledSoulConductorBlockID);
-		GameRegistry.registerBlock(defiledSoulConductorBlock, "defiledSoulConductorBlock");
+		GameRegistry.registerBlock(defiledSoulConductorBlock, DefiledSoulConductorItemBlock.class, "defiledSoulConductorBlock");
 		defiledSoulPylonBlock = new BlockDefiledSoulPylon(config.defiledSoulPylonBlockID);
-		GameRegistry.registerBlock(defiledSoulPylonBlock, "defiledSoulPylonBlock");
+		GameRegistry.registerBlock(defiledSoulPylonBlock, DefiledSoulPylonItemBlock.class, "defiledSoulPylonBlock");
 
 		beheaderItem = new BeheaderItem(config.beheaderItemID);
 		GameRegistry.registerItem(beheaderItem, "beheaderItem");
