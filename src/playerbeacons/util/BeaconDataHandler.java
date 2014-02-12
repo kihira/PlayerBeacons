@@ -18,12 +18,11 @@ public class BeaconDataHandler {
 	}
 
 	private void loadData() {
-
 		File mainFile = new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath(), "playerbeacons.dat");
 
 		if (mainFile.exists()) {
 			try {
-				beaconList = CompressedStreamTools.readCompressed(new FileInputStream(mainFile));
+				this.beaconList = CompressedStreamTools.readCompressed(new FileInputStream(mainFile));
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -40,13 +39,9 @@ public class BeaconDataHandler {
 			CompressedStreamTools.writeCompressed(data, new FileOutputStream(mainFileNew));
 
 			if (backupFile.exists()) backupFile.delete();
-
 			mainFile.renameTo(backupFile);
-
 			if (mainFile.exists()) mainFile.delete();
-
 			mainFileNew.renameTo(mainFile);
-
 			if (mainFileNew.exists()) mainFileNew.delete();
 		}
 		catch (Exception exception) {
