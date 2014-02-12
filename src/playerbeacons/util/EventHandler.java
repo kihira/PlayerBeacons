@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -95,32 +96,28 @@ public class EventHandler {
 
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
-	public void onRenderWorldLast(RenderWorldLastEvent e) {
+	public void onRenderWorldLast(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
-		MovingObjectPosition movingObject = mc.objectMouseOver;
-		if (movingObject != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if ((movingObject.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
-				TileEntity tileEntity = mc.theWorld.getBlockTileEntity(movingObject.blockX , movingObject.blockY, movingObject.blockZ);
+		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
+			if ((e.target.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
+				TileEntity tileEntity = mc.theWorld.getBlockTileEntity(e.target.blockX , e.target.blockY, e.target.blockZ);
 				if (tileEntity != null && tileEntity instanceof TileEntityPlayerBeacon) {
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
-					int x = tileEntityPlayerBeacon.xCoord;
-					int y = tileEntityPlayerBeacon.yCoord;
-					int z = tileEntityPlayerBeacon.zCoord;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
 					String owner = tileEntityPlayerBeacon.getOwner();
-					if (movingObject.blockX == x && movingObject.blockY == y && movingObject.blockZ == z) {
-						double viewX = movingObject.blockX - RenderManager.renderPosX;
-						double viewY = movingObject.blockY - RenderManager.renderPosY;
-						double viewZ = movingObject.blockZ - RenderManager.renderPosZ;
+					if (e.target.blockX == tileEntityPlayerBeacon.xCoord && e.target.blockY == tileEntityPlayerBeacon.yCoord && e.target.blockZ == tileEntityPlayerBeacon.zCoord) {
+						double viewX = e.target.blockX - RenderManager.renderPosX;
+						double viewY = e.target.blockY - RenderManager.renderPosY;
+						double viewZ = e.target.blockZ - RenderManager.renderPosZ;
 						String string;
 						if (corruption >= 15000) string = "Corruption: §4" + String.valueOf(corruption);
 						else if (corruption >= 10000) string = "Corruption: §c" + String.valueOf(corruption);
 						else if (corruption >= 5000) string = "Corruption: §e" + String.valueOf(corruption);
 						else string = "Corruption: " + String.valueOf(corruption);
-						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
+						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
 						if (owner.equals(" ")) owner = "§kNo-one";
 						string = "Bound to: §4" + owner;
-						renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
+						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
 					}
 				}
 			}
