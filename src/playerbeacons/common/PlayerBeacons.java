@@ -21,10 +21,7 @@ import playerbeacons.api.throttle.Throttle;
 import playerbeacons.block.BlockDefiledSoulConductor;
 import playerbeacons.block.BlockDefiledSoulPylon;
 import playerbeacons.block.BlockPlayerBeacon;
-import playerbeacons.buff.DigBuff;
-import playerbeacons.buff.JumpBuff;
-import playerbeacons.buff.ResistanceBuff;
-import playerbeacons.buff.SpeedBuff;
+import playerbeacons.buff.*;
 import playerbeacons.client.HUDPlayerBeacon;
 import playerbeacons.item.*;
 import playerbeacons.proxy.CommonProxy;
@@ -97,6 +94,7 @@ public class PlayerBeacons {
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
+        new CorruptionPotion(config.corruptionPotionID);
 
 		if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 25 && Calendar.getInstance().get(Calendar.MONTH) == 12) isChristmas = true;
 
@@ -128,7 +126,6 @@ public class PlayerBeacons {
 		else {
 			registerRecipes();
 		}
-        System.out.println(HUDPlayerBeacon.class.toString());
 	}
 
 	@Mod.EventHandler

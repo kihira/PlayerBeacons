@@ -5,11 +5,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 import playerbeacons.common.Config;
+import playerbeacons.common.PlayerBeacons;
 import playerbeacons.proxy.ClientProxy;
+
+import java.util.ArrayList;
 
 public class Util {
 	public static MovingObjectPosition getBlockLookAt(EntityPlayer player, double maxBlockDistance) {
@@ -28,6 +32,12 @@ public class Util {
 		}
 		return itemStack;
 	}
+
+    public static void applyCorruption(EntityPlayer player, int duration, int amplifier) {
+        PotionEffect potionEffect = new PotionEffect(PlayerBeacons.config.corruptionPotionID, duration, amplifier);
+        potionEffect.setCurativeItems(new ArrayList<ItemStack>());
+        player.addPotionEffect(potionEffect);
+    }
 
 	public static void drawLightning(double x1, double y1, double z1, double x2, double y2, double z2, double[] rgba) {
 		drawLightning(x1, y1, z1, x2, y2, z2, rgba[3], rgba[0], rgba[1], rgba[2]);

@@ -21,6 +21,7 @@ public class Config {
 	public int resCrystalItemID;
 
 	public int decapitationEnchantmentID;
+    public int corruptionPotionID;
 	public int spawnCooldownDuration;
 	public boolean disableCorruption;
 	public boolean enableThaumcraft;
@@ -66,6 +67,8 @@ public class Config {
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();
+        prop = config.get(Configuration.CATEGORY_GENERAL, "Corruption Potion ID", 30);
+        decapitationEnchantmentID = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Allow Zombies to spawn with player heads", true);
 		prop.comment = "WARNING: Mobs wearing heads do not despawn and may build up over time.";
 		enableZombieHead = prop.getBoolean(true);

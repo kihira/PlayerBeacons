@@ -30,3 +30,4 @@ tc.research_name.PB_BEACON=Beacons
 tc.research_text.PB_BEACON=[PB] It's like an inside out TARDIS
 tc.research_name.PB_DIMENSION=Dimensional Theory
 tc.research_text.PB_DIMENSION=[PB] One second I'm here, next second I'm there!
+potion.corruption=Corruption
