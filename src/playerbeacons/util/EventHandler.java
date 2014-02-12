@@ -96,7 +96,7 @@ public class EventHandler {
 
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
-	public void onRenderWorldLast(DrawBlockHighlightEvent e) {
+	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
 			if ((e.target.typeOfHit == EnumMovingObjectType.TILE) && (mc.thePlayer.getCurrentItemOrArmor(0) != null) && (mc.thePlayer.getCurrentItemOrArmor(0).getItem() instanceof CrystalItem)) {
