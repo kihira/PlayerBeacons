@@ -60,7 +60,7 @@ public class EventHandler {
 			if (item != null) {
                 int lvl = EnchantmentHelper.getEnchantmentLevel(PlayerBeacons.config.decapitationEnchantmentID, item);
                 Random random = new Random();
-                if ((random.nextInt()) % (12/lvl) == 0) {
+                if (lvl > 0 && (random.nextInt()) % (12/lvl) == 0) {
                     if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(2, null), 1);
                     else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
                     else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(4, null), 1);
