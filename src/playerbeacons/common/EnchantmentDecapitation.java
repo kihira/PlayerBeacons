@@ -1,7 +1,9 @@
 package playerbeacons.common;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.item.ItemStack;
 
 public class EnchantmentDecapitation extends Enchantment {
 
@@ -10,18 +12,26 @@ public class EnchantmentDecapitation extends Enchantment {
 		setName("decapitation");
 	}
 
+    @Override
 	public int getMaxLevel() {
 		return 3;
 	}
 
-	public boolean canApplyTogether(Enchantment par1Enchantment) {
-		return par1Enchantment != Enchantment.fortune && par1Enchantment != Enchantment.knockback;
+    @Override
+	public boolean canApplyTogether(Enchantment enchantment) {
+		return enchantment.effectId != Enchantment.fortune.effectId && enchantment.effectId != Enchantment.knockback.effectId && super.canApplyTogether(enchantment);
 	}
 
+    public boolean canApply(ItemStack itemStack) {
+        return EnchantmentHelper.getEnchantmentLevel(Enchantment.looting.effectId, itemStack) == 0;
+    }
+
+    @Override
 	public int getMinEnchantability(int par1) {
 		return 15 + (par1 - 1) * 9;
 	}
 
+    @Override
 	public int getMaxEnchantability(int par1) {
 		return super.getMinEnchantability(par1) + 50;
 	}
