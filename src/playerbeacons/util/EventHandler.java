@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -44,64 +45,32 @@ public class EventHandler {
 
 		//Death by DamageBehead
 		if (e.source instanceof DamageBehead) {
-			if (deadEntity instanceof EntityPlayer) {
-				deadEntity.entityDropItem(Util.getHead(3, ((EntityPlayer) deadEntity).username), 1);
-				return;
-			}
-			if (deadEntity instanceof EntityZombie) {
-				ItemStack itemStack = new ItemStack(Item.skull, 1, 2);
-				deadEntity.entityDropItem(itemStack, 1);
-				return;
-			}
-			if (deadEntity instanceof EntitySkeleton) {
-				deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-				return;
-			}
-			if (deadEntity instanceof EntityCreeper) {
-				deadEntity.entityDropItem(Util.getHead(4, null), 1);
-				return;
-			}
+			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(Util.getHead(3, ((EntityPlayer) deadEntity).username), 1);
+			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(2, null), 1);
+			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(4, null), 1);
+            return;
 		}
 
-		//Death by enchantment
+		//Death with enchantment
 		if (entity instanceof EntityPlayer) {
 			EntityPlayer attacker = (EntityPlayer) entity;
 			ItemStack item = attacker.getHeldItem();
-			NBTTagList enchantments = null;
 			if (item != null) {
-				if (item.hasTagCompound()) {
-					enchantments = attacker.getHeldItem().getEnchantmentTagList();
-				}
-			}
-            if (enchantments != null) {
-				for (int i = 0; i < enchantments.tagCount(); ++i) {
-					short id = ((NBTTagCompound)enchantments.tagAt(i)).getShort("id");
-					short lvl = ((NBTTagCompound)enchantments.tagAt(i)).getShort("lvl");
-					if (id == PlayerBeacons.config.decapitationEnchantmentID) {
-						Random random = new Random();
-						if ((random.nextInt()) % (12/lvl) == 0) {
-							if (deadEntity instanceof EntityZombie) {
-								deadEntity.entityDropItem(Util.getHead(2, null), 1);
-								return;
-							}
-							if (deadEntity instanceof EntitySkeleton) {
-								deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-								return;
-							}
-							if (deadEntity instanceof EntityCreeper) {
-								deadEntity.entityDropItem(Util.getHead(4, null), 1);
-								return;
-							}
-							if (deadEntity instanceof EntityPlayer) {
-								EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
-								e.setCanceled(true);
-								MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(deadPlayer.username + " was beheaded by " + attacker.username));
-								e.entityLiving.entityDropItem(Util.getHead(3, deadPlayer.username), 1);
-							}
-						}
-					}
-				}
-			}
+                int lvl = EnchantmentHelper.getEnchantmentLevel(PlayerBeacons.config.decapitationEnchantmentID, item);
+                Random random = new Random();
+                if ((random.nextInt()) % (12/lvl) == 0) {
+                    if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(2, null), 1);
+                    else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+                    else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(4, null), 1);
+                    else if (deadEntity instanceof EntityPlayer) {
+                        EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
+                        e.setCanceled(true);
+                        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(deadPlayer.username + " was beheaded by " + attacker.username));
+                        e.entityLiving.entityDropItem(Util.getHead(3, deadPlayer.username), 1);
+                    }
+                }
+            }
 		}
 	}
 
@@ -116,8 +85,8 @@ public class EventHandler {
 					//spawn within 50 blocks and similar y level
 					if ((player.getDistanceToEntity(entityZombie) < 50) && (player.posY - entityZombie.posY < 5)) {
 						entityZombie.setCurrentItemOrArmor(4, Util.getHead(3, player.username));
+                        entityZombie.setEquipmentDropChance(4, 100);
 						this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oA chill runs down your spine, you feel oddly attached to something"));
 					}
 				}
 			}
