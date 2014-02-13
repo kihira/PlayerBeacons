@@ -32,7 +32,7 @@ import playerbeacons.util.ThaumcraftHandler;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.0a", dependencies = "after:Thaumcraft;")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", version = "1.2.1", dependencies = "after:Thaumcraft;after:Waila;")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PlayerBeacons {
 
