@@ -318,7 +318,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
                 player.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(this.corruption / 250) * 20));
             }
-            player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel));
+            if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));
         }
 	}
 }
