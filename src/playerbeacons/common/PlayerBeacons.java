@@ -21,6 +21,7 @@ import playerbeacons.api.throttle.Throttle;
 import playerbeacons.block.*;
 import playerbeacons.buff.*;
 import playerbeacons.item.*;
+import playerbeacons.potion.CorruptionPotion;
 import playerbeacons.proxy.CommonProxy;
 import playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import playerbeacons.tileentity.TileEntityPlayerBeacon;

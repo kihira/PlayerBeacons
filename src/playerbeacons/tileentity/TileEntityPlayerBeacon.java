@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,20 +21,16 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import playerbeacons.api.buff.Buff;
 import playerbeacons.api.throttle.IThrottle;
 import playerbeacons.api.throttle.IThrottleContainer;
 import playerbeacons.api.throttle.Throttle;
-import playerbeacons.buff.CorruptionPotion;
 import playerbeacons.common.PlayerBeacons;
-import playerbeacons.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -305,20 +300,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
         if (player != null) {
             if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
-                Util.applyCorruption(player, 12000, 2);
                 player.travelToDimension(1);
                 this.corruptionLevel = 0;
                 this.corruption -= this.worldObj.rand.nextInt(9000);
             }
             else if ((this.corruption > 10000) && (this.corruptionLevel == 1)) {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
-                Util.applyCorruption(player, 12000, 1);
                 this.corruptionLevel = 2;
                 this.corruption -=- this.worldObj.rand.nextInt(2000);
             }
             else if ((this.corruption > 5000) && (this.corruptionLevel == 0)) {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond"));
-                Util.applyCorruption(player, 12000, 0);
                 this.corruptionLevel = 1;
                 this.corruption -= this.worldObj.rand.nextInt(1000);
             }
@@ -326,6 +318,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
                 player.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(this.corruption / 250) * 20));
             }
+            player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel));
         }
 	}
 }

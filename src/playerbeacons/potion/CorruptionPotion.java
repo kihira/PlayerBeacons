@@ -1,4 +1,4 @@
-package playerbeacons.buff;
+package playerbeacons.potion;
 
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
