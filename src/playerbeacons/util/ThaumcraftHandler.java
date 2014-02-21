@@ -40,9 +40,9 @@ public class ThaumcraftHandler {
 
 	private void registerCraftingRecipes() {
 		crystalRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.crystalItem, 2), new AspectList().add(Aspect.ORDER, 10).add(Aspect.AIR, 10).add(Aspect.EARTH, 10).add(Aspect.FIRE, 10).add(Aspect.WATER, 10).add(Aspect.ENTROPY, 10), "cPO", "CEv", "oPV", 'c', ItemApi.getItem("itemShard", 0), 'C', ItemApi.getItem("itemShard", 1), 'o', ItemApi.getItem("itemShard", 2), 'O', ItemApi.getItem("itemShard", 3), 'v', ItemApi.getItem("itemShard", 4), 'V', ItemApi.getItem("itemShard", 5), 'P', new ItemStack(Item.enderPearl), 'E', new ItemStack(Item.emerald));
-		defiledConductorBlockRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), new AspectList().add(Aspect.ORDER, 4), "OPO", "MMM", "OPO", 'O', new ItemStack(Block.obsidian), 'P', new ItemStack(Item.enderPearl), 'M', ItemApi.getBlock("blockCosmeticSolid", 6));
-		defiledPylonBlockRecipe = GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.enderPearl), 'G', new ItemStack(Item.ingotGold));
-		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Item.enderPearl), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.ingotIron));
+		defiledConductorBlockRecipe = ThaumcraftApi.addArcaneCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.defiledSoulConductorBlock, 4), new AspectList().add(Aspect.ORDER, 4), "OOO", "MMM", "OOO", 'O', new ItemStack(Block.obsidian), 'M', ItemApi.getBlock("blockCosmeticSolid", 6));
+		defiledPylonBlockRecipe = GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.defiledSoulPylonBlock, 2), "OPO", "G G", "OOO", 'O', new ItemStack(PlayerBeacons.defiledSoulConductorBlock), 'P', new ItemStack(Item.enderPearl), 'G', new ItemStack(Item.ingotGold));
+		GameRegistry.addShapedRecipe(new ItemStack(PlayerBeacons.beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Block.pistonBase), 'S', new ItemStack(Item.swordIron), 'L', new ItemStack(Item.leather), 'I', new ItemStack(Item.helmetIron));
 	}
 
 	private void registerInfusionRecipes() {
@@ -51,11 +51,11 @@ public class ThaumcraftHandler {
 			if (i % 2 == 0) itemStacks[i] = new ItemStack(PlayerBeacons.defiledSoulConductorBlock);
 			else itemStacks[i] = new ItemStack(Item.enderPearl);
 		}
-		beaconRecipe = ThaumcraftApi.addInfusionCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.playerBeaconBlock), 7, new AspectList().add(Aspect.SOUL, 30).add(Aspect.ELDRITCH, 30).add(Aspect.EXCHANGE, 20).add(Aspect.AURA, 20), new ItemStack(Block.beacon), itemStacks);
+		beaconRecipe = ThaumcraftApi.addInfusionCraftingRecipe(KEY_BEACON, new ItemStack(PlayerBeacons.playerBeaconBlock), 7, new AspectList().add(Aspect.SOUL, 50).add(Aspect.ELDRITCH, 50).add(Aspect.AURA, 20).add(Aspect.MAGIC, 10), new ItemStack(Block.beacon), itemStacks);
 	}
 
 	private void registerCrucibleRecipes() {
-		brownCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.brownCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.EARTH, 10));
+		brownCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.brownCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.MINE, 10));
 		greenCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.greenCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.MOTION, 10));
 		lightBlueCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.lightBlueCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.TRAVEL, 10));
 		redCrystalRecipe = ThaumcraftApi.addCrucibleRecipe(KEY_CRYSTAL, new ItemStack(PlayerBeacons.redCrystalItem), new ItemStack(PlayerBeacons.crystalItem), new AspectList().add(Aspect.ARMOR, 10));
@@ -66,10 +66,9 @@ public class ThaumcraftHandler {
 
 		researchItem = new ResearchItem(KEY_DIMENSION, "BASICS", new AspectList(), -2, 7, 0, new ItemStack(Item.enderPearl)).setRound().setAutoUnlock();
 		researchItem.setPages(new ResearchPage("research.pbdimensional.page.0")).registerResearchItem();
-		researchItem = new ResearchItem(KEY_BEACON, "BASICS", new AspectList().add(Aspect.ELDRITCH, 6).add(Aspect.SOUL, 4), 0, 7, 2, new ItemStack(PlayerBeacons.playerBeaconBlock)).setParents(KEY_DIMENSION).setParentsHidden("ARCANESTONE");
+		researchItem = new ResearchItem(KEY_BEACON, "BASICS", new AspectList().add(Aspect.ELDRITCH, 1).add(Aspect.SOUL, 1).add(Aspect.MAGIC, 1).add(Aspect.AURA, 1), 0, 6, 3, new ItemStack(PlayerBeacons.playerBeaconBlock)).setParents(KEY_DIMENSION).setParentsHidden("ARCANESTONE");
 		researchItem.setPages(new ResearchPage("research.pbbeacon.page.0"), new ResearchPage("research.pbbeacon.page.1"), new ResearchPage(beaconRecipe), new ResearchPage(defiledConductorBlockRecipe), new ResearchPage("research.pbbeacon.page.2")).registerResearchItem();
-		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 6).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 4), 2, 7, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON);
+		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 5).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 2), 2, 7, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON).setSecondary();
 		researchItem.setPages(new ResearchPage("research.pbcrystal.page.0"), new ResearchPage(defiledPylonBlockRecipe), new ResearchPage(crystalRecipe), new ResearchPage(brownCrystalRecipe), new ResearchPage(greenCrystalRecipe), new ResearchPage(lightBlueCrystalRecipe), new ResearchPage(redCrystalRecipe)).registerResearchItem();
-
 	}
 }
