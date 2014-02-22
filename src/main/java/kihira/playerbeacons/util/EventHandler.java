@@ -2,6 +2,10 @@ package kihira.playerbeacons.util;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.common.DamageBehead;
+import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.item.CrystalItem;
+import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,25 +16,16 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import org.lwjgl.opengl.GL11;
-import kihira.playerbeacons.common.DamageBehead;
-import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.item.CrystalItem;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.Random;
 
@@ -110,13 +105,13 @@ public class EventHandler {
 						double viewY = e.target.blockY - RenderManager.renderPosY;
 						double viewZ = e.target.blockZ - RenderManager.renderPosZ;
 						String string;
-						if (corruption >= 15000) string = "Corruption: §4" + String.valueOf(corruption);
-						else if (corruption >= 10000) string = "Corruption: §c" + String.valueOf(corruption);
-						else if (corruption >= 5000) string = "Corruption: §e" + String.valueOf(corruption);
+						if (corruption >= 15000) string = "Corruption: \u00a74" + String.valueOf(corruption);
+						else if (corruption >= 10000) string = "Corruption: \u00a7c" + String.valueOf(corruption);
+						else if (corruption >= 5000) string = "Corruption: \u00a7e" + String.valueOf(corruption);
 						else string = "Corruption: " + String.valueOf(corruption);
 						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
-						if (owner.equals(" ")) owner = "§kNo-one";
-						string = "Bound to: §4" + owner;
+						if (owner.equals(" ")) owner = "\u00a7kNo-one";
+						string = "Bound to: \u00a74" + owner;
 						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
 					}
 				}

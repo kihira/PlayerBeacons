@@ -2,6 +2,11 @@ package kihira.playerbeacons.tileentity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.api.throttle.IThrottle;
+import kihira.playerbeacons.api.throttle.IThrottleContainer;
+import kihira.playerbeacons.api.throttle.Throttle;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -25,12 +30,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
-import kihira.playerbeacons.api.buff.Buff;
-import kihira.playerbeacons.api.throttle.IThrottle;
-import kihira.playerbeacons.api.throttle.IThrottleContainer;
-import kihira.playerbeacons.api.throttle.Throttle;
-import kihira.playerbeacons.common.PlayerBeacons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -299,23 +300,23 @@ public class TileEntityPlayerBeacon extends TileEntity {
         EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
         if (player != null) {
             if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at you from the beyond, pulling you into another dimension").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
                 player.travelToDimension(1);
                 this.corruptionLevel = 0;
                 this.corruption -= this.worldObj.rand.nextInt(9000);
             }
             else if ((this.corruption > 10000) && (this.corruptionLevel == 1)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at your soul from the beyond, disorientating you").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
                 this.corruptionLevel = 2;
-                this.corruption -=- this.worldObj.rand.nextInt(2000);
+                this.corruption -= this.worldObj.rand.nextInt(2000);
             }
             else if ((this.corruption > 5000) && (this.corruptionLevel == 0)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYou feel an unknown force grasp at you from the beyond"));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at you from the beyond").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
                 this.corruptionLevel = 1;
                 this.corruption -= this.worldObj.rand.nextInt(1000);
             }
             if (alwaysDoCorruption && this.corruption > 0) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("§4§oYour corruption flows through your soul"));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("Your corruption flows through your soul").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
                 player.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(this.corruption / 250) * 20));
             }
             if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));

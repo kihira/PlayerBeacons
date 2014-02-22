@@ -12,6 +12,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
@@ -56,12 +57,12 @@ public class BeheaderItem extends ItemArmor {
 								enemyPlayer.setCurrentItemOrArmor(4, itemStack);
 								player.setCurrentItemOrArmor(0, null);
 							}
-							else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3This device needs to be reset before it can claim a victim"));
+							else player.sendChatToPlayer(ChatMessageComponent.createFromText("This device needs to be reset before it can claim a victim").setColor(EnumChatFormatting.DARK_AQUA));
 						}
-						else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3The players helmet prevents you from doing that!"));
+						else player.sendChatToPlayer(ChatMessageComponent.createFromText("The players helmet prevents you from doing that!").setColor(EnumChatFormatting.DARK_AQUA));
 					}
 				}
-				else player.sendChatToPlayer(ChatMessageComponent.createFromText("§3You need to bind this device to you"));
+				else player.sendChatToPlayer(ChatMessageComponent.createFromText("You need to bind this device to you").setColor(EnumChatFormatting.DARK_AQUA));
 			}
 		}
 		return true;
@@ -74,18 +75,18 @@ public class BeheaderItem extends ItemArmor {
 					case 1:
 						if (itemStack.hasTagCompound()) {
 							String owner = itemStack.getTagCompound().getString("owner");
-							if (owner != null) player.sendChatToPlayer(ChatMessageComponent.createFromText("§6" + owner + " has clamped a strange device clamp around your head"));
-							else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
+							if (owner != null) player.sendChatToPlayer(ChatMessageComponent.createFromText(owner + " has clamped a strange device clamp around your head").setColor(EnumChatFormatting.GOLD));
+							else player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel a strange device clamp around your head").setColor(EnumChatFormatting.GOLD));
 						}
-						else player.sendChatToPlayer(ChatMessageComponent.createFromText("§6You feel a strange device clamp around your head"));
+						else player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel a strange device clamp around your head").setColor(EnumChatFormatting.GOLD));
 						break;
 					case 100:
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("§6The device tightens, as you hear it power up"));
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("The device tightens, as you hear it power up").setColor(EnumChatFormatting.GOLD));
 						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
 						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
 						break;
 					case 200:
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("§6With a quick slash, you suddenly find yourself without your head"));
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("With a quick slash, you suddenly find yourself without your head").setColor(EnumChatFormatting.GOLD));
 						player.setCurrentItemOrArmor(4, null);
 						player.attackEntityFrom(new DamageBehead(), 100);
 						break;
@@ -102,7 +103,7 @@ public class BeheaderItem extends ItemArmor {
 					NBTTagCompound tagCompound = new NBTTagCompound();
 					tagCompound.setString("owner", par3EntityPlayer.username);
 					par1ItemStack.setTagCompound(tagCompound);
-					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3This device has now been bound to you"));
+					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("This device has now been bound to you").setColor(EnumChatFormatting.DARK_AQUA));
 				}
 				if (par1ItemStack.getItemDamage() != 0) {
 					ItemStack itemStack = new ItemStack(PlayerBeacons.beheaderItem);
@@ -111,7 +112,7 @@ public class BeheaderItem extends ItemArmor {
 					itemStack.setTagCompound(nbtTagCompound);
 					par3EntityPlayer.setCurrentItemOrArmor(0, null);
 					par3EntityPlayer.setCurrentItemOrArmor(0, itemStack);
-					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3The device clicks, it seems to have reset"));
+					par3EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("The device clicks, it seems to have reset").setColor(EnumChatFormatting.DARK_AQUA));
 					return itemStack;
 				}
 			}
@@ -127,7 +128,7 @@ public class BeheaderItem extends ItemArmor {
 		list.add(" ");
 		if (itemStack.hasTagCompound()) {
 			String owner = itemStack.getTagCompound().getString("owner");
-			list.add("Owner: §4" + owner);
+			list.add("Owner: " + owner);
 		}
 		else list.add("Right click to bind");
 	}

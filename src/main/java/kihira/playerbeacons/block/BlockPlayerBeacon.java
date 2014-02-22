@@ -64,7 +64,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				}
 				else {
 					player.attackEntityFrom(new DamageBehead(), 10);
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("§d§oA mystical energy seems to guard this device"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
 				}
 			}
 		}
@@ -89,7 +89,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 					tileEntityPlayerBeacon.doCorruption(true);
 					tileEntityPlayerBeacon.setCorruption(0, true);
 					world.markBlockForUpdate(x, y, z);
-					entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("§3§oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
+					entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("\u00a73\u00a7oThe crystal fizzles away as it interacts with the beacon, releasing the corruption from within it"));
 					return true;
 				}
 			}
@@ -103,7 +103,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				if (!(player.username.equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) && !(player.capabilities.isCreativeMode) && !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
 					player.attackEntityFrom(new DamageBehead(), 2);
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("§d§oA mystical energy seems to guard this device"));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
 				}
 			}
 		}
@@ -116,7 +116,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tagCompound != null) {
 				EntityPlayer player = (EntityPlayer) par5EntityLivingBase;
 				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup(null);
-				player.sendChatToPlayer(ChatMessageComponent.createFromText("§e§oYour soul is already bound to this dimension, rendering the beacon unbound"));
+				player.sendChatToPlayer(ChatMessageComponent.createFromText("\u00a7e\u00a7oYour soul is already bound to this dimension, rendering the beacon unbound"));
 			}
 			else {
 				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
