@@ -1,15 +1,14 @@
 package kihira.playerbeacons.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import org.lwjgl.opengl.GL11;
-import kihira.playerbeacons.common.Config;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.item.*;
 import kihira.playerbeacons.proxy.ClientProxy;
 import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.util.Util;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL11;
 
 public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
@@ -72,21 +71,21 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			else {
 				modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
-			if ((PlayerBeacons.config.enableLightning) && (tileentity.worldObj.isAirBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord)) && (tileEntityDefiledSoulPylon.getStackInSlot(0) != null)) {
+			if ((PlayerBeacons.config.enableLightning) && (tileentity.getWorldObj().isAirBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord)) && (tileEntityDefiledSoulPylon.getStackInSlot(0) != null)) {
 				for (int i = 0; i < 5; i++) {
-					if (tileentity.worldObj.getBlockId(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock.blockID) {
+					if (tileentity.getWorldObj().getBlock(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock) {
 						Util.drawLightning(0, 0, 0, i, -2, -i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
 						break;
 					}
-					if (tileentity.worldObj.getBlockId(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock.blockID) {
+					if (tileentity.getWorldObj().getBlock(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord + i) == PlayerBeacons.playerBeaconBlock) {
 						Util.drawLightning(0, 0, 0, -i, -2, -i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
 						break;
 					}
-					if (tileentity.worldObj.getBlockId(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock.blockID) {
+					if (tileentity.getWorldObj().getBlock(tileentity.xCoord - i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock) {
 						Util.drawLightning(0, 0, 0, -i, -2, i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
 						break;
 					}
-					if (tileentity.worldObj.getBlockId(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock.blockID) {
+					if (tileentity.getWorldObj().getBlock(tileentity.xCoord + i, tileentity.yCoord - 1, tileentity.zCoord - i) == PlayerBeacons.playerBeaconBlock) {
 						Util.drawLightning(0, 0, 0, i, -2, i, ((CrystalItem) tileEntityDefiledSoulPylon.getStackInSlot(0).getItem()).getRGBA());
 						break;
 					}

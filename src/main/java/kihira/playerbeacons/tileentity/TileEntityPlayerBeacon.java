@@ -7,7 +7,6 @@ import kihira.playerbeacons.api.throttle.IThrottle;
 import kihira.playerbeacons.api.throttle.IThrottleContainer;
 import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.common.PlayerBeacons;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.boss.EntityDragon;
@@ -16,12 +15,13 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.Potion;
@@ -29,8 +29,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
@@ -58,31 +57,31 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setString("owner", owner);
-		par1NBTTagCompound.setFloat("badstuff", corruption);
-		par1NBTTagCompound.setShort("badstufflevel", corruptionLevel);
+		par1NBTTagCompound.setString("owner", this.owner);
+		par1NBTTagCompound.setFloat("badstuff", this.corruption);
+		par1NBTTagCompound.setShort("badstufflevel", this.corruptionLevel);
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.data);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.func_148857_g());
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
 	}
 
 	public void initialSetup(EntityPlayer player) {
-		if (!worldObj.isRemote) {
+		if (!this.worldObj.isRemote) {
 			if (player != null) {
-				this.owner = player.username;
+				this.owner = player.getCommandSenderName();
 				this.corruption = 0;
 				this.corruptionLevel = 0;
-				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.username, this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
+				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.getCommandSenderName(), this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
 			}
 		}
 	}
@@ -92,47 +91,47 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public void setOwner(String newOwner) {
-		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(worldObj, newOwner) == null) {
-			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, owner);
-			PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
+		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, newOwner) == null) {
+			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, this.owner);
+			PlayerBeacons.beaconData.deleteBeaconInformation(this.worldObj, this.owner);
 			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, newOwner, nbtTagCompound);
 			this.owner = newOwner;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 	}
 
 	public boolean hasSkull() {
-		return hasSkull;
+		return this.hasSkull;
 	}
 
 	@Override
 	public void invalidate() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) PlayerBeacons.beaconData.deleteBeaconInformation(worldObj, owner);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) PlayerBeacons.beaconData.deleteBeaconInformation(this.worldObj, this.owner);
 		super.invalidate();
 	}
 
 	private boolean isCloneConstruct() {
-		if (this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.skull.blockID) return false;
+		if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) return false;
 		//Check 5x5 underneath and above
 		for (int i = -2; i <= 2; i++) {
 			for (int j = -2; j <= 2; j++) {
-				if (worldObj.getBlockId(this.xCoord + i, this.yCoord - 1, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock.blockID) return false;
-				if (worldObj.getBlockId(this.xCoord + i, this.yCoord + 3, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock.blockID) return false;
+				if (this.worldObj.getBlock(this.xCoord + i, this.yCoord - 1, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock) return false;
+				if (this.worldObj.getBlock(this.xCoord + i, this.yCoord + 3, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock) return false;
 			}
 		}
 		//Check pylons
 		for (int i = 0; i <= 3; i++) {
-			if (worldObj.getBlockId(this.xCoord + 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
-			if (worldObj.getBlockId(this.xCoord + 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
-			if (worldObj.getBlockId(this.xCoord - 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
-			if (worldObj.getBlockId(this.xCoord - 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock.blockID) return false;
+			if (this.worldObj.getBlock(this.xCoord + 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
+			if (this.worldObj.getBlock(this.xCoord + 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
+			if (this.worldObj.getBlock(this.xCoord - 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
+			if (this.worldObj.getBlock(this.xCoord - 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
 		}
 		return true;
 	}
 
 	public void checkBeacon() {
 		this.levels = 0;
-		if (this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.skull.blockID) {
+		if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) {
 			this.hasSkull = true;
 			for (int i = 1; i <= 4; levels = i++) {
 				int j = this.yCoord - i;
@@ -140,7 +139,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				boolean flag = true;
 				for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
 					for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-						if (!(this.worldObj.getBlockId(k, j, l) == PlayerBeacons.config.defiledSoulConductorBlockID)) {
+						if (!(this.worldObj.getBlock(k, j, l) == PlayerBeacons.defiledSoulConductorBlock)) {
 							flag = false;
 							break;
 						}
@@ -156,26 +155,27 @@ public class TileEntityPlayerBeacon extends TileEntity {
             //TODO Clone construct
 			EntityPlayer entityPlayer = (EntityPlayer) entities.get(0);
 		}
-		else if ((this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord) == Block.dragonEgg.blockID) && (PlayerBeacons.config.enableEasterEgg)) {
-			this.worldObj.destroyBlock(this.xCoord, this.yCoord + 1, this.zCoord, false);
+		else if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
+			this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
 			EntityDragon dragon = new EntityDragon(this.worldObj);
 			dragon.setLocationAndAngles(this.xCoord, this.yCoord + 20, this.zCoord, 0, 0);
-			dragon.setCustomNameTag(owner + "'s Puppy");
+			dragon.setCustomNameTag(this.owner + "'s Puppy");
 			this.worldObj.spawnEntityInWorld(dragon);
 		}
 		else this.hasSkull = false;
 	}
 
+    @SuppressWarnings("unchecked")
 	public void doEffects() {
-		TileEntitySkull skull = (TileEntitySkull) this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+		TileEntitySkull skull = (TileEntitySkull) this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
 		if (skull != null) {
-			if (skull.getExtraType().equals(this.owner)) {
+			if (skull.func_145907_c().equals(this.owner)) {
 				EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.owner);
 				if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
 					for (Map.Entry<String, Buff> entry : Buff.buffs.entrySet()) {
 						Buff buff = entry.getValue();
 						EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
-						if ((buff.getMinBeaconLevel() <= levels) && (player != null)) {
+						if ((buff.getMinBeaconLevel() <= this.levels) && (player != null)) {
 							int i = 0;
 							for (IThrottle throttle : Throttle.throttleList) {
 								if (throttle.getAffectedBuffs().contains(entry.getKey())) i = i + this.throttleHashMap.get(throttle);
@@ -186,9 +186,9 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				}
 			}
             //Other Players head
-			else if (skull.getSkullType() == 3) {
+			else if (skull.func_145904_a() == 3) {
 				this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord));
-				this.worldObj.destroyBlock(this.xCoord, this.yCoord + 1, this.zCoord, false);
+				this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
 			}
 			//Mob Head
 			else if (this.levels > 0) {
@@ -196,7 +196,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
 				axisalignedbb.maxY = this.worldObj.getHeight();
 				List<Object> list = null;
-				int skullType = skull.getSkullType();
+				int skullType = skull.func_145904_a();
 				if (skullType == 0 || skullType == 1) {
 					List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisalignedbb);
 					list = new ArrayList<Object>();
@@ -226,50 +226,50 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	public float getCorruption() {
-		return corruption;
+		return this.corruption;
 	}
 
 	public void setCorruption(float newCorruption, boolean adjustLevel) {
-		if (newCorruption >= 0) corruption = newCorruption;
+		if (newCorruption >= 0) this.corruption = newCorruption;
 		if (adjustLevel) {
-			if (newCorruption >= 5000) corruptionLevel = 1;
-			else if (newCorruption >= 10000) corruptionLevel = 2;
-			else corruptionLevel = 0;
+			if (newCorruption >= 5000) this.corruptionLevel = 1;
+			else if (newCorruption >= 10000) this.corruptionLevel = 2;
+			else this.corruptionLevel = 0;
 		}
 	}
 
 	public void calcPylons() {
-		if (levels > 0) {
-			throttleHashMap.clear();
+		if (this.levels > 0) {
+            this.throttleHashMap.clear();
 			for (IThrottle throttle : Throttle.throttleList) {
-				throttleHashMap.put(throttle, 0);
+                this.throttleHashMap.put(throttle, 0);
 			}
-			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				doPylon(xCoord - levels, yCoord - levels + 1 + y, zCoord - levels);
+			for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof IThrottleContainer) && ( y < (1 + this.levels))); y++) {
+				doPylon(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
 			}
-			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				doPylon(xCoord + levels, yCoord - levels + 1 + y, zCoord - levels);
+			for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof IThrottleContainer) && ( y < (1 + this.levels))); y++) {
+				doPylon(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
 			}
-			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord + levels, yCoord - levels + 1 + y, zCoord + levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				doPylon(xCoord + levels, yCoord - levels + 1 + y, zCoord + levels);
+			for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof IThrottleContainer) && ( y < (1 + this.levels))); y++) {
+				doPylon(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
 			}
-			for (int y = 0; ((worldObj.getBlockTileEntity(xCoord - levels, yCoord - levels + 1 + y, zCoord + levels) instanceof IThrottleContainer) && ( y < (1 + levels))); y++) {
-				doPylon(xCoord - levels, yCoord - levels + 1 + y, zCoord + levels);
+			for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof IThrottleContainer) && ( y < (1 + this.levels))); y++) {
+				doPylon(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
 			}
-			for (Map.Entry<IThrottle, Integer> entry : throttleHashMap.entrySet()) {
-				if (entry.getValue() > levels) throttleHashMap.put(entry.getKey(), levels);
+			for (Map.Entry<IThrottle, Integer> entry : this.throttleHashMap.entrySet()) {
+				if (entry.getValue() > this.levels) this.throttleHashMap.put(entry.getKey(), this.levels);
 			}
 		}
 	}
 
 	private void doPylon(int x, int y, int z) {
-		IInventory iInventory = (IInventory) this.worldObj.getBlockTileEntity(x, y, z);
+		IInventory iInventory = (IInventory) this.worldObj.getTileEntity(x, y, z);
         //Get entire inventory incase it has more then one crystal slot.
 		for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
 			if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
 				ItemStack itemStack = iInventory.getStackInSlot(i);
 				IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-				this.throttleHashMap.put(item, throttleHashMap.get(item) + 1);
+				this.throttleHashMap.put(item, this.throttleHashMap.get(item) + 1);
 				if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
 				else {
 					itemStack.setItemDamage(itemStack.getItemDamage() + 1);
@@ -287,7 +287,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 				for (Object obj : throttle.getAffectedBuffs()) {
 					Buff buff = Buff.buffs.get(obj.toString());
 					if (buff.getMinBeaconLevel() <= this.levels) {
-						y = buff.getCorruption(this.levels) - throttle.getCorruptionThrottle(buff, this.levels, throttleHashMap.get(throttle));
+						y = buff.getCorruption(this.levels) - throttle.getCorruptionThrottle(buff, this.levels, this.throttleHashMap.get(throttle));
 						newCorruption += y;
 					}
 				}
@@ -300,23 +300,23 @@ public class TileEntityPlayerBeacon extends TileEntity {
         EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
         if (player != null) {
             if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at you from the beyond, pulling you into another dimension").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
+                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
                 player.travelToDimension(1);
                 this.corruptionLevel = 0;
                 this.corruption -= this.worldObj.rand.nextInt(9000);
             }
             else if ((this.corruption > 10000) && (this.corruptionLevel == 1)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at your soul from the beyond, disorientating you").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
+                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
                 this.corruptionLevel = 2;
                 this.corruption -= this.worldObj.rand.nextInt(2000);
             }
             else if ((this.corruption > 5000) && (this.corruptionLevel == 0)) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("You feel an unknown force grasp at you from the beyond").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
+                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond"));
                 this.corruptionLevel = 1;
                 this.corruption -= this.worldObj.rand.nextInt(1000);
             }
             if (alwaysDoCorruption && this.corruption > 0) {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("Your corruption flows through your soul").setColor(EnumChatFormatting.DARK_RED).setItalic(true));
+                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYour corruption flows through your soul"));
                 player.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(this.corruption / 250) * 20));
             }
             if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));

@@ -1,6 +1,7 @@
 package kihira.playerbeacons.common;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 
 public class CreativeTabPlayerBeacons extends CreativeTabs {
 
@@ -8,7 +9,8 @@ public class CreativeTabPlayerBeacons extends CreativeTabs {
 		super("playerbeacons");
 	}
 
-	public int getTabIconItemIndex() {
-		return PlayerBeacons.playerBeaconBlock.blockID;
+    @Override
+	public Item getTabIconItem() {
+		return Item.getItemFromBlock(PlayerBeacons.playerBeaconBlock);
 	}
 }

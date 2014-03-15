@@ -1,23 +1,8 @@
 package kihira.playerbeacons.util;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import kihira.playerbeacons.common.PlayerBeacons;
-import thaumcraft.api.ItemApi;
-import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.crafting.CrucibleRecipe;
-import thaumcraft.api.crafting.IArcaneRecipe;
-import thaumcraft.api.crafting.InfusionRecipe;
-import thaumcraft.api.research.ResearchItem;
-import thaumcraft.api.research.ResearchPage;
-
 public class ThaumcraftHandler {
 
+    /*
 	public final String KEY_CRYSTAL = "PB_CRYSTAL";
 	public final String KEY_BEACON = "PB_BEACON";
 	public final String KEY_DIMENSION = "PB_DIMENSION";
@@ -71,4 +56,5 @@ public class ThaumcraftHandler {
 		researchItem = new ResearchItem(KEY_CRYSTAL, "BASICS", new AspectList().add(Aspect.CRYSTAL, 5).add(Aspect.EXCHANGE, 4).add(Aspect.TRAP, 2), 2, 7, 1, new ItemStack(PlayerBeacons.crystalItem)).setParents(KEY_BEACON).setSecondary();
 		researchItem.setPages(new ResearchPage("research.pbcrystal.page.0"), new ResearchPage(defiledPylonBlockRecipe), new ResearchPage(crystalRecipe), new ResearchPage(brownCrystalRecipe), new ResearchPage(greenCrystalRecipe), new ResearchPage(lightBlueCrystalRecipe), new ResearchPage(redCrystalRecipe)).registerResearchItem();
 	}
+	*/
 }

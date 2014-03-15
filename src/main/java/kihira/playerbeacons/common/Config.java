@@ -1,24 +1,13 @@
 package kihira.playerbeacons.common;
 
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
 import kihira.playerbeacons.api.buff.Buff;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 import java.util.Map;
 
 public class Config {
-
-	public int playerBeaconBlockID;
-	public int defiledSoulConductorBlockID;
-	public int defiledSoulPylonBlockID;
-
-	public int beheaderItemID;
-	public int crystalItemID;
-	public int speedCrystalItemID;
-	public int digCrystalItemID;
-	public int jumpCrystalItemID;
-	public int resCrystalItemID;
 
 	public int decapitationEnchantmentID;
     public int corruptionPotionID;
@@ -43,27 +32,6 @@ public class Config {
 	private void loadGeneral() {
 
 		Property prop;
-		prop = config.get(Configuration.CATEGORY_BLOCK, "Player Beacon", 3500);
-		playerBeaconBlockID = prop.getInt();
-
-		prop = config.get(Configuration.CATEGORY_BLOCK, "Defiled Soul Conductor", 3501);
-		defiledSoulConductorBlockID = prop.getInt();
-
-		prop = config.get(Configuration.CATEGORY_BLOCK, "Defiled Soul Pylon", 3502);
-		defiledSoulPylonBlockID = prop.getInt();
-
-		prop = config.get(Configuration.CATEGORY_ITEM, "Beheader", 20000);
-		beheaderItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Light Blue Crystal", 20001);
-		speedCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Brown Crystal", 20002);
-		digCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Green Crystal", 20003);
-		jumpCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Black Crystal", 20004);
-		resCrystalItemID = prop.getInt();
-		prop = config.get(Configuration.CATEGORY_ITEM, "Depleted Crystal", 20005);
-		crystalItemID = prop.getInt();
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);
 		decapitationEnchantmentID = prop.getInt();

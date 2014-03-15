@@ -49,13 +49,13 @@ public class CommandPlayerBeacons extends CommandBase {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = getCommandSenderAsPlayer(icommandsender);
 			MovingObjectPosition targetBlock = Util.getBlockLookAt(player, 4);
-			if (player.worldObj.getBlockId(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ) == PlayerBeacons.config.playerBeaconBlockID) {
-				TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) player.worldObj.getBlockTileEntity(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ);
+			if (player.worldObj.getBlock(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ) == PlayerBeacons.playerBeaconBlock) {
+				TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) player.worldObj.getTileEntity(targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ);
 				if (astring[0].toLowerCase().equals("setowner")) {
 					if (astring.length == 2 && astring[1].length() <= 16) {
 						if (PlayerBeacons.beaconData.loadBeaconInformation(player.worldObj, astring[1]) == null) {
 							tileEntity.setOwner(astring[1]);
-							notifyAdmins(icommandsender, "commands.playerbeacon.setowner.success", player.username, targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
+							notifyAdmins(icommandsender, "commands.playerbeacon.setowner.success", player.getCommandSenderName(), targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
 						}
 						else throw new CommandException("commands.playerbeacon.alreadyExists", astring[1]);
 					}
@@ -65,7 +65,7 @@ public class CommandPlayerBeacons extends CommandBase {
 					if (astring.length == 3 && !astring[1].isEmpty() && !astring[2].isEmpty()) {
 						try {
 							tileEntity.setCorruption(Float.valueOf(astring[1]), Boolean.getBoolean(astring[2]));
-							notifyAdmins(icommandsender, "commands.playerbeacon.setcorruption.success", player.username, targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
+							notifyAdmins(icommandsender, "commands.playerbeacon.setcorruption.success", player.getCommandSenderName(), targetBlock.blockX, targetBlock.blockY, targetBlock.blockZ, astring[1]);
 						}
 						catch (Exception e) {
 							throw new WrongUsageException("commands.playerbeacon.setcorruption.usage");

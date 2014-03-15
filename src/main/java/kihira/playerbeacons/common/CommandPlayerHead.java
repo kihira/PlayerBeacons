@@ -33,7 +33,7 @@ public class CommandPlayerHead extends CommandBase {
 			EntityPlayer player = icommandsender.getEntityWorld().getPlayerEntityByName(icommandsender.getCommandSenderName());
 			if (player != null) {
 				player.entityDropItem(Util.getHead(3, astring[0]), 1);
-				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.username);
+				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.getCommandSenderName());
 			}
 		}
 		else throw new WrongUsageException("commands.playerhead.usage", astring);

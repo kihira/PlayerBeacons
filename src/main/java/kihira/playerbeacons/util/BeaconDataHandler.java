@@ -50,8 +50,8 @@ public class BeaconDataHandler {
 	}
 
 	public boolean updateBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int levels, short corruptionLevels) {
-		if (beaconList.hasKey(player)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(player);
+		if (this.beaconList.hasKey(player)) {
+			NBTTagCompound playerData = this.beaconList.getCompoundTag(player);
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				NBTTagCompound playerDataWorld = playerData.getCompoundTag(String.valueOf(world.provider.dimensionId));
 				playerDataWorld.setInteger("x", x);
@@ -61,8 +61,8 @@ public class BeaconDataHandler {
 				playerDataWorld.setFloat("badstuff", corruption);
 				playerDataWorld.setInteger("levels", levels);
 				playerDataWorld.setShort("badstufflevel", corruptionLevels);
-				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
-				saveData(beaconList);
+				playerData.setTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
+				saveData(this.beaconList);
 				return true;
 			}
 		}
@@ -70,18 +70,18 @@ public class BeaconDataHandler {
 	}
 
 	public void deleteBeaconInformation(World world, String username) {
-		if (beaconList.hasKey(username)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(username);
+		if (this.beaconList.hasKey(username)) {
+			NBTTagCompound playerData = this.beaconList.getCompoundTag(username);
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				playerData.removeTag(String.valueOf(world.provider.dimensionId));
-				saveData(beaconList);
+				saveData(this.beaconList);
 			}
 		}
 	}
 
 	public NBTTagCompound loadBeaconInformation(World world, String username) {
-		if (beaconList.hasKey(username)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(username);
+		if (this.beaconList.hasKey(username)) {
+			NBTTagCompound playerData = this.beaconList.getCompoundTag(username);
 			if (playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				return playerData.getCompoundTag(String.valueOf(world.provider.dimensionId));
 			}
@@ -90,26 +90,26 @@ public class BeaconDataHandler {
 	}
 
 	public void addBeaconInformation(World world, String player, NBTTagCompound nbtTagCompound) {
-		if (!beaconList.hasKey(player)) {
+		if (!this.beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
-			beaconList.setCompoundTag(player, newPlayerData);
+            this.beaconList.setTag(player, newPlayerData);
 		}
-		if (beaconList.hasKey(player)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(player);
+		if (this.beaconList.hasKey(player)) {
+			NBTTagCompound playerData = this.beaconList.getCompoundTag(player);
 			if (!playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
-				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), nbtTagCompound);
-				saveData(beaconList);
+				playerData.setTag(String.valueOf(world.provider.dimensionId), nbtTagCompound);
+				saveData(this.beaconList);
 			}
 		}
 	}
 
 	public void addBeaconInformation(World world, String player, int x, int y, int z, boolean isActive, float corruption, int levels, short corruptionLevels) {
-		if (!beaconList.hasKey(player)) {
+		if (!this.beaconList.hasKey(player)) {
 			NBTTagCompound newPlayerData = new NBTTagCompound();
-			beaconList.setCompoundTag(player, newPlayerData);
+            this.beaconList.setTag(player, newPlayerData);
 		}
-		if (beaconList.hasKey(player)) {
-			NBTTagCompound playerData = beaconList.getCompoundTag(player);
+		if (this.beaconList.hasKey(player)) {
+			NBTTagCompound playerData = this.beaconList.getCompoundTag(player);
 			if (!playerData.hasKey(String.valueOf(world.provider.dimensionId))) {
 				NBTTagCompound playerDataWorld = new NBTTagCompound();
 				playerDataWorld.setInteger("x", x);
@@ -119,8 +119,8 @@ public class BeaconDataHandler {
 				playerDataWorld.setFloat("badstuff", corruption);
 				playerDataWorld.setInteger("levels", levels);
 				playerDataWorld.setShort("badstufflevel", corruptionLevels);
-				playerData.setCompoundTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
-				saveData(beaconList);
+				playerData.setTag(String.valueOf(world.provider.dimensionId), playerDataWorld);
+				saveData(this.beaconList);
 			}
 		}
 	}

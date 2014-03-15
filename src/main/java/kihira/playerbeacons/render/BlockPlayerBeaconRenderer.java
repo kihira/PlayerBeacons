@@ -1,12 +1,12 @@
 package kihira.playerbeacons.render;
 
-import net.minecraft.block.Block;
+import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import org.lwjgl.opengl.GL11;
-import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.proxy.ClientProxy;
 
 public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
@@ -30,12 +30,12 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		playerBeaconModel.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-		if (PlayerBeacons.isChristmas && tileentity.worldObj.getBlockId(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord) == Block.skull.blockID) {
-			TileEntitySkull tileEntitySkull = (TileEntitySkull) tileentity.worldObj.getBlockTileEntity(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord);
+		if (PlayerBeacons.isChristmas && tileentity.getWorldObj().getBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord) == Blocks.skull) {
+			TileEntitySkull tileEntitySkull = (TileEntitySkull) tileentity.getWorldObj().getTileEntity(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord);
 			bindTexture(ClientProxy.santaHatTexture);
 			GL11.glScalef(1F, 1F, 1F);
 			GL11.glTranslatef(0F, 0.27F, 0F);
-			GL11.glRotatef((tileEntitySkull.func_82119_b() * 360) / 16.0F, 0F, 1F, 0F);
+			GL11.glRotatef((tileEntitySkull.func_145906_b() * 360) / 16.0F, 0F, 1F, 0F);
 			santaHatModel.render(null, 0.0F, 0.0F, 0.0F, 0F, 0.0F, 0.0625F);
 		}
 		GL11.glDisable(GL11.GL_BLEND);

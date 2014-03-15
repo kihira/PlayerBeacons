@@ -1,11 +1,7 @@
 package mcp.mobius.waila.api;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 
-public interface IWailaBlockDecorator {
-
-	void decorateBlock(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config);	
-	
+public abstract interface IWailaBlockDecorator {
+    public abstract void decorateBlock(ItemStack paramItemStack, IWailaDataAccessor paramIWailaDataAccessor, IWailaConfigHandler paramIWailaConfigHandler);
 }

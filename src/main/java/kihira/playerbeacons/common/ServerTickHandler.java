@@ -1,71 +1,48 @@
 package kihira.playerbeacons.common;
 
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 
-public class ServerTickHandler implements IScheduledTickHandler {
+public class ServerTickHandler {
 
-	private short cycle = 0;
+    private short cycle = 0;
 
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {
-		cycle++;
-		MinecraftServer mc = MinecraftServer.getServer();
-		for (WorldServer worldServer : mc.worldServers) {
-			if (worldServer.playerEntities != null) {
-				List<Object> playerEntities = new ArrayList<Object>(worldServer.playerEntities);
-				for (Object playerEntity : playerEntities) {
-					EntityPlayer entityPlayer = (EntityPlayer) playerEntity;
-					NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(worldServer, entityPlayer.username);
-					if (nbtTagCompound != null) {
-						int x = nbtTagCompound.getInteger("x");
-						int y = nbtTagCompound.getInteger("y");
-						int z = nbtTagCompound.getInteger("z");
-						TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) worldServer.getBlockTileEntity(x, y, z);
-						if (tileEntityPlayerBeacon != null) {
-							tileEntityPlayerBeacon.checkBeacon();
-							if (cycle % 2 == 0) {
-								if (!PlayerBeacons.config.disableCorruption) {
-									tileEntityPlayerBeacon.calcPylons();
-									tileEntityPlayerBeacon.calcCorruption();
-									tileEntityPlayerBeacon.doCorruption(false);
-								}
-								if (tileEntityPlayerBeacon.hasSkull()) tileEntityPlayerBeacon.doEffects();
-								if (cycle % 4 == 0) worldServer.markBlockForUpdate(x, y, z);
-							}
-							if (cycle >= 32000) cycle = 0;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) { }
-
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.SERVER);
-	}
-
-	@Override
-	public String getLabel() {
-		return "serverplayerbeacon";
-	}
-
-	@Override
-	public int nextTickSpacing() {
-		return 20;
-	}
+    @SubscribeEvent
+    public void tick(TickEvent.WorldTickEvent event) {
+        if (event.phase == TickEvent.Phase.START && event.world.getTotalWorldTime() % 20 == 0) {
+            this.cycle++;
+            if (event.world.playerEntities != null) {
+                List<Object> playerEntities = new ArrayList<Object>(event.world.playerEntities);
+                for (Object playerEntity : playerEntities) {
+                    EntityPlayer entityPlayer = (EntityPlayer) playerEntity;
+                    NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(event.world, entityPlayer.getCommandSenderName());
+                    if (nbtTagCompound != null) {
+                        int x = nbtTagCompound.getInteger("x");
+                        int y = nbtTagCompound.getInteger("y");
+                        int z = nbtTagCompound.getInteger("z");
+                        TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) event.world.getTileEntity(x, y, z);
+                        if (tileEntityPlayerBeacon != null) {
+                            tileEntityPlayerBeacon.checkBeacon();
+                            if (this.cycle % 2 == 0) {
+                                if (!PlayerBeacons.config.disableCorruption) {
+                                    tileEntityPlayerBeacon.calcPylons();
+                                    tileEntityPlayerBeacon.calcCorruption();
+                                    tileEntityPlayerBeacon.doCorruption(false);
+                                }
+                                if (tileEntityPlayerBeacon.hasSkull()) tileEntityPlayerBeacon.doEffects();
+                                if (this.cycle % 4 == 0) event.world.markBlockForUpdate(x, y, z);
+                            }
+                            if (this.cycle >= 32000) this.cycle = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

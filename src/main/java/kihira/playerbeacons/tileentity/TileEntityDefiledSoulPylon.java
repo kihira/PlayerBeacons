@@ -1,16 +1,16 @@
 package kihira.playerbeacons.tileentity;
 
+import kihira.playerbeacons.api.throttle.ICrystal;
+import kihira.playerbeacons.api.throttle.IThrottleContainer;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import kihira.playerbeacons.api.throttle.ICrystal;
-import kihira.playerbeacons.api.throttle.IThrottleContainer;
-import kihira.playerbeacons.common.PlayerBeacons;
 
 public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, IThrottleContainer {
 
@@ -27,21 +27,21 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
 		NBTTagCompound tag = new NBTTagCompound();
-		if (crystal != null) crystal.writeToNBT(tag);
+		if (this.crystal != null) this.crystal.writeToNBT(tag);
 		par1NBTTagCompound.setTag("crystal", tag);
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.data);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.func_148857_g());
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
-		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
 	}
 
     @Override
@@ -56,7 +56,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public ItemStack getStackInSlot(int i) {
-		if (i == 0) return crystal;
+		if (i == 0) return this.crystal;
 		return null;
 	}
 
@@ -79,17 +79,17 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		if (i == 0) {
 			this.crystal = itemstack;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 	}
 
 	@Override
-	public String getInvName() {
+	public String getInventoryName() {
 		return "Pylon";
 	}
 
 	@Override
-	public boolean isInvNameLocalized() {
+	public boolean hasCustomInventoryName() {
 		return false;
 	}
 
@@ -104,10 +104,10 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	}
 
 	@Override
-	public void openChest() {}
+	public void openInventory() {}
 
 	@Override
-	public void closeChest() {}
+	public void closeInventory() {}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -115,10 +115,10 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	}
 
 	public boolean isPylonBase() {
-		return !worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) && worldObj.getBlockId(xCoord, yCoord - 1, zCoord) != PlayerBeacons.config.defiledSoulPylonBlockID;
+		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
 	}
 
 	public boolean isPylonTop() {
-		return !worldObj.isAirBlock(xCoord, yCoord + 1, zCoord) && worldObj.getBlockId(xCoord, yCoord + 1, zCoord) != PlayerBeacons.config.defiledSoulPylonBlockID;
+		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
 	}
 }

@@ -16,7 +16,7 @@ public class BlockSkullRenderer extends TileEntitySkullRenderer {
 	private final ModelSkull modelSkull = new ModelSkull();
 
 	@Override
-	public void func_82393_a(float par1, float par2, float par3, int par4, float par5, int par6, String par7Str) {
+	public void func_147530_a(float par1, float par2, float par3, int par4, float par5, int par6, String par7Str) {
 		//We only need to override the player head
 		if (par6 == 3) {
 			ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
@@ -54,11 +54,11 @@ public class BlockSkullRenderer extends TileEntitySkullRenderer {
 			modelSkull.render(null, 0.0F, 0.0F, 0.0F, par5, 0.0F, 0.0625F);
 			GL11.glPopMatrix();
 		}
-		else super.func_82393_a(par1, par2, par3, par4, par5, par6, par7Str);
+		else super.func_147530_a(par1, par2, par3, par4, par5, par6, par7Str);
 	}
 
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-        super.renderTileEntitySkullAt((TileEntitySkull) tileentity, d0, d1, d2, f);
+        super.renderTileEntityAt((TileEntitySkull) tileentity, d0, d1, d2, f);
     }
 }

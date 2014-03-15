@@ -1,14 +1,15 @@
 package kihira.playerbeacons.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.tileentity.TileEntitySkull;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.render.*;
 import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ClientProxy extends CommonProxy {
 
@@ -21,14 +22,14 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers() {
 		BlockPlayerBeaconRenderer playerBeaconRenderer = new BlockPlayerBeaconRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlayerBeacon.class, playerBeaconRenderer);
-		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.playerBeaconBlockID, new ItemPlayerBeaconRenderer());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.playerBeaconBlock), new ItemPlayerBeaconRenderer());
 
 		BlockDefiledSoulPylonRenderer blockDefiledSoulPylonRenderer = new BlockDefiledSoulPylonRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDefiledSoulPylon.class, blockDefiledSoulPylonRenderer);
-		MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.defiledSoulPylonBlock), new ItemDefiledSoulPylonRenderer());
 
 		//Replace skull renderer
-		TileEntityRenderer.instance.specialRendererMap.remove(TileEntitySkull.class);
+        TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
 		BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
 		//MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());

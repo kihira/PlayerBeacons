@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrownCrystalItem extends CrystalItem {
-	public BrownCrystalItem(int id) {
-		super(id);
+	public BrownCrystalItem() {
 		setUnlocalizedName("brownCrystalItem");
 	}
 

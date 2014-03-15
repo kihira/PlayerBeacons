@@ -1,4 +1,5 @@
 package mcp.mobius.waila.api;
 
-public interface IWailaDataProvider extends IWailaBlock{
+public abstract interface IWailaDataProvider extends IWailaBlock {
+
 }
