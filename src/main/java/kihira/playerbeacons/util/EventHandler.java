@@ -4,7 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
-import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.Minecraft;
@@ -94,7 +93,7 @@ public class EventHandler {
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if ((e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) && (mc.thePlayer.getCurrentEquippedItem() != null) && (mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ICrystal)) {
+			if ((e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
@@ -122,7 +121,7 @@ public class EventHandler {
 	private void renderLabel(String string, float viewX, float viewY, float viewZ) {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		RenderManager renderManager = RenderManager.instance;
-		float f1 = 0.016666668F * 1.6F;
+		float f1 = 0.016666668F * 1.4F;
 		GL11.glPushMatrix();
 		GL11.glTranslatef(viewX, viewY, viewZ);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
