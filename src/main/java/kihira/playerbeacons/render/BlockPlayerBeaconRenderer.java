@@ -83,8 +83,8 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
     }
 
     private void faceEntity(EntityLivingBase par1Entity, double posX, double posY, double posZ) {
-        double d0 = par1Entity.posX - posX;
-        double d2 = par1Entity.posZ - posZ;
+        double d0 = par1Entity.posX - posX - par1Entity.width;
+        double d2 = par1Entity.posZ - posZ - par1Entity.width;
         double d1 = par1Entity.posY - (posY) + (double)par1Entity.getEyeHeight() - 1.1F;
 
         double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
