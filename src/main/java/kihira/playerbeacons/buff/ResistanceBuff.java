@@ -1,5 +1,6 @@
 package kihira.playerbeacons.buff;
 
+import kihira.playerbeacons.api.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -12,8 +13,8 @@ public class ResistanceBuff extends Buff {
 	}
 
 	@Override
-	public void doBuff(EntityPlayer player, int beaconLevels, int crystalCount) {
-		if (crystalCount < beaconLevels - 2) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, beaconLevels - crystalCount - 3, true));
+	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+		if (crystalCount < theBeacon.getLevels() - 2) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, theBeacon.getLevels() - crystalCount - 3, true));
 	}
 
 	@Override

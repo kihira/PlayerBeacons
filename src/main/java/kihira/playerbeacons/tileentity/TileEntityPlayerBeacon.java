@@ -2,6 +2,7 @@ package kihira.playerbeacons.tileentity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.throttle.IThrottle;
 import kihira.playerbeacons.api.throttle.IThrottleContainer;
@@ -24,7 +25,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileEntityPlayerBeacon extends TileEntity {
+public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
 	private String owner = " ";
 	private boolean hasSkull;
@@ -86,11 +86,17 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
+    @Override
 	public String getOwner() {
 		return this.owner;
 	}
 
-	public void setOwner(String newOwner) {
+    @Override
+    public int getLevels() {
+        return this.levels;
+    }
+
+    public void setOwner(String newOwner) {
 		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, newOwner) == null) {
 			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, this.owner);
 			PlayerBeacons.beaconData.deleteBeaconInformation(this.worldObj, this.owner);
@@ -180,7 +186,7 @@ public class TileEntityPlayerBeacon extends TileEntity {
 							for (IThrottle throttle : Throttle.throttleList) {
 								if (throttle.getAffectedBuffs().contains(entry.getKey())) i = i + this.throttleHashMap.get(throttle);
 							}
-							buff.doBuff(player, this.levels, i);
+							buff.doBuff(player, this, i);
 						}
 					}
 				}
@@ -225,10 +231,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
+    @Override
 	public float getCorruption() {
 		return this.corruption;
 	}
 
+    @Override
 	public void setCorruption(float newCorruption, boolean adjustLevel) {
 		if (newCorruption >= 0) this.corruption = newCorruption;
 		if (adjustLevel) {
@@ -238,7 +246,12 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
-	public void calcPylons() {
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    public void calcPylons() {
 		if (this.levels > 0) {
             this.throttleHashMap.clear();
 			for (IThrottle throttle : Throttle.throttleList) {
@@ -296,7 +309,8 @@ public class TileEntityPlayerBeacon extends TileEntity {
 		}
 	}
 
-	public void doCorruption(boolean alwaysDoCorruption) {
+    @Override
+	public void applyCorruption() {
         EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
         if (player != null) {
             if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
@@ -314,10 +328,6 @@ public class TileEntityPlayerBeacon extends TileEntity {
                 player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond"));
                 this.corruptionLevel = 1;
                 this.corruption -= this.worldObj.rand.nextInt(1000);
-            }
-            if (alwaysDoCorruption && this.corruption > 0) {
-                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYour corruption flows through your soul"));
-                player.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(this.corruption / 250) * 20));
             }
             if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));
         }

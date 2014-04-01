@@ -1,5 +1,6 @@
 package kihira.playerbeacons.api.buff;
 
+import kihira.playerbeacons.api.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.HashMap;
@@ -34,12 +35,12 @@ public abstract class Buff {
 	public abstract String getName();
 
 	/**
-	 * This method is called when the requirements to active the buff are reached.
+	 * This method is called when the requirements to activate the buff are reached.
 	 * @param player The owner of the beacon
-	 * @param beaconLevels How many levels on the beacon
+	 * @param theBeacon The beacon itself
 	 * @param crystalCount The amount of crystals detected that throttle the buff
 	 */
-	public abstract void doBuff(EntityPlayer player, int beaconLevels, int crystalCount);
+	public abstract void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount);
 
 	/**
 	 * How much the buff will generated in corruption for the number of beacon levels. This is the

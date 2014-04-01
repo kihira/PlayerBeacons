@@ -33,7 +33,7 @@ public class ServerTickHandler {
                                 if (!PlayerBeacons.config.disableCorruption) {
                                     tileEntityPlayerBeacon.calcPylons();
                                     tileEntityPlayerBeacon.calcCorruption();
-                                    tileEntityPlayerBeacon.doCorruption(false);
+                                    tileEntityPlayerBeacon.applyCorruption();
                                 }
                                 if (tileEntityPlayerBeacon.hasSkull()) tileEntityPlayerBeacon.doEffects();
                                 if (this.cycle % 4 == 0) event.world.markBlockForUpdate(x, y, z);

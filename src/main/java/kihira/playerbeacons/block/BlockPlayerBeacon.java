@@ -68,7 +68,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
 				if ((player.getCommandSenderName().equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || (player.capabilities.isCreativeMode) || ((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
-					tileEntityPlayerBeacon.doCorruption(true);
+					tileEntityPlayerBeacon.applyCorruption();
 					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
 				}
@@ -97,7 +97,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof CrystalItem) {
                     entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
 					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-					tileEntityPlayerBeacon.doCorruption(true);
+					tileEntityPlayerBeacon.applyCorruption();
 					tileEntityPlayerBeacon.setCorruption(0, true);
 					world.markBlockForUpdate(x, y, z);
 					entityPlayer.addChatComponentMessage(new ChatComponentText("The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));

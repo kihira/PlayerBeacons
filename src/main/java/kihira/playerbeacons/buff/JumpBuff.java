@@ -1,5 +1,6 @@
 package kihira.playerbeacons.buff;
 
+import kihira.playerbeacons.api.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -12,8 +13,8 @@ public class JumpBuff extends Buff {
 	}
 
 	@Override
-	public void doBuff(EntityPlayer player, int beaconLevels, int crystalCount) {
-		if (crystalCount < beaconLevels) player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, beaconLevels - crystalCount - 1, true));
+	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+		if (crystalCount < theBeacon.getLevels()) player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, theBeacon.getLevels() - crystalCount - 1, true));
 	}
 
 	@Override

@@ -3,10 +3,10 @@ package kihira.playerbeacons.util;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -96,11 +96,11 @@ public class EventHandler {
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
 			if ((e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) && (mc.thePlayer.getCurrentEquippedItem() != null) && (mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ICrystal)) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
-				if (tileEntity != null && tileEntity instanceof TileEntityPlayerBeacon) {
-					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
+				if (tileEntity != null && tileEntity instanceof IBeacon) {
+                    IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
 					String owner = tileEntityPlayerBeacon.getOwner();
-					if (e.target.blockX == tileEntityPlayerBeacon.xCoord && e.target.blockY == tileEntityPlayerBeacon.yCoord && e.target.blockZ == tileEntityPlayerBeacon.zCoord) {
+					if (e.target.blockX == tileEntityPlayerBeacon.getTileEntity().xCoord && e.target.blockY == tileEntityPlayerBeacon.getTileEntity().yCoord && e.target.blockZ == tileEntityPlayerBeacon.getTileEntity().zCoord) {
 						double viewX = e.target.blockX - RenderManager.renderPosX;
 						double viewY = e.target.blockY - RenderManager.renderPosY;
 						double viewZ = e.target.blockZ - RenderManager.renderPosZ;
