@@ -10,6 +10,25 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 public class Util {
+
+    public static enum EnumHeadType {
+        SKELETON(0),
+        WITHERSKELETON(1),
+        ZOMBIE(2),
+        PLAYER(3),
+        CREEPER(4);
+
+        private int id;
+
+        private EnumHeadType(int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+    }
+
 	public static MovingObjectPosition getBlockLookAt(EntityPlayer player, double maxBlockDistance) {
 		Vec3 vec3 = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + (player.worldObj.isRemote ? 0.0D : (player.getEyeHeight() - 0.09D)), player.posZ);
 		Vec3 vec31 = player.getLookVec();
@@ -17,8 +36,12 @@ public class Util {
 		return player.worldObj.rayTraceBlocks(vec3, vec32);
 	}
 
-	public static ItemStack getHead(int skullType, String owner) {
-		ItemStack itemStack = new ItemStack(Items.skull, 1, skullType);
+    public static ItemStack getHead(EnumHeadType headType, String owner) {
+        return getHead(headType.getID(), owner);
+    }
+
+	public static ItemStack getHead(int id, String owner) {
+		ItemStack itemStack = new ItemStack(Items.skull, 1, id);
 		if (owner != null) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("SkullOwner", owner);

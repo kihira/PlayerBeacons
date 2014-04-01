@@ -32,7 +32,7 @@ public class CommandPlayerHead extends CommandBase {
 		if ((astring.length > 0) && (astring[0].length() > 0)) {
 			EntityPlayer player = icommandsender.getEntityWorld().getPlayerEntityByName(icommandsender.getCommandSenderName());
 			if (player != null) {
-				player.entityDropItem(Util.getHead(3, astring[0]), 1);
+				player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, astring[0]), 1);
 				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.getCommandSenderName());
 			}
 		}

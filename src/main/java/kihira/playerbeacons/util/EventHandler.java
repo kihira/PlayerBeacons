@@ -40,10 +40,10 @@ public class EventHandler {
 
 		//Death by DamageBehead
 		if (e.source instanceof DamageBehead) {
-			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(Util.getHead(3, deadEntity.getCommandSenderName()), 1);
-			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(2, null), 1);
+			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadEntity.getCommandSenderName()), 1);
+			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
 			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(4, null), 1);
+			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
             return;
 		}
 
@@ -55,14 +55,14 @@ public class EventHandler {
                 int lvl = EnchantmentHelper.getEnchantmentLevel(PlayerBeacons.config.decapitationEnchantmentID, item);
                 Random random = new Random();
                 if (lvl > 0 && (random.nextInt()) % (12/lvl) == 0) {
-                    if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(2, null), 1);
+                    if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
                     else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-                    else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(4, null), 1);
+                    else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
                     else if (deadEntity instanceof EntityPlayer) {
                         EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
                         e.setCanceled(true);
                         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(deadPlayer.getCommandSenderName() + " was beheaded by " + attacker.getCommandSenderName()));
-                        e.entityLiving.entityDropItem(Util.getHead(3, deadPlayer.getCommandSenderName()), 1);
+                        e.entityLiving.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
                     }
                 }
             }
@@ -79,7 +79,7 @@ public class EventHandler {
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
 					//spawn within 50 blocks and similar y level
 					if ((player.getDistanceToEntity(entityZombie) < 50) && (player.posY - entityZombie.posY < 5)) {
-						entityZombie.setCurrentItemOrArmor(4, Util.getHead(3, player.getCommandSenderName()));
+						entityZombie.setCurrentItemOrArmor(4, Util.getHead(Util.EnumHeadType.PLAYER, player.getCommandSenderName()));
                         entityZombie.setEquipmentDropChance(4, 100);
 						this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
 					}
