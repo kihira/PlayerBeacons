@@ -1,9 +1,10 @@
 package kihira.playerbeacons.block;
 
+import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.item.CrystalItem;
 import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -83,28 +84,38 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
     @Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int meta, float par7, float par8, float par9) {
-		if (!world.isRemote) {
-			if (entityPlayer.getCurrentEquippedItem() != null) {
-				if (entityPlayer.getCurrentEquippedItem().getItem() == Items.emerald) {
-					ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
-					if (itemStack.stackSize == 1) entityPlayer.setCurrentItemOrArmor(0, null);
-					else entityPlayer.setCurrentItemOrArmor(0, new ItemStack(Items.emerald, itemStack.stackSize - 1));
-					EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
-					world.spawnEntityInWorld(item);
-					return true;
-				}
-				//If they right click with depleted, disperse all corruption
-				else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof CrystalItem) {
+        if (entityPlayer.getCurrentEquippedItem() != null) {
+            if (entityPlayer.getCurrentEquippedItem().getItem() == Items.skull && entityPlayer.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()) {
+                if (!world.isRemote) {
+                    TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                    if (!tileEntityPlayerBeacon.getOwner().equals(" ")) {
+                        tileEntityPlayerBeacon.setOwner(entityPlayer.getCommandSenderName());
+                        entityPlayer.setCurrentItemOrArmor(0, null);
+                    }
+                }
+                return true;
+            }
+            if (!world.isRemote) {
+                if (entityPlayer.getCurrentEquippedItem().getItem() == Items.emerald) {
+                    ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
+                    if (itemStack.stackSize == 1) entityPlayer.setCurrentItemOrArmor(0, null);
+                    else entityPlayer.setCurrentItemOrArmor(0, new ItemStack(Items.emerald, itemStack.stackSize - 1));
+                    EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
+                    world.spawnEntityInWorld(item);
+                    return true;
+                }
+                //If they right click with depleted, disperse all corruption
+                else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ICrystal) {
                     entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
-					TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-					tileEntityPlayerBeacon.applyCorruption();
-					tileEntityPlayerBeacon.setCorruption(0, true);
-					world.markBlockForUpdate(x, y, z);
-					entityPlayer.addChatComponentMessage(new ChatComponentText("The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
-					return true;
-				}
-			}
-		}
+                    TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                    tileEntityPlayerBeacon.applyCorruption();
+                    tileEntityPlayerBeacon.setCorruption(0, true);
+                    world.markBlockForUpdate(x, y, z);
+                    entityPlayer.addChatComponentMessage(new ChatComponentText("The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
+                    return true;
+                }
+            }
+        }
 		return false;
 	}
 

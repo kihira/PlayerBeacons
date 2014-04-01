@@ -3,7 +3,6 @@ package kihira.playerbeacons.render;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
 
 public class ModelPlayerBeacon extends ModelBase {
 	private final ModelRenderer base;
@@ -50,7 +49,7 @@ public class ModelPlayerBeacon extends ModelBase {
 	private final ModelRenderer StudB3;
 	private final ModelRenderer StudB2;
 
-	public ModelPlayerBeacon() {
+    public ModelPlayerBeacon() {
 		textureWidth = 64;
 		textureHeight = 32;
 
@@ -271,8 +270,8 @@ public class ModelPlayerBeacon extends ModelBase {
 		setRotation(StudB2, -2.356194F, 0F, 0F);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+	public void render(Entity entity, float x, float y, float z, float f3, float partialTickTime, float f5) {
+		setRotationAngles(x, y, z, f3, partialTickTime, f5, null);
 		base.render(f5);
 		Basefoot1.render(f5);
 		Basefoot2.render(f5);
