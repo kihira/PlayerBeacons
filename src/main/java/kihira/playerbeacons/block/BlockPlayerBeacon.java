@@ -68,7 +68,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
-				if ((player.getCommandSenderName().equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) || (player.capabilities.isCreativeMode) || ((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
+				if ((player.getCommandSenderName().equals(tileEntityPlayerBeacon.getOwner())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwner().equals(" ")) {
 					tileEntityPlayerBeacon.applyCorruption();
 					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
@@ -85,18 +85,16 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
     @Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int meta, float par7, float par8, float par9) {
         if (entityPlayer.getCurrentEquippedItem() != null) {
-            if (entityPlayer.getCurrentEquippedItem().getItem() == Items.skull && entityPlayer.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()) {
-                if (!world.isRemote) {
+            if (!world.isRemote) {
+                if (entityPlayer.getCurrentEquippedItem().getItem() == Items.skull && entityPlayer.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()) {
                     TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
                     if (!tileEntityPlayerBeacon.getOwner().equals(" ")) {
                         tileEntityPlayerBeacon.setOwner(entityPlayer.getCommandSenderName());
                         entityPlayer.setCurrentItemOrArmor(0, null);
                     }
+                    return true;
                 }
-                return true;
-            }
-            if (!world.isRemote) {
-                if (entityPlayer.getCurrentEquippedItem().getItem() == Items.emerald) {
+                else if (entityPlayer.getCurrentEquippedItem().getItem() == Items.emerald) {
                     ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
                     if (itemStack.stackSize == 1) entityPlayer.setCurrentItemOrArmor(0, null);
                     else entityPlayer.setCurrentItemOrArmor(0, new ItemStack(Items.emerald, itemStack.stackSize - 1));
