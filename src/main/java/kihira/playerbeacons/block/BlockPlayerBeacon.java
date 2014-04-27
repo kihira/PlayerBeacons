@@ -131,22 +131,6 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-		if (!world.isRemote) {
-			NBTTagCompound tagCompound = PlayerBeacons.beaconData.loadBeaconInformation(world, par5EntityLivingBase.getCommandSenderName());
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			if (tagCompound != null) {
-				EntityPlayer player = (EntityPlayer) par5EntityLivingBase;
-				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup(null);
-				player.addChatComponentMessage(new ChatComponentText("\u00a7e\u00a7oYour soul is already bound to this dimension, rendering the beacon unbound"));
-			}
-			else {
-				if (tileEntity instanceof TileEntityPlayerBeacon) ((TileEntityPlayerBeacon) tileEntity).initialSetup((EntityPlayer) par5EntityLivingBase);
-			}
-		}
-	}
-
-    @Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
 		if (world.getBlock(x, y + 1, z) == Blocks.skull) {
 			TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon)world.getTileEntity(x, y, z);

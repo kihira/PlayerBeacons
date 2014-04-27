@@ -75,17 +75,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
 	}
 
-	public void initialSetup(EntityPlayer player) {
-		if (!this.worldObj.isRemote) {
-			if (player != null) {
-				this.owner = player.getCommandSenderName();
-				this.corruption = 0;
-				this.corruptionLevel = 0;
-				PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, player.getCommandSenderName(), this.xCoord, this.yCoord, this.zCoord, false, 0, 0, (short) 0);
-			}
-		}
-	}
-
     @Override
 	public String getOwner() {
 		return this.owner;
