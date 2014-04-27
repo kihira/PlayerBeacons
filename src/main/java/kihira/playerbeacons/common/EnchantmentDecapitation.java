@@ -23,7 +23,7 @@ public class EnchantmentDecapitation extends Enchantment {
 	}
 
     public boolean canApply(ItemStack itemStack) {
-        return EnchantmentHelper.getEnchantmentLevel(Enchantment.looting.effectId, itemStack) == 0;
+        return EnchantmentHelper.getEnchantmentLevel(Enchantment.looting.effectId, itemStack) == 0 && super.canApply(itemStack);
     }
 
     @Override

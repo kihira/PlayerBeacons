@@ -11,6 +11,7 @@
 *.iml
 *.ipr
 *.iws
+/.idea
 
 ## eclipse
 /.settings
