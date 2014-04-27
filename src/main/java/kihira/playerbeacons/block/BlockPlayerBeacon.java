@@ -88,11 +88,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
             if (!world.isRemote) {
                 if (entityPlayer.getCurrentEquippedItem().getItem() == Items.skull && entityPlayer.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()) {
                     TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-                    if (!tileEntityPlayerBeacon.getOwner().equals(" ")) {
+                    if (tileEntityPlayerBeacon.getOwner().equals(" ")) {
                         tileEntityPlayerBeacon.setOwner(entityPlayer.getCommandSenderName());
                         entityPlayer.setCurrentItemOrArmor(0, null);
                     }
-                    return true;
                 }
                 else if (entityPlayer.getCurrentEquippedItem().getItem() == Items.emerald) {
                     ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
@@ -100,7 +99,6 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     else entityPlayer.setCurrentItemOrArmor(0, new ItemStack(Items.emerald, itemStack.stackSize - 1));
                     EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
                     world.spawnEntityInWorld(item);
-                    return true;
                 }
                 //If they right click with depleted, disperse all corruption
                 else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ICrystal) {
@@ -110,11 +108,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     tileEntityPlayerBeacon.setCorruption(0, true);
                     world.markBlockForUpdate(x, y, z);
                     entityPlayer.addChatComponentMessage(new ChatComponentText("The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
-                    return true;
                 }
             }
         }
-		return false;
+		return true;
 	}
 
     @Override
