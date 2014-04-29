@@ -45,7 +45,6 @@ import java.util.Map;
 public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
 	private String owner = " ";
-	private boolean hasSkull;
 	private float corruption = 0;
 	private short corruptionLevel = 0;
 	private int levels = 0;
@@ -109,10 +108,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         }
     }
 
-	public boolean hasSkull() {
-		return this.hasSkull;
-	}
-
 	@Override
 	public void invalidate() {
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && !this.getOwner().equals(" ")) {
@@ -144,8 +139,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
 	public void checkBeacon() {
 		this.levels = 0;
-		if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) {
-			this.hasSkull = true;
+		if (!this.getOwner().equals(" ")) {
 			for (int i = 1; i <= 4; levels = i++) {
 				int j = this.yCoord - i;
 				if (j < 0) break;
@@ -160,22 +154,13 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 				}
 				if (!flag) break;
 			}
-			return;
 		}
-		AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord), (double) (this.yCoord + 1), (double) (this.zCoord));
-		List entities = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
-		if ((entities != null) && (this.isCloneConstruct())) {
-            //TODO Clone construct
-			EntityPlayer entityPlayer = (EntityPlayer) entities.get(0);
-		}
-		else if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
-			this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
-			EntityDragon dragon = new EntityDragon(this.worldObj);
-			dragon.setLocationAndAngles(this.xCoord, this.yCoord + 20, this.zCoord, 0, 0);
-			dragon.setCustomNameTag(this.owner + "'s Puppy");
-			this.worldObj.spawnEntityInWorld(dragon);
-		}
-		else this.hasSkull = false;
+//		AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord), (double) (this.yCoord + 1), (double) (this.zCoord));
+//		List entities = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
+//		if ((entities != null) && (this.isCloneConstruct())) {
+//            //TODO Clone construct
+//			EntityPlayer entityPlayer = (EntityPlayer) entities.get(0);
+//		}
 	}
 
     @SuppressWarnings("unchecked")
@@ -355,6 +340,12 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                     }
                 }
             }
+        }
+        else if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
+            this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
+            EntityDragon dragon = new EntityDragon(this.worldObj);
+            dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
+            this.worldObj.spawnEntityInWorld(dragon);
         }
     }
 
