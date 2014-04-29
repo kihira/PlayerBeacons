@@ -24,7 +24,6 @@ public class BeaconDataHelper {
 
                 //Set tag just incase it didn't alredy exist
                 beaconData.setTag(dimKey, worldBeaconData);
-                System.out.print(player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG));
             }
             else {
                 beaconData.removeTag(dimKey);
