@@ -9,6 +9,7 @@ import kihira.playerbeacons.api.throttle.IThrottleContainer;
 import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -26,10 +27,13 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
@@ -46,13 +50,19 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 	private int levels = 0;
 	private HashMap<IThrottle, Integer> throttleHashMap = new HashMap<IThrottle, Integer>();
 
+    public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
+
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		this.owner = par1NBTTagCompound.getString("owner");
 		this.corruption = par1NBTTagCompound.getFloat("badstuff");
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
-	}
+        this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
+        this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
+        this.prevHeadRotationPitch = par1NBTTagCompound.getFloat("prevHeadRotationPitch");
+        this.prevHeadRotationYaw = par1NBTTagCompound.getFloat("prevHeadRotationYaw");
+    }
 
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
@@ -60,6 +70,10 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 		par1NBTTagCompound.setString("owner", this.owner);
 		par1NBTTagCompound.setFloat("badstuff", this.corruption);
 		par1NBTTagCompound.setShort("badstufflevel", this.corruptionLevel);
+        par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
+        par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
+        par1NBTTagCompound.setFloat("prevHeadRotationPitch", this.prevHeadRotationPitch);
+        par1NBTTagCompound.setFloat("prevHeadRotationYaw", this.prevHeadRotationYaw);
 	}
 
 	@Override
@@ -321,4 +335,45 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));
         }
 	}
+
+    @Override
+    public void updateEntity() {
+        if (!this.getOwner().equals(" ")) {
+            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
+            if (player != null) {
+                this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
+
+                //Only send packet updates if player is greater then client knows about and is server
+                if (!this.worldObj.isRemote && (this.worldObj.getWorldTime() % 5 == 0) && (this.getDistanceFrom(player.posX, player.posY, player.posZ) > MinecraftServer.getServer().getConfigurationManager().getEntityViewDistance() * 16)) {
+                    this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
+                    if ((this.headRotationPitch != this.prevHeadRotationPitch) || (this.headRotationYaw != this.prevHeadRotationYaw)) {
+                        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                    }
+                }
+            }
+        }
+    }
+
+    private void faceEntity(EntityLivingBase par1Entity, double posX, double posY, double posZ) {
+        this.prevHeadRotationPitch = this.headRotationPitch;
+        this.prevHeadRotationYaw = this.headRotationYaw;
+        if (par1Entity != null) {
+            double d0 = par1Entity.posX - posX - par1Entity.width;
+            double d2 = par1Entity.posZ - posZ - par1Entity.width;
+            double d1 = par1Entity.posY - posY - par1Entity.height + (double)par1Entity.getEyeHeight() + 0.1F;
+
+            double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+            float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
+            float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
+            this.headRotationPitch = this.updateRotation(this.headRotationPitch, f3, 5F);
+            this.headRotationYaw = this.updateRotation(this.headRotationYaw, f2, 5F);
+        }
+    }
+
+    private float updateRotation(float currRot, float intendedRot, float maxInc) {
+        float f3 = MathHelper.wrapAngleTo180_float(intendedRot - currRot);
+        if (f3 > maxInc) f3 = maxInc;
+        if (f3 < -maxInc) f3 = -maxInc;
+        return currRot + f3;
+    }
 }
