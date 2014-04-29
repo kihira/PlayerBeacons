@@ -8,6 +8,7 @@ import kihira.playerbeacons.api.throttle.IThrottle;
 import kihira.playerbeacons.api.throttle.IThrottleContainer;
 import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.util.BeaconDataHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -99,15 +100,14 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         return this.levels;
     }
 
-    public void setOwner(String newOwner) {
-		if (newOwner.length() <= 16 && PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, newOwner) == null) {
-			NBTTagCompound nbtTagCompound = PlayerBeacons.beaconData.loadBeaconInformation(this.worldObj, this.owner);
-			PlayerBeacons.beaconData.deleteBeaconInformation(this.worldObj, this.owner);
-			PlayerBeacons.beaconData.addBeaconInformation(this.worldObj, newOwner, nbtTagCompound);
-			this.owner = newOwner;
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-	}
+    public void setOwner(EntityPlayer player) {
+        if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
+            BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
+            this.owner = player.getCommandSenderName();
+
+            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        }
+    }
 
 	public boolean hasSkull() {
 		return this.hasSkull;
@@ -115,7 +115,11 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
 	@Override
 	public void invalidate() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) PlayerBeacons.beaconData.deleteBeaconInformation(this.worldObj, this.owner);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && !this.getOwner().equals(" ")) {
+            //Remove player beacon data
+            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
+            if (player != null) BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
+        }
 		super.invalidate();
 	}
 

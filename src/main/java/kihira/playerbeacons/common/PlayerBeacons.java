@@ -17,7 +17,6 @@ import kihira.playerbeacons.potion.CorruptionPotion;
 import kihira.playerbeacons.proxy.CommonProxy;
 import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
-import kihira.playerbeacons.util.BeaconDataHandler;
 import kihira.playerbeacons.util.EventHandler;
 import kihira.playerbeacons.util.ThaumcraftHandler;
 import net.minecraft.block.Block;
@@ -40,7 +39,6 @@ public class PlayerBeacons {
 
 	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
 	public static Config config;
-	public static BeaconDataHandler beaconData;
 	public static final Logger logger = LogManager.getLogger("PlayerBeacons");
 
 	public static final Block playerBeaconBlock = new BlockPlayerBeacon();
@@ -121,15 +119,8 @@ public class PlayerBeacons {
 	}
 
 	@Mod.EventHandler
-	public void serverStart(FMLServerAboutToStartEvent e) {
-		beaconData = new BeaconDataHandler();
-		logger.info("Loaded beacon data");
-	}
-
-	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
-		e.registerServerCommand(new CommandPlayerBeacons());
 	}
 
 	private void registerThrottles() {
