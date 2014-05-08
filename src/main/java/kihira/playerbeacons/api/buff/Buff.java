@@ -65,4 +65,6 @@ public abstract class Buff {
 	public void setMinBeaconLevel(int minBeaconLevel) {
 		this.minBeaconLevel = minBeaconLevel;
 	}
+
+    public abstract float[] getRGBA();
 }

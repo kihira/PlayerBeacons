@@ -1,6 +1,8 @@
 package kihira.playerbeacons.block;
 
+import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.throttle.ICrystal;
+import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
 import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
@@ -8,16 +10,13 @@ import kihira.playerbeacons.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -131,9 +130,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
     @Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-		if (world.getBlock(x, y + 1, z) == Blocks.skull) {
-			TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon)world.getTileEntity(x, y, z);
-			float corrupution = tileEntityPlayerBeacon.getCorruption();
+        TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+		if (!playerBeacon.getOwner().equals(" ")) {
+            /*
+			float corrupution = playerBeacon.getCorruption();
 			for (int l = 0; l < (corrupution / 500); ++l) {
 				double d1 = (double)((float)y + random.nextFloat());
 				int i1 = random.nextInt(2) * 2 - 1;
@@ -145,6 +145,19 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				double d2 = (double)(random.nextFloat() * 1.0F * (float)i1);
 				world.spawnParticle("portal", d6, d1, d5, d2, d3, d4);
 			}
+			*/
+            for (int i = 0; i < 2; i++) {
+                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("dig")));
+            }
+            for (int i = 0; i < 2; i++) {
+                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("speed")));
+            }
+            for (int i = 0; i < 2; i++) {
+                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("jump")));
+            }
+            for (int i = 0; i < 2; i++) {
+                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("resistance")));
+            }
 		}
 	}
 }

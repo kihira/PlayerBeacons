@@ -22,6 +22,11 @@ public class JumpBuff extends Buff {
 		return beaconLevel * corruptionGenerated;
 	}
 
+    @Override
+    public float[] getRGBA() {
+        return new float[] {0.45F, 0.6F, 0.45F, 1F};
+    }
+
 	@Override
 	public String getName() {
 		return "Jump";

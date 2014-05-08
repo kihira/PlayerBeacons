@@ -22,7 +22,12 @@ public class DigBuff extends Buff {
 		return beaconLevel * corruptionGenerated;
 	}
 
-	@Override
+    @Override
+    public float[] getRGBA() {
+        return new float[] {0.5F, 0.4F, 0.3F, 1F};
+    }
+
+    @Override
 	public String getName() {
 		return "Dig";
 	}

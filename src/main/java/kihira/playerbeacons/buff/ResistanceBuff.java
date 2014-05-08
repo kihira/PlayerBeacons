@@ -22,6 +22,11 @@ public class ResistanceBuff extends Buff {
 		return (beaconLevel - 2) * corruptionGenerated;
 	}
 
+    @Override
+    public float[] getRGBA() {
+        return new float[] {0.5F, 0F, 0F, 1F};
+    }
+
 	@Override
 	public String getName() {
 		return "Resistance";
