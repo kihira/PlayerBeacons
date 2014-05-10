@@ -1,6 +1,8 @@
 package kihira.playerbeacons.tileentity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
@@ -8,6 +10,7 @@ import kihira.playerbeacons.api.throttle.IThrottle;
 import kihira.playerbeacons.api.throttle.IThrottleContainer;
 import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.network.PacketEventHandler;
 import kihira.playerbeacons.util.BeaconDataHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +32,6 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.AxisAlignedBB;
@@ -230,12 +232,21 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
 	public void setCorruption(float newCorruption, boolean adjustLevel) {
-		if (newCorruption >= 0) this.corruption = newCorruption;
-		if (adjustLevel) {
-			if (newCorruption >= 5000) this.corruptionLevel = 1;
-			else if (newCorruption >= 10000) this.corruptionLevel = 2;
-			else this.corruptionLevel = 0;
-		}
+
+        if (newCorruption != this.corruption) {
+            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
+            if (player != null) {
+                FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(this.getOwner(), this.getCorruption());
+                PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(this.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 50));
+            }
+
+            if (newCorruption >= 0) this.corruption = newCorruption;
+            if (adjustLevel) {
+                if (newCorruption >= 5000) this.corruptionLevel = 1;
+                else if (newCorruption >= 10000) this.corruptionLevel = 2;
+                else this.corruptionLevel = 0;
+            }
+        }
 	}
 
     @Override

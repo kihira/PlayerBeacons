@@ -5,6 +5,8 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.block.*;
@@ -13,6 +15,7 @@ import kihira.playerbeacons.buff.JumpBuff;
 import kihira.playerbeacons.buff.ResistanceBuff;
 import kihira.playerbeacons.buff.SpeedBuff;
 import kihira.playerbeacons.item.*;
+import kihira.playerbeacons.network.PacketEventHandler;
 import kihira.playerbeacons.potion.CorruptionPotion;
 import kihira.playerbeacons.proxy.CommonProxy;
 import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
@@ -51,6 +54,8 @@ public class PlayerBeacons {
 	public static final BrownCrystalItem brownCrystalItem = new BrownCrystalItem();
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();
 	public static final RedCrystalItem redCrystalItem = new RedCrystalItem();
+
+    public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
 	public static boolean isChristmas = false;
 
@@ -99,6 +104,8 @@ public class PlayerBeacons {
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
 		info = ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH);
 		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
+
+        eventChannel.register(new PacketEventHandler());
 	}
 
     @Mod.EventHandler

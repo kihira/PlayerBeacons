@@ -4,12 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.util.BeaconDataHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerTickHandler {
 
