@@ -1,10 +1,10 @@
 package kihira.playerbeacons.buff;
 
 import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import kihira.playerbeacons.api.buff.Buff;
 
 public class JumpBuff extends Buff {
 

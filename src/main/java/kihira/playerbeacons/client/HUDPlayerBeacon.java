@@ -1,17 +1,15 @@
 package kihira.playerbeacons.client;
 
+import kihira.playerbeacons.block.BlockDefiledSoulPylon;
+import kihira.playerbeacons.block.BlockPlayerBeacon;
+import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
+import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.item.ItemStack;
-import kihira.playerbeacons.block.BlockDefiledSoulPylon;
-import kihira.playerbeacons.block.BlockPlayerBeacon;
-import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 public class HUDPlayerBeacon implements IWailaDataProvider {

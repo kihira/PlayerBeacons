@@ -1,5 +1,8 @@
 package kihira.playerbeacons.block;
 
+import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.item.CrystalItem;
+import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -12,9 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.item.CrystalItem;
-import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
 
 import java.util.List;
 

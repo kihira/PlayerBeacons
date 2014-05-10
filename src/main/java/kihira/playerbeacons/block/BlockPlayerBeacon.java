@@ -1,5 +1,7 @@
 package kihira.playerbeacons.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
@@ -129,6 +131,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
+    @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
 		if (!playerBeacon.getOwner().equals(" ")) {

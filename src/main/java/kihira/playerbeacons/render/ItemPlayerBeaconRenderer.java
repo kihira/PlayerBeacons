@@ -1,11 +1,10 @@
 package kihira.playerbeacons.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.entity.Entity;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
-import kihira.playerbeacons.proxy.ClientProxy;
 
 public class ItemPlayerBeaconRenderer implements IItemRenderer {
 

@@ -1,5 +1,7 @@
 package kihira.playerbeacons.util;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -9,7 +11,11 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 public class Util {
+
+    private static Random rand = new Random();
 
     public static enum EnumHeadType {
         SKELETON(0),
@@ -50,10 +56,12 @@ public class Util {
 		return itemStack;
 	}
 
+    @SideOnly(Side.CLIENT)
 	public static void drawLightning(double x1, double y1, double z1, double x2, double y2, double z2, double[] rgba) {
 		drawLightning(x1, y1, z1, x2, y2, z2, rgba[3], rgba[0], rgba[1], rgba[2]);
 	}
 
+    @SideOnly(Side.CLIENT)
 	public static void drawLightning(double x1, double y1, double z1, double x2, double y2, double z2, double a, double r, double g, double b) {
 		double tx = x2 - x1, ty = y2 - y1, tz = z2 - z1;
 
@@ -106,8 +114,8 @@ public class Util {
 		GL11.glPopAttrib();
 	}
 
+    @SideOnly(Side.CLIENT)
 	public static void drawLightningBetweenPointsFast(double x1, double y1, double z1, double x2, double y2, double z2, int index) {
-
 		double u1 = index / 50.0;
 		double u2 = u1 + 0.02;
 		double px = (y1 - y2) * 0.125;

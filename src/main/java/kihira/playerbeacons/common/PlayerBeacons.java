@@ -44,16 +44,16 @@ public class PlayerBeacons {
 	public static Config config;
 	public static final Logger logger = LogManager.getLogger("PlayerBeacons");
 
-	public static final Block playerBeaconBlock = new BlockPlayerBeacon();
-	public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
-	public static final Block defiledSoulPylonBlock = new BlockDefiledSoulPylon();
-
 	public static final BeheaderItem beheaderItem = new BeheaderItem();
 	public static final CrystalItem crystalItem = new CrystalItem();
 	public static final LightBlueCrystalItem lightBlueCrystalItem = new LightBlueCrystalItem();
 	public static final BrownCrystalItem brownCrystalItem = new BrownCrystalItem();
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();
 	public static final RedCrystalItem redCrystalItem = new RedCrystalItem();
+
+    public static final Block playerBeaconBlock = new BlockPlayerBeacon();
+    public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
+    public static final Block defiledSoulPylonBlock = new BlockDefiledSoulPylon();
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
