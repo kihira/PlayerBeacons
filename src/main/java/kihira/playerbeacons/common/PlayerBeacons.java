@@ -32,8 +32,8 @@ import kihira.playerbeacons.util.ThaumcraftHandler;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
-@Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila;")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila;", version = "1.2.4")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, versionBounds = "[1.2.3,1.3.0)")
 public class PlayerBeacons {
 
 	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
