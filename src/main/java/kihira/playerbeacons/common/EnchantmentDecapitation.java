@@ -19,7 +19,7 @@ public class EnchantmentDecapitation extends Enchantment {
 
     @Override
 	public boolean canApplyTogether(Enchantment enchantment) {
-		return enchantment.effectId != Enchantment.fortune.effectId && enchantment.effectId != Enchantment.knockback.effectId && super.canApplyTogether(enchantment);
+		return enchantment != null && enchantment.effectId != Enchantment.fortune.effectId && enchantment.effectId != Enchantment.knockback.effectId && super.canApplyTogether(enchantment);
 	}
 
     public boolean canApply(ItemStack itemStack) {
