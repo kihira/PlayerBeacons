@@ -22,23 +22,23 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 
 	public BlockDefiledSoulPylon() {
 		super(Material.rock);
-		setHardness(8f);
-		setResistance(100.0F);
-		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setBlockName("defiledSoulPylon");
-		setBlockTextureName("playerbeacon:pyramidBrick");
-		setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
+        this.setHardness(8f);
+        this.setResistance(100.0F);
+        this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
+        this.setBlockName("defiledSoulPylon");
+        this.setBlockTextureName("playerbeacon:pyramidBrick");
+        this.setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}
 
     @Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List list, Entity entity) {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
 		if (tileEntityDefiledSoulPylon.isPylonBase() || tileEntityDefiledSoulPylon.isPylonTop()) {
-			setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+            this.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
 			super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
 		}
 		else {
-			setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
+            this.setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 			super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
 		}
 	}
@@ -72,7 +72,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
-		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon)world.getTileEntity(x, y, z);
+		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
 		if (tileEntityDefiledSoulPylon != null) {
 			ItemStack inv = tileEntityDefiledSoulPylon.getStackInSlot(0);
 			if (inv != null) {

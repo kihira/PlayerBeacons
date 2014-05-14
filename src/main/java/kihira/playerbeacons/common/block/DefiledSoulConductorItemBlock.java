@@ -14,7 +14,7 @@ public class DefiledSoulConductorItemBlock extends ItemBlock {
 
     public DefiledSoulConductorItemBlock(Block block) {
         super(block);
-        setMaxDamage(0);
+        this.setMaxDamage(0);
     }
 
     @Override

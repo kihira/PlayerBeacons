@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -29,13 +30,13 @@ import java.util.Random;
 
 public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
-	public BlockPlayerBeacon() {
+    public BlockPlayerBeacon() {
 		super(Material.rock);
-		setHardness(8f);
-		setResistance(100.0F);
-		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setBlockName("playerBeacon");
-		setBlockTextureName("playerbeacon:pyramidBrick");
+        this.setHardness(8f);
+        this.setResistance(100.0F);
+        this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
+        this.setBlockName("playerBeacon");
+        this.setBlockTextureName("playerbeacon:pyramidBrick");
 	}
 
     @Override
@@ -76,7 +77,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 				}
 				else {
 					player.attackEntityFrom(PlayerBeacons.damageBehead, 10);
-					player.addChatComponentMessage(new ChatComponentText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
+					player.addChatComponentMessage(new ChatComponentText("block.playerBeacon.guard"));
 				}
 			}
 		}
@@ -109,7 +110,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     tileEntityPlayerBeacon.applyCorruption();
                     tileEntityPlayerBeacon.setCorruption(0, true);
                     world.markBlockForUpdate(x, y, z);
-                    player.addChatComponentMessage(new ChatComponentText("The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
+                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("crystal.dissipation")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
                 }
             }
         }
@@ -123,7 +124,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				if (!(player.getCommandSenderName().equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) && !(player.capabilities.isCreativeMode) && !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
 					player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
-					player.addChatComponentMessage(new ChatComponentText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
+					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
 				}
 			}
 		}
@@ -149,7 +150,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			}
 			*/
             for (int i = 0; i < 2; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("dig")));
+                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("haste")));
             }
             for (int i = 0; i < 2; i++) {
                 Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("speed")));

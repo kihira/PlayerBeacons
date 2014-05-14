@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public class BeheaderItem extends ItemArmor {
 
 	public BeheaderItem() {
 		super(ArmorMaterial.IRON, 2, 0);
-		setUnlocalizedName("beheader");
-		setTextureName("playerbeacon:beheader");
-		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setMaxDamage(200);
+		this.setUnlocalizedName("beheader");
+        this.setTextureName("playerbeacon:beheader");
+        this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
+        this.setMaxDamage(200);
 	}
 
     @Override
@@ -35,36 +35,29 @@ public class BeheaderItem extends ItemArmor {
 
     @Override
     @SuppressWarnings("unchecked")
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setString("owner", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-		ItemStack itemStack = new ItemStack(par1, 1, 0);
-		itemStack.setTagCompound(tagCompound);
-		par3List.add(itemStack);
+	public void getSubItems(Item par1, CreativeTabs creativeTabs, List list) {
+        list.add(this.bindAndReset(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), null));
 	}
 
     @Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+	public boolean onLeftClickEntity(ItemStack itemStack, EntityPlayer player, Entity entity) {
 		if (!entity.worldObj.isRemote) {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer enemyPlayer = (EntityPlayer) entity;
-				if (stack.hasTagCompound() && stack.getTagCompound().getString("owner").equals(player.getCommandSenderName())) {
-					if (!enemyPlayer.capabilities.isCreativeMode && MinecraftServer.getServer().isPVPEnabled()) {
+				if (itemStack.hasTagCompound() && itemStack.getTagCompound().getString("owner").equals(player.getCommandSenderName())) {
+					if (!enemyPlayer.capabilities.isCreativeMode && MinecraftServer.getServer().isPVPEnabled() && !enemyPlayer.isOnSameTeam(player)) {
 						if (enemyPlayer.getCurrentArmor(0) == null) {
-							if (stack.getItemDamage() == 0) {
-								NBTTagCompound nbtTagCompound = new NBTTagCompound();
-								nbtTagCompound.setString("owner", player.getCommandSenderName());
-								ItemStack itemStack = new ItemStack(PlayerBeacons.beheaderItem);
-								itemStack.setTagCompound(nbtTagCompound);
+							if (itemStack.getItemDamage() == 0) {
+                                this.bindAndReset(player.getCommandSenderName(), itemStack);
 								enemyPlayer.setCurrentItemOrArmor(4, itemStack);
 								player.setCurrentItemOrArmor(0, null);
 							}
-							else player.addChatComponentMessage(new ChatComponentText("\u00a73This device needs to be reset before it can claim a victim"));
+							else player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.resetneeded")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
 						}
-						else player.addChatComponentMessage(new ChatComponentText("\u00a73The players helmet prevents you from doing that!"));
+						else player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.helmet")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
 					}
 				}
-				else player.addChatComponentMessage(new ChatComponentText("\u00a73You need to bind this device to you"));
+				else player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.bindneeded")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
 			}
 		}
 		return true;
@@ -78,18 +71,18 @@ public class BeheaderItem extends ItemArmor {
 					case 1:
 						if (itemStack.hasTagCompound()) {
 							String owner = itemStack.getTagCompound().getString("owner");
-							if (owner != null) player.addChatComponentMessage(new ChatComponentText("\u00a76" + owner + " has clamped a strange device clamp around your head"));
-							else player.addChatComponentMessage(new ChatComponentText("\u00a76You feel a strange device clamp around your head"));
+							if (owner != null) player.addChatComponentMessage(new ChatComponentTranslation("item.beheader.stage.0", owner).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
+							else player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.stage.0.1")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 						}
-						else player.addChatComponentMessage(new ChatComponentText("\u00a76You feel a strange device clamp around your head"));
+						else player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.stage.0.1")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 						break;
 					case 100:
-						player.addChatComponentMessage(new ChatComponentText("\u00a76The device tightens, as you hear it power up"));
+						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.stage.1")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 						player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200));
 						player.addPotionEffect(new PotionEffect(Potion.confusion.id, 200));
 						break;
 					case 200:
-						player.addChatComponentMessage(new ChatComponentText("\u00a76With a quick slash, you suddenly find yourself without your head"));
+						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.stage.2")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 						player.setCurrentItemOrArmor(4, null);
 						player.attackEntityFrom(PlayerBeacons.damageBehead, 100);
 						break;
@@ -100,43 +93,45 @@ public class BeheaderItem extends ItemArmor {
 	}
 
     @Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	public ItemStack onItemRightClick(ItemStack itemStack, World par2World, EntityPlayer player) {
 		if (!par2World.isRemote) {
-			if (par1ItemStack.getItem() instanceof BeheaderItem) {
-				if (!par1ItemStack.hasTagCompound()) {
-					NBTTagCompound tagCompound = new NBTTagCompound();
-					tagCompound.setString("owner", par3EntityPlayer.getCommandSenderName());
-					par1ItemStack.setTagCompound(tagCompound);
-					par3EntityPlayer.addChatComponentMessage(new ChatComponentText("\u00a73This device has now been bound to you"));
+			if (itemStack.getItem() instanceof BeheaderItem) {
+				if (!itemStack.hasTagCompound()) {
+                    this.bindAndReset(player.getCommandSenderName(), itemStack);
+                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.bind")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
 				}
-				if (par1ItemStack.getItemDamage() != 0) {
-					ItemStack itemStack = new ItemStack(PlayerBeacons.beheaderItem);
-					NBTTagCompound nbtTagCompound = new NBTTagCompound();
-					nbtTagCompound.setString("owner", par3EntityPlayer.getCommandSenderName());
-					itemStack.setTagCompound(nbtTagCompound);
-					par3EntityPlayer.setCurrentItemOrArmor(0, null);
-					par3EntityPlayer.setCurrentItemOrArmor(0, itemStack);
-					par3EntityPlayer.addChatComponentMessage(new ChatComponentText("\u00a73The device clicks, it seems to have reset"));
+				if (itemStack.getItemDamage() != 0) {
+                    this.bindAndReset(player.getCommandSenderName(), itemStack);
+                    player.setCurrentItemOrArmor(0, itemStack);
+                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("item.beheader.reset")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
 					return itemStack;
 				}
 			}
 		}
-		return par1ItemStack;
+		return itemStack;
 	}
+
+    private ItemStack bindAndReset(String name, ItemStack itemStack) {
+        if (itemStack == null) itemStack = new ItemStack(PlayerBeacons.beheaderItem);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        nbtTagCompound.setString("owner", name);
+        itemStack.setTagCompound(nbtTagCompound);
+        itemStack.setItemDamage(0);
+        return itemStack;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
 	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
 		super.addInformation(itemStack, entityPlayer, list, par4);
-		list.add("A cruel device,");
-		list.add("this will behead");
-		list.add("anyone who wears it");
+		list.add(StatCollector.translateToLocal("item.beheader.information.0"));
+		list.add(StatCollector.translateToLocal("item.beheader.information.1"));
 		list.add(" ");
 		if (itemStack.hasTagCompound()) {
 			String owner = itemStack.getTagCompound().getString("owner");
-			list.add("Owner: " + owner);
+			list.add(StatCollector.translateToLocal("item.beheader.information.2") + " " + owner);
 		}
-		else list.add("Right click to bind");
+		else list.add(StatCollector.translateToLocal("item.beheader.bindneeded"));
 	}
 
     @Override

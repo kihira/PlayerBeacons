@@ -11,17 +11,12 @@ public class BlockDefiledSoulConductor extends Block {
 
 	public BlockDefiledSoulConductor() {
 		super(Material.rock);
-		setHardness(15f);
-		setResistance(100.0F);
-		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setBlockName("defiledSoulConductor");
-		setBlockTextureName("playerbeacon:pyramidBrick");
+		this.setHardness(15f);
+        this.setResistance(100.0F);
+        this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
+        this.setBlockName("defiledSoulConductor");
+        this.setBlockTextureName("playerbeacon:pyramidBrick");
 	}
-
-    @Override
-    public String getItemIconName() {
-        return null;
-    }
 
     @Override
 	public boolean isBeaconBase(IBlockAccess worldObj, int x, int y, int z, int beaconX, int beaconY, int beaconZ) {
