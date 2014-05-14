@@ -62,8 +62,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 		this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
-        this.prevHeadRotationPitch = par1NBTTagCompound.getFloat("prevHeadRotationPitch");
-        this.prevHeadRotationYaw = par1NBTTagCompound.getFloat("prevHeadRotationYaw");
     }
 
 	@Override
@@ -74,8 +72,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 		par1NBTTagCompound.setShort("badstufflevel", this.corruptionLevel);
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
-        par1NBTTagCompound.setFloat("prevHeadRotationPitch", this.prevHeadRotationPitch);
-        par1NBTTagCompound.setFloat("prevHeadRotationYaw", this.prevHeadRotationYaw);
 	}
 
 	@Override
