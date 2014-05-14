@@ -1,9 +1,9 @@
 package kihira.playerbeacons.client;
 
-import kihira.playerbeacons.block.BlockDefiledSoulPylon;
-import kihira.playerbeacons.block.BlockPlayerBeacon;
-import kihira.playerbeacons.tileentity.TileEntityDefiledSoulPylon;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
+import kihira.playerbeacons.common.block.BlockPlayerBeacon;
+import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
+import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;

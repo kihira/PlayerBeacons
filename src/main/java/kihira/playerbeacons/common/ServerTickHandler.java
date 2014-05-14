@@ -2,8 +2,8 @@ package kihira.playerbeacons.common;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
-import kihira.playerbeacons.util.BeaconDataHelper;
+import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.common.util.BeaconDataHelper;
 
 public class ServerTickHandler {
 

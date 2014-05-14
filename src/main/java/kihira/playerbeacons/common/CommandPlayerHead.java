@@ -1,6 +1,6 @@
 package kihira.playerbeacons.common;
 
-import kihira.playerbeacons.util.Util;
+import kihira.playerbeacons.common.util.Util;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;

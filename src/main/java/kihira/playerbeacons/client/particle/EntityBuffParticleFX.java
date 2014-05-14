@@ -1,7 +1,7 @@
 package kihira.playerbeacons.client.particle;
 
 import kihira.playerbeacons.api.buff.Buff;
-import kihira.playerbeacons.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
 
