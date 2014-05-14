@@ -9,7 +9,7 @@ import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import kihira.playerbeacons.common.block.*;
-import kihira.playerbeacons.common.buff.DigBuff;
+import kihira.playerbeacons.common.buff.HasteBuff;
 import kihira.playerbeacons.common.buff.JumpBuff;
 import kihira.playerbeacons.common.buff.ResistanceBuff;
 import kihira.playerbeacons.common.buff.SpeedBuff;
@@ -133,7 +133,7 @@ public class PlayerBeacons {
 	private void registerBuffs() {
 		new SpeedBuff();
 		new JumpBuff();
-		new DigBuff();
+		new HasteBuff();
 		new ResistanceBuff();
 	}
 

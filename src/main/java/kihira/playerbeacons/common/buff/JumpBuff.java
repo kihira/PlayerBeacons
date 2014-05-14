@@ -15,7 +15,7 @@ public class JumpBuff extends Buff {
 
 	@Override
 	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-		if (crystalCount < theBeacon.getLevels()) player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, theBeacon.getLevels() - crystalCount - 1, true));
+        player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
 	}
 
 	@Override
@@ -27,9 +27,4 @@ public class JumpBuff extends Buff {
     public float[] getRGBA() {
         return new float[] {0.45F, 0.6F, 0.45F, 1F};
     }
-
-	@Override
-	public String getName() {
-		return "Jump";
-	}
 }

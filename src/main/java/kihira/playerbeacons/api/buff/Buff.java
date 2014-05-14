@@ -29,12 +29,6 @@ public abstract class Buff {
 	}
 
 	/**
-	 * The fancy name for your Buff
-	 * @return Name of Buff
-	 */
-	public abstract String getName();
-
-	/**
 	 * This method is called when the requirements to activate the buff are reached.
 	 * @param player The owner of the beacon
 	 * @param theBeacon The beacon itself
@@ -49,13 +43,6 @@ public abstract class Buff {
 	 * @return How much corruption is generated
 	 */
 	public abstract float getCorruption(EntityPlayer player, IBeacon theBeacon, int crystalCount);
-
-	public int getMinBeaconLevel() {
-		return this.minBeaconLevel;
-	}
-	public int getMaxBuffLevel() {
-		return this.maxBuffLevel;
-	}
 
     public abstract float[] getRGBA();
 }

@@ -7,15 +7,15 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 
-public class DigBuff extends Buff {
+public class HasteBuff extends Buff {
 
-	public DigBuff() {
-		super("dig", 10, 1, 1);
+	public HasteBuff() {
+		super("haste", 10, 1, 1);
 	}
 
 	@Override
 	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-		if (crystalCount < theBeacon.getLevels()) player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 300, theBeacon.getLevels() - crystalCount - 1, true));
+        player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
 	}
 
 	@Override
@@ -27,9 +27,4 @@ public class DigBuff extends Buff {
     public float[] getRGBA() {
         return new float[] {0.5F, 0.4F, 0.3F, 1F};
     }
-
-    @Override
-	public String getName() {
-		return "Dig";
-	}
 }

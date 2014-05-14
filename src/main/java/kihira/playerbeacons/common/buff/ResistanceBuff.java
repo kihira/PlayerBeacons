@@ -15,7 +15,7 @@ public class ResistanceBuff extends Buff {
 
 	@Override
 	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-		if (crystalCount < theBeacon.getLevels() - 2) player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, theBeacon.getLevels() - crystalCount - 3, true));
+        player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels() - 2) - 1, true));
 	}
 
 	@Override
@@ -27,9 +27,4 @@ public class ResistanceBuff extends Buff {
     public float[] getRGBA() {
         return new float[] {0.5F, 0F, 0F, 1F};
     }
-
-	@Override
-	public String getName() {
-		return "Resistance";
-	}
 }

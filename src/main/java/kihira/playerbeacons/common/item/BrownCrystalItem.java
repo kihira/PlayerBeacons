@@ -26,7 +26,7 @@ public class BrownCrystalItem extends CrystalItem {
 
     @Override
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
-        Buff buff = Buff.buffs.get("dig");
+        Buff buff = Buff.buffs.get("haste");
         buff.doBuff(player, beacon, crystalCount);
         return buff.getCorruption(player, beacon, crystalCount);
     }

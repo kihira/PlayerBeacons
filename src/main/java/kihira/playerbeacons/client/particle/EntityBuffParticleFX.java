@@ -15,9 +15,12 @@ public class EntityBuffParticleFX extends EntityFX {
 
     public EntityBuffParticleFX(EntityPlayer targetPlayer, TileEntityPlayerBeacon beacon, Buff buff) {
         super(targetPlayer.getEntityWorld(), beacon.xCoord + 0.3F, beacon.yCoord + 0.05F, beacon.zCoord + 0.3F, 0, 0, 0);
-        float[] RGBA = buff.getRGBA();
-        this.setRBGColorF(RGBA[0], RGBA[1], RGBA[2]);
-        this.setAlphaF(RGBA[3]);
+
+        if (buff != null) {
+            float[] RGBA = buff.getRGBA();
+            this.setRBGColorF(RGBA[0], RGBA[1], RGBA[2]);
+            this.setAlphaF(RGBA[3]);
+        }
 
         this.setPosition(this.posX + (rand.nextFloat() / 3F), this.posY + (rand.nextFloat() / 3F), this.posZ + (rand.nextFloat() / 3F));
         this.motionX = this.motionY = this.motionZ = 0;

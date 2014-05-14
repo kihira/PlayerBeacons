@@ -27,9 +27,4 @@ public class SpeedBuff extends Buff {
     public float[] getRGBA() {
         return new float[] {0.5F, 0.5F, 1F, 1F};
     }
-
-	@Override
-	public String getName() {
-		return "Speed";
-	}
 }
