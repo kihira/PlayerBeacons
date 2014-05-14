@@ -18,7 +18,6 @@ public class ServerTickHandler {
                 if (this.cycle % 2 == 0) {
                     if (!PlayerBeacons.config.disableCorruption) {
                         playerBeacon.calcPylons();
-                        playerBeacon.calcCorruption();
                         playerBeacon.applyCorruption();
                     }
                     if (!playerBeacon.getOwner().equals(" ")) playerBeacon.doEffects();

@@ -25,7 +25,7 @@ public abstract class Buff {
 			this.minBeaconLevel = minBeaconLevel;
 			buffs.put(simpleName, this);
 		}
-		else throw new IllegalArgumentException("[PlayerBeacons] Buff " + simpleName + " is already registered");
+		else throw new IllegalArgumentException("Buff " + simpleName + " is already registered");
 	}
 
 	/**
@@ -48,22 +48,13 @@ public abstract class Buff {
 	 * @param beaconLevel How many levels on the beacon
 	 * @return How much corruption is generated
 	 */
-	public abstract float getCorruption(int beaconLevel);
+	public abstract float getCorruption(EntityPlayer player, IBeacon theBeacon, int crystalCount);
 
 	public int getMinBeaconLevel() {
-		return minBeaconLevel;
+		return this.minBeaconLevel;
 	}
 	public int getMaxBuffLevel() {
-		return maxBuffLevel;
-	}
-	public void setCorruption(float newCorruption) {
-		corruptionGenerated = newCorruption;
-	}
-	public void setMaxBuffLevel(int maxBuffLevel) {
-		this.maxBuffLevel = maxBuffLevel;
-	}
-	public void setMinBeaconLevel(int minBeaconLevel) {
-		this.minBeaconLevel = minBeaconLevel;
+		return this.maxBuffLevel;
 	}
 
     public abstract float[] getRGBA();

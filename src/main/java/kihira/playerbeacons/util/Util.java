@@ -11,13 +11,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Random;
-
 public class Util {
 
-    private static Random rand = new Random();
-
     public static enum EnumHeadType {
+        NONE(-1),
         SKELETON(0),
         WITHERSKELETON(1),
         ZOMBIE(2),
@@ -32,6 +29,25 @@ public class Util {
 
         public int getID() {
             return this.id;
+        }
+
+        public static EnumHeadType fromId(int id) {
+            switch (id) {
+                case -1:
+                    return NONE;
+                case 0:
+                    return SKELETON;
+                case 1:
+                    return WITHERSKELETON;
+                case 2:
+                    return WITHERSKELETON;
+                case 3:
+                    return WITHERSKELETON;
+                case 4:
+                    return WITHERSKELETON;
+                default:
+                    return null;
+            }
         }
     }
 

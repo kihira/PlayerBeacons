@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import kihira.playerbeacons.api.throttle.Throttle;
 import kihira.playerbeacons.block.*;
 import kihira.playerbeacons.buff.DigBuff;
 import kihira.playerbeacons.buff.JumpBuff;
@@ -81,9 +80,7 @@ public class PlayerBeacons {
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
-		registerThrottles();
 		registerBuffs();
-		config.loadBuffs();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
         FMLCommonHandler.instance().bus().register(new ServerTickHandler());
 		proxy.registerRenderers();
@@ -128,13 +125,6 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
-	}
-
-	private void registerThrottles() {
-		Throttle.registerThrottle(lightBlueCrystalItem);
-		Throttle.registerThrottle(greenCrystalItem);
-		Throttle.registerThrottle(redCrystalItem);
-		Throttle.registerThrottle(brownCrystalItem);
 	}
 
 	private void registerBuffs() {

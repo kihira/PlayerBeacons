@@ -5,6 +5,7 @@ import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.MathHelper;
 
 public class JumpBuff extends Buff {
 
@@ -18,8 +19,8 @@ public class JumpBuff extends Buff {
 	}
 
 	@Override
-	public float getCorruption(int beaconLevel) {
-		return beaconLevel * corruptionGenerated;
+	public float getCorruption(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+		return MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) * this.corruptionGenerated;
 	}
 
     @Override

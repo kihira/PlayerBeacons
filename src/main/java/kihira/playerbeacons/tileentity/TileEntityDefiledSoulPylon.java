@@ -1,7 +1,7 @@
 package kihira.playerbeacons.tileentity;
 
 import kihira.playerbeacons.api.throttle.ICrystal;
-import kihira.playerbeacons.api.throttle.IThrottleContainer;
+import kihira.playerbeacons.api.throttle.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,35 +12,38 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, IThrottleContainer {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, ICrystalContainer {
 
 	private ItemStack crystal;
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
+	public void readFromNBT(NBTTagCompound nbtTagCompound) {
+		super.readFromNBT(nbtTagCompound);
+		NBTTagCompound tag = (NBTTagCompound) nbtTagCompound.getTag("crystal");
 		this.crystal = ItemStack.loadItemStackFromNBT(tag);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
+	public void writeToNBT(NBTTagCompound nbtTagCompound) {
+		super.writeToNBT(nbtTagCompound);
 		NBTTagCompound tag = new NBTTagCompound();
 		if (this.crystal != null) this.crystal.writeToNBT(tag);
-		par1NBTTagCompound.setTag("crystal", tag);
+        nbtTagCompound.setTag("crystal", tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.func_148857_g());
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
+		this.writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
 	}
 
@@ -57,7 +60,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	@Override
 	public ItemStack getStackInSlot(int i) {
 		if (i == 0) return this.crystal;
-		return null;
+		else return null;
 	}
 
 	@Override
@@ -67,12 +70,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		if (this.crystal != null) {
-			ItemStack itemstack = this.crystal;
-			this.crystal= null;
-			return itemstack;
-		}
-		else return null;
+        return null;
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		return i == 0 && itemstack.getItem() instanceof ICrystal;
+		return i == 0 && (itemstack == null || itemstack.getItem() instanceof ICrystal);
 	}
 
 	public boolean isPylonBase() {
@@ -121,4 +119,11 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public boolean isPylonTop() {
 		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
 	}
+
+    @Override
+    public List<ICrystal> getCrystalList() {
+        List<ICrystal> list = new ArrayList<ICrystal>();
+        if (this.crystal != null) list.add((ICrystal) this.crystal.getItem());
+        return list;
+    }
 }

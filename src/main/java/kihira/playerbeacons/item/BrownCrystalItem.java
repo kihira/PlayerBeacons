@@ -1,17 +1,21 @@
 package kihira.playerbeacons.item;
 
+import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.buff.Buff;
+import net.minecraft.entity.player.EntityPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BrownCrystalItem extends CrystalItem {
 	public BrownCrystalItem() {
-		setUnlocalizedName("brownCrystalItem");
+        this.setUnlocalizedName("brownCrystalItem");
 	}
 
 	@Override
 	public List<String> getAffectedBuffs() {
 		List<String> list = new ArrayList<String>();
-		list.add("dig");
+		list.add("haste");
 		return list;
 	}
 
@@ -19,4 +23,11 @@ public class BrownCrystalItem extends CrystalItem {
 	public double[] getRGBA() {
 		return new double[]{0.5, 0.4, 0.3, 1};
 	}
+
+    @Override
+    public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
+        Buff buff = Buff.buffs.get("dig");
+        buff.doBuff(player, beacon, crystalCount);
+        return buff.getCorruption(player, beacon, crystalCount);
+    }
 }

@@ -1,11 +1,15 @@
 package kihira.playerbeacons.item;
 
+import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.buff.Buff;
+import net.minecraft.entity.player.EntityPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RedCrystalItem extends CrystalItem {
 	public RedCrystalItem() {
-		setUnlocalizedName("redCrystalItem");
+		this.setUnlocalizedName("redCrystalItem");
 	}
 
 	@Override
@@ -19,4 +23,11 @@ public class RedCrystalItem extends CrystalItem {
 	public double[] getRGBA() {
 		return new double[]{0.5, 0, 0, 1};
 	}
+
+    @Override
+    public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
+        Buff buff = Buff.buffs.get("resistance");
+        buff.doBuff(player, beacon, crystalCount);
+        return buff.getCorruption(player, beacon, crystalCount);
+    }
 }

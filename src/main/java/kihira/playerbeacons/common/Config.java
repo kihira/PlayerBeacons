@@ -1,11 +1,9 @@
 package kihira.playerbeacons.common;
 
-import kihira.playerbeacons.api.buff.Buff;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import java.io.File;
-import java.util.Map;
 
 public class Config {
 
@@ -57,6 +55,7 @@ public class Config {
 		enableLightning = prop.getBoolean(false);
 	}
 
+    /*
 	public void loadBuffs() {
 		Property prop;
 		for (Map.Entry<String, Buff> buff : Buff.buffs.entrySet()) {
@@ -76,6 +75,7 @@ public class Config {
 		}
 		save();
 	}
+	*/
 
 	private void save() {
 		config.save();

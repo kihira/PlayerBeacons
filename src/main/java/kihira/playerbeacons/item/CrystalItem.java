@@ -2,7 +2,7 @@ package kihira.playerbeacons.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -20,42 +21,23 @@ public class CrystalItem extends Item implements ICrystal {
 
 	public CrystalItem() {
 		//This equals one day in real time. Change it depending on how fast we calculate bad stuff
-		setMaxDamage(43200);
-		setMaxStackSize(1);
-		setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-		setTextureName("playerbeacon:crystalitem");
-		setUnlocalizedName("crystalitem");
+		this.setMaxDamage(43200);
+        this.setMaxStackSize(1);
+        this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
+        this.setTextureName("playerbeacon:crystalitem");
+        this.setUnlocalizedName("crystalitem");
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		List buffList = getAffectedBuffs();
+    @SuppressWarnings("unchecked")
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List par3List, boolean par4) {
+		List<String> buffList = this.getAffectedBuffs();
 		if (buffList != null) {
-			par3List.add("Throttles Buffs: ");
-			for (Object obj:buffList) {
-				par3List.add(Buff.buffs.get(obj.toString()).getName());
+			par3List.add("Enables Buffs: ");
+			for (String buffName : buffList) {
+				par3List.add(StatCollector.translateToLocal("buff." + buffName + ".name"));
 			}
 		}
-	}
-
-	@Override
-	public float getCorruptionThrottle(Buff buff, int beaconLevel, int throttleCount) {
-		return 10f * throttleCount;
-	}
-
-	@Override
-	public float getCorruptionReduction(float currentCorruption, int currentCorruptionLevel, int beaconLevel) {
-		return 0;
-	}
-
-	@Override
-	public List<String> getAffectedBuffs() {
-		return null;
-	}
-
-	@Override
-	public double[] getRGBA() {
-		return new double[]{1, 1, 1, 1};
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -75,11 +57,13 @@ public class CrystalItem extends Item implements ICrystal {
 	@Override
 	public int getColorFromItemStack(ItemStack itemStack, int par2) {
 		int i = 0;
-		double[] rgba = getRGBA();
-		i = i | ((int) (rgba[3] * 255) << 24);
-		i = i | ((int) (rgba[0] * 255) << 16);
-		i = i | ((int) (rgba[1] * 255) << 8);
-		i = i | ((int) (rgba[2] * 255));
+		double[] rgba = this.getRGBA();
+        if (rgba != null && rgba.length == 4) {
+            i = i | ((int) (rgba[3] * 255) << 24);
+            i = i | ((int) (rgba[0] * 255) << 16);
+            i = i | ((int) (rgba[1] * 255) << 8);
+            i = i | ((int) (rgba[2] * 255));
+        }
 		return i;
 	}
 
@@ -88,4 +72,19 @@ public class CrystalItem extends Item implements ICrystal {
 	public boolean requiresMultipleRenderPasses() {
 		return true;
 	}
+
+    @Override
+    public double[] getRGBA() {
+        return new double[] {1, 1, 1, 1};
+    }
+
+    @Override
+    public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
+        return 0;
+    }
+
+    @Override
+    public List<String> getAffectedBuffs() {
+        return null;
+    }
 }

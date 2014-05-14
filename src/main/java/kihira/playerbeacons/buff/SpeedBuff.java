@@ -5,6 +5,7 @@ import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.MathHelper;
 
 public class SpeedBuff extends Buff {
 
@@ -14,12 +15,12 @@ public class SpeedBuff extends Buff {
 
 	@Override
 	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-		if (crystalCount < theBeacon.getLevels()) player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 300, theBeacon.getLevels() - crystalCount - 1, true));
+		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
 	}
 
 	@Override
-	public float getCorruption(int beaconLevel) {
-		return beaconLevel * corruptionGenerated;
+	public float getCorruption(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+        return MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) * this.corruptionGenerated;
 	}
 
     @Override
