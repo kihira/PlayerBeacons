@@ -18,29 +18,34 @@ public class CommandPlayerHead extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender icommandsender) {
-		return "/playerhead <playername> | Playername is case sensitive!";
+	public String getCommandUsage(ICommandSender commandSender) {
+		return "commands.playerhead.usage";
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
+	public List addTabCompletionOptions(ICommandSender commandSender, String[] par2ArrayOfStr) {
 		return par2ArrayOfStr.length == 1 ? getListOfStringsMatchingLastWord(par2ArrayOfStr, MinecraftServer.getServer().getAllUsernames()) : null;
 	}
 
 	@Override
-	public void processCommand(ICommandSender icommandsender, String[] astring) {
-		if ((astring.length > 0) && (astring[0].length() > 0)) {
-			EntityPlayer player = icommandsender.getEntityWorld().getPlayerEntityByName(icommandsender.getCommandSenderName());
-			if (player != null) {
-				player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, astring[0]), 1);
-				notifyAdmins(icommandsender, "commands.playerhead.success", astring[0], player.getCommandSenderName());
-			}
-		}
-		else throw new WrongUsageException("commands.playerhead.usage", astring);
-	}
+	public void processCommand(ICommandSender commandSender, String[] args) {
+        EntityPlayer player = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
+        if (args != null && player != null) {
+            if (args.length == 0) {
+                player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, player.getCommandSenderName()), 1);
+                notifyAdmins(commandSender, "commands.playerhead.success", player.getCommandSenderName(), player.getCommandSenderName());
+            }
+            else if (args.length > 0 && args[0].length() > 0) {
+                player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, args[0]), 1);
+                notifyAdmins(commandSender, "commands.playerhead.success", args[0], player.getCommandSenderName());
+            }
+            else throw new WrongUsageException("commands.playerhead.usage", args);
+        }
+        else throw new WrongUsageException("commands.playerhead.usage", args);
+    }
 
     @Override
     public int compareTo(Object o) {
-        return super.compareTo((ICommand)o);
+        return super.compareTo((ICommand) o);
     }
 }
