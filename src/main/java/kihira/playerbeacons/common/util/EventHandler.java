@@ -17,9 +17,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -54,14 +52,13 @@ public class EventHandler {
 			if (item != null) {
                 int lvl = EnchantmentHelper.getEnchantmentLevel(PlayerBeacons.config.decapitationEnchantmentID, item);
                 Random random = new Random();
-                if (lvl > 0 && (random.nextInt()) % (12/lvl) == 0) {
+                if (lvl > 0 && (random.nextInt()) % (12 / lvl) == 0) {
                     if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
                     else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
                     else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
                     else if (deadEntity instanceof EntityPlayer) {
-                        EntityPlayer deadPlayer = (EntityPlayer)deadEntity;
-                        e.setCanceled(true);
-                        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(deadPlayer.getCommandSenderName() + " was beheaded by " + attacker.getCommandSenderName()));
+                        EntityPlayer deadPlayer = (EntityPlayer) deadEntity;
+                        deadPlayer.func_110142_aN().func_94547_a(PlayerBeacons.damageBehead, 1, 1);
                         e.entityLiving.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
                     }
                 }

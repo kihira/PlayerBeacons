@@ -6,6 +6,6 @@ public class DamageBehead extends DamageSource {
 
 	public DamageBehead() {
 		super("behead");
-		setDamageBypassesArmor();
+		this.setDamageBypassesArmor();
 	}
 }

@@ -1,6 +1,5 @@
 package kihira.playerbeacons.common.item;
 
-import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
@@ -92,7 +91,7 @@ public class BeheaderItem extends ItemArmor {
 					case 200:
 						player.addChatComponentMessage(new ChatComponentText("\u00a76With a quick slash, you suddenly find yourself without your head"));
 						player.setCurrentItemOrArmor(4, null);
-						player.attackEntityFrom(new DamageBehead(), 100);
+						player.attackEntityFrom(PlayerBeacons.damageBehead, 100);
 						break;
 				}
 				itemStack.setItemDamage(itemStack.getItemDamage() + 1);

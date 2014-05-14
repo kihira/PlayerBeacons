@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
-import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.Util;
@@ -76,7 +75,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 					return world.setBlockToAir(x, y, z);
 				}
 				else {
-					player.attackEntityFrom(new DamageBehead(), 10);
+					player.attackEntityFrom(PlayerBeacons.damageBehead, 10);
 					player.addChatComponentMessage(new ChatComponentText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
 				}
 			}
@@ -123,7 +122,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				if (!(player.getCommandSenderName().equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) && !(player.capabilities.isCreativeMode) && !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
-					player.attackEntityFrom(new DamageBehead(), 2);
+					player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
 					player.addChatComponentMessage(new ChatComponentText("\u00a7d\u00a7oA mystical energy seems to guard this device"));
 				}
 			}

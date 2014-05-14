@@ -58,6 +58,8 @@ public class PlayerBeacons {
 
 	public static boolean isChristmas = false;
 
+    public static final DamageBehead damageBehead = new DamageBehead();
+
 	@SidedProxy(clientSide = "kihira.playerbeacons.proxy.ClientProxy", serverSide = "kihira.playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
