@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,7 +59,7 @@ public class PlayerBeacons {
 
 	public static boolean isChristmas = false;
 
-    public static final DamageBehead damageBehead = new DamageBehead();
+    public static final DamageSource damageBehead = new DamageSource("behead").setDamageBypassesArmor();
 
 	@SidedProxy(clientSide = "kihira.playerbeacons.proxy.ClientProxy", serverSide = "kihira.playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;

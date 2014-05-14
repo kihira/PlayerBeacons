@@ -4,7 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
-import kihira.playerbeacons.common.DamageBehead;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -37,7 +36,7 @@ public class EventHandler {
 		Entity deadEntity = e.entity;
 
 		//Death by DamageBehead
-		if (e.source instanceof DamageBehead) {
+		if (e.source == PlayerBeacons.damageBehead) {
 			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadEntity.getCommandSenderName()), 1);
 			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
 			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
