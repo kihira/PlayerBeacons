@@ -1,18 +1,17 @@
 package kihira.playerbeacons.tileentity;
 
+import kihira.playerbeacons.api.throttle.ICrystal;
+import kihira.playerbeacons.api.throttle.IThrottleContainer;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import kihira.playerbeacons.api.throttle.ICrystal;
-import kihira.playerbeacons.api.throttle.IThrottleContainer;
-import kihira.playerbeacons.common.PlayerBeacons;
 
-public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, IThrottleContainer {
+public class TileEntityDefiledSoulPylon extends TileEntity implements IThrottleContainer {
 
 	private ItemStack crystal;
 
@@ -20,7 +19,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		NBTTagCompound tag = (NBTTagCompound) par1NBTTagCompound.getTag("crystal");
-		this.crystal = ItemStack.loadItemStackFromNBT(tag);
+		if (tag != null) this.crystal = ItemStack.loadItemStackFromNBT(tag);
 	}
 
 	@Override
@@ -67,12 +66,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		if (this.crystal != null) {
-			ItemStack itemstack = this.crystal;
-			this.crystal= null;
-			return itemstack;
-		}
-		else return null;
+        return null;
 	}
 
 	@Override
@@ -111,7 +105,7 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		return i == 0 && itemstack.getItem() instanceof ICrystal;
+		return i == 0 && itemstack != null && itemstack.getItem() instanceof ICrystal;
 	}
 
 	public boolean isPylonBase() {

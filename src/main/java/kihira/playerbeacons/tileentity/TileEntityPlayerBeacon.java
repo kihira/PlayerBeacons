@@ -16,7 +16,6 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -33,10 +32,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TileEntityPlayerBeacon extends TileEntity {
 
@@ -263,20 +259,22 @@ public class TileEntityPlayerBeacon extends TileEntity {
 	}
 
 	private void doPylon(int x, int y, int z) {
-		IInventory iInventory = (IInventory) this.worldObj.getBlockTileEntity(x, y, z);
-        //Get entire inventory incase it has more then one crystal slot.
-		for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
-			if (((iInventory.getStackInSlot(i) != null) && iInventory.getStackInSlot(i).getItem() instanceof IThrottle)) {
-				ItemStack itemStack = iInventory.getStackInSlot(i);
-				IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
-				this.throttleHashMap.put(item, throttleHashMap.get(item) + 1);
-				if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-				else {
-					itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-					iInventory.setInventorySlotContents(i, itemStack);
-				}
-			}
-		}
+        TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
+        if (tileEntity != null && tileEntity instanceof IThrottleContainer) {
+            IThrottleContainer iInventory = (IThrottleContainer) tileEntity;
+            //Get entire inventory incase it has more then one crystal slot.
+            for (int i = 0; i <= iInventory.getSizeInventory(); i++) {
+                ItemStack itemStack = iInventory.getStackInSlot(i);
+                if ((itemStack != null && itemStack.getItem() instanceof IThrottle && itemStack.getItem() != PlayerBeacons.crystalItem)) {
+                    IThrottle item = (IThrottle) iInventory.getStackInSlot(i).getItem();
+                    if (this.throttleHashMap.containsKey(item)) this.throttleHashMap.put(item, throttleHashMap.get(item) + 1);
+                    if (itemStack.attemptDamageItem(1, new Random())) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem, 1, 0));
+                    else {
+                        iInventory.setInventorySlotContents(i, itemStack);
+                    }
+                }
+            }
+        }
 	}
 
 	public void calcCorruption() {
