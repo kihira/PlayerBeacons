@@ -17,7 +17,7 @@ public class EntityBuffParticleFX extends EntityFX {
     private final EntityPlayer player;
 
     public EntityBuffParticleFX(EntityPlayer targetPlayer, TileEntityPlayerBeacon beacon, Buff buff) {
-        super(targetPlayer.getEntityWorld(), beacon.xCoord + 0.3F, beacon.yCoord + 0.05F, beacon.zCoord + 0.3F, 0, 0, 0);
+        super(targetPlayer.getEntityWorld(), beacon.xCoord + 0.3F, beacon.yCoord, beacon.zCoord + 0.3F, 0, 0, 0);
 
         if (buff != null) {
             float[] RGBA = buff.getRGBA();
