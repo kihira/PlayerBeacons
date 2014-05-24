@@ -4,7 +4,6 @@ import kihira.playerbeacons.api.throttle.ICrystal;
 import kihira.playerbeacons.api.throttle.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -15,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory, ICrystalContainer {
+public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalContainer {
 
 	private ItemStack crystal;
 
@@ -125,5 +124,10 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements IInventory
         List<ICrystal> list = new ArrayList<ICrystal>();
         if (this.crystal != null) list.add((ICrystal) this.crystal.getItem());
         return list;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
     }
 }

@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.throttle.ICrystal;
+import kihira.playerbeacons.api.throttle.ICrystalContainer;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
@@ -26,6 +27,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
@@ -132,35 +134,43 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-        TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-		if (!playerBeacon.getOwner().equals(" ")) {
-            /*
-			float corrupution = playerBeacon.getCorruption();
-			for (int l = 0; l < (corrupution / 500); ++l) {
-				double d1 = (double)((float)y + random.nextFloat());
-				int i1 = random.nextInt(2) * 2 - 1;
-				int j1 = random.nextInt(2) * 2 - 1;
-				double d3 = ((double)random.nextFloat() - 0.5D) * 0.125D;
-				double d5 = (double)z + 0.5D + 0.25D * (double)j1;
-				double d4 = (double)(random.nextFloat() * 1.0F * (float)j1);
-				double d6 = (double)x + 0.5D + 0.25D * (double)i1;
-				double d2 = (double)(random.nextFloat() * 1.0F * (float)i1);
-				world.spawnParticle("portal", d6, d1, d5, d2, d3, d4);
-			}
-			*/
-            for (int i = 0; i < 2; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("haste")));
+	public void randomDisplayTick(World world, int xPos, int yPos, int zPos, Random rand) {
+        TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(xPos, yPos, zPos);
+        //Calculate levels on the client
+        playerBeacon.checkBeacon();
+        if (!playerBeacon.getOwner().equals(" ") && playerBeacon.getLevels() > 0) {
+            int levels = playerBeacon.getLevels();
+            for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
+                ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels);
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer.getCrystalList(), new Random());
             }
-            for (int i = 0; i < 2; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("speed")));
+            for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
+                ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels);
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos - levels, crystalContainer.getCrystalList(), new Random());
             }
-            for (int i = 0; i < 2; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("jump")));
+            for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
+                ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels);
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer.getCrystalList(), new Random());
             }
-            for (int i = 0; i < 2; i++) {
-                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(Minecraft.getMinecraft().thePlayer, playerBeacon, Buff.buffs.get("resistance")));
+            for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
+                ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels);
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer.getCrystalList(), new Random());
             }
 		}
 	}
+
+    private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, List<ICrystal> crystalList, Random rand) {
+        if (crystalList != null && !crystalList.isEmpty()) {
+            for (ICrystal crystal : crystalList) {
+                List<String> buffList = crystal.getAffectedBuffs();
+                if (buffList != null && !buffList.isEmpty()) {
+                    for (String buff : buffList) {
+                        for (int j = 0; j < 2; j++) {
+                            Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
