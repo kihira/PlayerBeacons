@@ -53,7 +53,7 @@ public class EntityBuffParticleFX extends EntityFX {
         this.targetY = targetY;
         this.targetZ = targetZ;
 
-        this.particleMaxAge = 100;
+        this.particleMaxAge = 200;
 
     }
 
@@ -79,7 +79,7 @@ public class EntityBuffParticleFX extends EntityFX {
         this.motionZ += d2 / d3 * 0.005D;
 
         if (this.particleAge++ >= this.particleMaxAge) setDead();
-        if (d3 < 0.1) setDead();
+        if (d3 < 0.5) setDead();
 
         this.posX += this.motionX;
         this.posY += this.motionY;
