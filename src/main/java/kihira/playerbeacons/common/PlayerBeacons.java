@@ -16,11 +16,11 @@ import kihira.playerbeacons.common.buff.SpeedBuff;
 import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.potion.CorruptionPotion;
-import kihira.playerbeacons.proxy.CommonProxy;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.EventHandler;
 import kihira.playerbeacons.common.util.ThaumcraftHandler;
+import kihira.playerbeacons.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -34,8 +34,6 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Calendar;
 
 @Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila;")
 public class PlayerBeacons {
@@ -57,15 +55,13 @@ public class PlayerBeacons {
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
-	public static boolean isChristmas = false;
-
     public static final DamageSource damageBehead = new DamageSource("behead").setDamageBypassesArmor();
 
 	@SidedProxy(clientSide = "kihira.playerbeacons.proxy.ClientProxy", serverSide = "kihira.playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.EventHandler
-	public void preinit(FMLPreInitializationEvent e) {
+	public void preInit(FMLPreInitializationEvent e) {
 
 		config = new Config(e.getSuggestedConfigurationFile());
 
@@ -90,8 +86,6 @@ public class PlayerBeacons {
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
         new CorruptionPotion(config.corruptionPotionID);
-
-		if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 25 && Calendar.getInstance().get(Calendar.MONTH) == 12) isChristmas = true;
 
 		ItemStack itemStack = makeResearchNotes();
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);

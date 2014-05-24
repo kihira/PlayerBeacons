@@ -324,7 +324,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (par1Entity != null) {
             double d0 = par1Entity.posX - posX - par1Entity.width;
             double d2 = par1Entity.posZ - posZ - par1Entity.width;
-            double d1 = par1Entity.posY - posY - par1Entity.height + (double)par1Entity.getEyeHeight() + 0.1F;
+            double d1 = par1Entity.posY - posY - par1Entity.height + (double)par1Entity.getEyeHeight() + (this.worldObj.isRemote ? 0.1F : 0.22F);
 
             double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
             float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;

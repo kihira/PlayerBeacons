@@ -27,7 +27,7 @@ public class TickHandler {
             }
         }
         else if (event.side.isClient() && PlayerBeacons.config.enableHideParticleEffects && event.player.worldObj.getTotalWorldTime() % 10 == 0) {
-            event.player.getDataWatcher().updateObject(7, 0);
+            event.player.getDataWatcher().updateObject(7, 0); //TODO Remove in 1.8 as this feature will be in vanilla per potion effect
         }
     }
 }
