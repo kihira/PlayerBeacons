@@ -5,13 +5,13 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.BeaconDataHelper;
 
-public class ServerTickHandler {
+public class TickHandler {
 
     private short cycle = 0;
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START && event.player.worldObj.getTotalWorldTime() % 20 == 0) {
+        if (event.phase == TickEvent.Phase.START && event.side.isServer() && event.player.worldObj.getTotalWorldTime() % 20 == 0) {
             TileEntityPlayerBeacon playerBeacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.worldObj.provider.dimensionId);
             if (playerBeacon != null) {
                 playerBeacon.checkBeacon();
@@ -25,6 +25,9 @@ public class ServerTickHandler {
                 }
                 if (this.cycle >= 32000) this.cycle = 0;
             }
+        }
+        else if (event.side.isClient() && PlayerBeacons.config.enableHideParticleEffects && event.player.worldObj.getTotalWorldTime() % 10 == 0) {
+            event.player.getDataWatcher().updateObject(7, 0);
         }
     }
 }

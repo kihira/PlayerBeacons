@@ -20,10 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -112,7 +109,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     tileEntityPlayerBeacon.applyCorruption();
                     tileEntityPlayerBeacon.setCorruption(0, true);
                     world.markBlockForUpdate(x, y, z);
-                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("crystal.dissipation")).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
+                    player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
                 }
             }
         }

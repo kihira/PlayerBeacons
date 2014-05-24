@@ -13,7 +13,7 @@ public class Config {
 	public boolean disableCorruption;
 	public boolean enableThaumcraft;
 	public boolean enableLightning;
-
+    public boolean enableHideParticleEffects;
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
 
@@ -41,7 +41,7 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Easter Egg", false);
 		prop.comment = "WARNING: This could destroy parts of your world unintentionally";
 		enableEasterEgg = prop.getBoolean(false);
-		prop = config.get(Configuration.CATEGORY_GENERAL, "Time between special zombie spawns", 54000);
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Time between special zombie spawns", 54000); //TODO Remove
 		prop.comment = "Time between chance to spawn a zombie with a player head. Default: 54000 seconds";
 		spawnCooldownDuration = prop.getInt();
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Disable Corruption", false);
@@ -50,9 +50,12 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Thaumcraft Intergration", true);
 		prop.comment = "If this is enabled and Thaumcraft is detected, the default recipes will be replaced with TC research and recipes";
 		enableThaumcraft = prop.getBoolean(true);
-		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy lightning", false);
+		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy lightning", false); //TODO Remove
 		prop.comment = "EXPERIMENTAL. This feature isn't finished so is disabled by default";
 		enableLightning = prop.getBoolean(false);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "Hide particle effects", true);
+        prop.comment = "Hides all particle effects on the player";
+        enableHideParticleEffects = prop.getBoolean(true);
 	}
 
     /*

@@ -85,7 +85,7 @@ public class PlayerBeacons {
 
 		registerBuffs();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-        FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+        FMLCommonHandler.instance().bus().register(new TickHandler());
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
