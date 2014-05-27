@@ -2,11 +2,13 @@ package kihira.playerbeacons.common.util;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
@@ -57,6 +59,14 @@ public class Util {
 		Vec3 vec32 = vec3.addVector(vec31.xCoord * maxBlockDistance, vec31.yCoord * maxBlockDistance, vec31.zCoord * maxBlockDistance);
 		return player.worldObj.rayTraceBlocks(vec3, vec32);
 	}
+
+    public static ItemStack getPlayerBacon(String playerName, int count) {
+        ItemStack itemStack = new ItemStack(PlayerBeacons.playerBaconItem, MathHelper.clamp_int(count, 1, 64), 0);
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        tagCompound.setString("PlayerName", playerName);
+        itemStack.setTagCompound(tagCompound);
+        return itemStack;
+    }
 
     public static ItemStack getHead(EnumHeadType headType, String owner) {
         return getHead(headType.getID(), owner);

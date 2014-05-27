@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
@@ -21,6 +22,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -64,6 +66,12 @@ public class EventHandler {
             }
 		}
 	}
+
+    @SubscribeEvent
+    public void onPlayerDrops(PlayerDropsEvent e) {
+        //Bacon!
+        e.drops.add(new EntityItem(e.entityPlayer.worldObj, e.entityPlayer.posX, e.entityPlayer.posY, e.entityPlayer.posZ, Util.getPlayerBacon(e.entityPlayer.getCommandSenderName(), e.lootingLevel + 1)));
+    }
 
 	@SubscribeEvent
 	public void onEntitySpawn(LivingSpawnEvent e) {

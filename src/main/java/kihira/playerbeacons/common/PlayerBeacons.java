@@ -48,6 +48,7 @@ public class PlayerBeacons {
 	public static final BrownCrystalItem brownCrystalItem = new BrownCrystalItem();
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();
 	public static final RedCrystalItem redCrystalItem = new RedCrystalItem();
+    public static final PlayerBaconItem playerBaconItem = new PlayerBaconItem();
 
     public static final Block playerBeaconBlock = new BlockPlayerBeacon();
     public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
@@ -75,6 +76,7 @@ public class PlayerBeacons {
 		GameRegistry.registerItem(brownCrystalItem, "brownCrystalItem");
 		GameRegistry.registerItem(greenCrystalItem, "greenCrystalItem");
 		GameRegistry.registerItem(redCrystalItem, "redCrystalItem");
+        GameRegistry.registerItem(playerBaconItem, "playerBaconItem");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");

@@ -47,3 +47,5 @@ buff.haste.name=Haste
 buff.jump.name=Jump
 buff.resistance.name=Resistance
 crystal.dissipation=The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it
+item.playerBacon.name=Player Bacon
+item.playerBacon.food=Mmm, tastes like %s!
