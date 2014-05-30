@@ -1,4 +1,4 @@
-package kihira.playerbeacons.api.throttle;
+package kihira.playerbeacons.api.crystal;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;

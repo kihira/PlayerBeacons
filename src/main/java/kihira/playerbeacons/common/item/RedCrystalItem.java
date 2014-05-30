@@ -1,7 +1,7 @@
 package kihira.playerbeacons.common.item;
 
 import kihira.playerbeacons.api.IBeacon;
-import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.api.buff.IBuff;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -26,8 +26,7 @@ public class RedCrystalItem extends CrystalItem {
 
     @Override
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
-        Buff buff = Buff.buffs.get("resistance");
-        buff.doBuff(player, beacon, crystalCount);
-        return buff.getCorruption(player, beacon, crystalCount);
+        IBuff buff = IBuff.buffs.get("resistance");
+        return buff.doBuff(player, beacon, crystalCount);
     }
 }

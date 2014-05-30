@@ -1,4 +1,4 @@
-package kihira.playerbeacons.api.throttle;
+package kihira.playerbeacons.api.crystal;
 
 import kihira.playerbeacons.api.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
