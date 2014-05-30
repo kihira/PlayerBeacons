@@ -2,7 +2,7 @@ package kihira.playerbeacons.client.particle;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.buff.IBuff;
+import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ public class EntityBuffParticleFX extends EntityFX {
 
     private final EntityPlayer player;
 
-    public EntityBuffParticleFX(EntityPlayer targetPlayer, TileEntityPlayerBeacon beacon, IBuff buff) {
+    public EntityBuffParticleFX(EntityPlayer targetPlayer, TileEntityPlayerBeacon beacon, Buff buff) {
         super(targetPlayer.getEntityWorld(), beacon.xCoord + 0.3F, beacon.yCoord, beacon.zCoord + 0.3F, 0, 0, 0);
 
         if (buff != null) {
@@ -36,7 +36,7 @@ public class EntityBuffParticleFX extends EntityFX {
         this.targetZ = targetPlayer.posZ;
     }
 
-    public EntityBuffParticleFX(double targetX, double targetY, double targetZ, TileEntityPlayerBeacon beacon, IBuff buff) {
+    public EntityBuffParticleFX(double targetX, double targetY, double targetZ, TileEntityPlayerBeacon beacon, Buff buff) {
         super(beacon.getWorldObj(), beacon.xCoord + 0.3F, beacon.yCoord + 0.05F, beacon.zCoord + 0.3F, 0, 0, 0);
 
         if (buff != null) {

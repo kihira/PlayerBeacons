@@ -2,9 +2,9 @@ package kihira.playerbeacons.common.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.buff.IBuff;
-import kihira.playerbeacons.api.crystal.ICrystal;
-import kihira.playerbeacons.api.crystal.ICrystalContainer;
+import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.api.throttle.ICrystal;
+import kihira.playerbeacons.api.throttle.ICrystalContainer;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
@@ -163,7 +163,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 if (buffList != null && !buffList.isEmpty()) {
                     for (String buff : buffList) {
                         for (int j = 0; j < 2; j++) {
-                            Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, IBuff.buffs.get(buff)));
+                            Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
                         }
                     }
                 }
