@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.item.PlayerBaconItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,6 +16,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -91,6 +94,26 @@ public class EventHandler {
 			}
 		}
 	}
+
+    @SubscribeEvent
+    public void onInteract(EntityInteractEvent e) {
+        if (e.target instanceof EntityWolf && e.entityPlayer.getCurrentEquippedItem() != null) {
+            ItemStack itemStack = e.entityPlayer.getCurrentEquippedItem();
+            //Bacon does funny things to wolves
+            if (itemStack.getItem() instanceof PlayerBaconItem && itemStack.hasTagCompound()) {
+                EntityWolf entityWolf = (EntityWolf) e.target;
+                EntityPlayer target = e.entityPlayer.worldObj.getPlayerEntityByName(itemStack.getTagCompound().getString("PlayerName"));
+                //TODO range check?
+                if (target != null) {
+                    entityWolf.setTamed(false);
+                    entityWolf.setAngry(true);
+                    entityWolf.setPathToEntity(entityWolf.getNavigator().getPathToEntityLiving(target));
+                    entityWolf.setAttackTarget(target);
+                    if (!e.entityPlayer.capabilities.isCreativeMode && itemStack.stackSize-- <= 0) e.entityPlayer.setCurrentItemOrArmor(0, null);
+                }
+            }
+        }
+    }
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
