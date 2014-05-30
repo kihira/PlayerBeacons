@@ -8,6 +8,8 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.block.*;
 import kihira.playerbeacons.common.buff.HasteBuff;
 import kihira.playerbeacons.common.buff.JumpBuff;
@@ -22,8 +24,10 @@ import kihira.playerbeacons.common.util.EventHandler;
 import kihira.playerbeacons.common.util.ThaumcraftHandler;
 import kihira.playerbeacons.proxy.CommonProxy;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,10 +39,27 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 @Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila;")
 public class PlayerBeacons {
 
-	public static final CreativeTabPlayerBeacons tabPlayerBeacons = new CreativeTabPlayerBeacons();
+	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs("playerbeacons") {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public Item getTabIconItem() {
+            return Item.getItemFromBlock(PlayerBeacons.playerBeaconBlock);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        @SuppressWarnings("unchecked")
+        public void displayAllReleventItems(List list) {
+            super.displayAllReleventItems(list);
+            list.add(PlayerBeacons.researchNotes);
+        }
+    };
+
 	public static Config config;
 	public static final Logger logger = LogManager.getLogger("PlayerBeacons");
 
@@ -49,6 +70,7 @@ public class PlayerBeacons {
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();
 	public static final RedCrystalItem redCrystalItem = new RedCrystalItem();
     public static final PlayerBaconItem playerBaconItem = new PlayerBaconItem();
+    public static final ItemStack researchNotes = makeResearchNotes();
 
     public static final Block playerBeaconBlock = new BlockPlayerBeacon();
     public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
@@ -89,25 +111,15 @@ public class PlayerBeacons {
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
         new CorruptionPotion(config.corruptionPotionID);
 
-		ItemStack itemStack = makeResearchNotes();
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);
-		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
+		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
 		info = ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST);
-		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
-		info = ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST);
-		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
-		info = ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST);
-		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
-		info = ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH);
-		info.addItem(new WeightedRandomChestContent(itemStack, 1, 1, 5));
+		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
+		info = ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY);
+		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
 
         eventChannel.register(new PacketEventHandler());
 	}
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent e) {
-        FMLInterModComms.sendMessage("Waila", "register", "playerbeacons.client.HUDPlayerBeacon.callbackRegister");
-    }
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
@@ -119,6 +131,8 @@ public class PlayerBeacons {
 		else {
 			registerRecipes();
 		}
+
+        FMLInterModComms.sendMessage("Waila", "register", "playerbeacons.client.HUDPlayerBeacon.callbackRegister");
 	}
 
 	@Mod.EventHandler
@@ -144,7 +158,7 @@ public class PlayerBeacons {
 		GameRegistry.addShapedRecipe(new ItemStack(beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Items.ender_eye), 'S', new ItemStack(Items.iron_sword), 'L', new ItemStack(Items.leather), 'I', new ItemStack(Items.iron_ingot));
 	}
 
-	private ItemStack makeResearchNotes() {
+	private static ItemStack makeResearchNotes() {
 		NBTTagCompound nbtTagCompound = new NBTTagCompound();
 		nbtTagCompound.setString("author", "Dr. Prof. \u00a7kNexans");
 		nbtTagCompound.setString("title", "Research Notes");
