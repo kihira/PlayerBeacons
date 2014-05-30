@@ -1,5 +1,7 @@
-package kihira.playerbeacons.api.throttle;
+package kihira.playerbeacons.api.crystal;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -10,6 +12,7 @@ import java.util.List;
  */
 public interface ICrystal {
 
+    @SideOnly(Side.CLIENT)
 	public double[] getRGBA();
 
     /**

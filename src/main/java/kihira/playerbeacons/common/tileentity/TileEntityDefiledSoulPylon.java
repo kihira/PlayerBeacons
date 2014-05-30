@@ -1,7 +1,7 @@
 package kihira.playerbeacons.common.tileentity;
 
-import kihira.playerbeacons.api.throttle.ICrystal;
-import kihira.playerbeacons.api.throttle.ICrystalContainer;
+import kihira.playerbeacons.api.crystal.ICrystal;
+import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

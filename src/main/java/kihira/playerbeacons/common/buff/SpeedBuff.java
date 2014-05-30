@@ -1,5 +1,7 @@
 package kihira.playerbeacons.common.buff;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,20 +12,17 @@ import net.minecraft.util.MathHelper;
 public class SpeedBuff extends Buff {
 
 	public SpeedBuff() {
-		super("speed", 10, 1, 1);
+		super("speed");
 	}
 
 	@Override
-	public void doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+	public float doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
 		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
-	}
-
-	@Override
-	public float getCorruption(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-        return MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) * this.corruptionGenerated;
+        return MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) * 10;
 	}
 
     @Override
+    @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
         return new float[] {0.5F, 0.5F, 1F, 1F};
     }

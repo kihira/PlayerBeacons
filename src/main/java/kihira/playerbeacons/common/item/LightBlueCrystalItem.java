@@ -1,5 +1,7 @@
 package kihira.playerbeacons.common.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +22,7 @@ public class LightBlueCrystalItem extends CrystalItem {
 	}
 
 	@Override
+    @SideOnly(Side.CLIENT)
     public double[] getRGBA() {
         return new double[]{0.5, 0.5, 1, 1};
     }
@@ -27,7 +30,6 @@ public class LightBlueCrystalItem extends CrystalItem {
     @Override
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
         Buff buff = Buff.buffs.get("speed");
-        buff.doBuff(player, beacon, crystalCount);
-        return buff.getCorruption(player, beacon, crystalCount);
+        return buff.doBuff(player, beacon, crystalCount);
     }
 }
