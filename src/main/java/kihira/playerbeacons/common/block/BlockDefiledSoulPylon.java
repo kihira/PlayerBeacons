@@ -1,7 +1,7 @@
 package kihira.playerbeacons.common.block;
 
+import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.common.item.CrystalItem;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -91,7 +91,7 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 			if (!tileEntityDefiledSoulPylon.isPylonBase() && !tileEntityDefiledSoulPylon.isPylonTop()) {
 				ItemStack itemStack = entityPlayer.getCurrentEquippedItem();
 				if (itemStack != null) {
-					if (itemStack.getItem() instanceof CrystalItem) {
+					if (itemStack.getItem() instanceof ICrystal) {
 						if (tileEntityDefiledSoulPylon.getStackInSlot(0) == null) {
 							tileEntityDefiledSoulPylon.setInventorySlotContents(0, entityPlayer.getCurrentEquippedItem());
 							tileEntityDefiledSoulPylon.updateContainingBlockInfo();
@@ -114,6 +114,18 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 		}
 		return false;
 	}
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbourBlock) {
+        TileEntityDefiledSoulPylon soulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
+        if (soulPylon.isPylonTop() || soulPylon.isPylonBase()) {
+            ItemStack itemStack = soulPylon.getStackInSlotOnClosing(0);
+            if (itemStack != null) {
+                world.spawnEntityInWorld(new EntityItem(world, x, y, z, itemStack));
+                soulPylon.setInventorySlotContents(0, null);
+            }
+        }
+    }
 
     @Override
 	public TileEntity createNewTileEntity(World world, int var2) {

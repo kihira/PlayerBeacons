@@ -69,6 +69,9 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalCo
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
+        if (i == 0) {
+            return this.crystal;
+        }
         return null;
 	}
 
