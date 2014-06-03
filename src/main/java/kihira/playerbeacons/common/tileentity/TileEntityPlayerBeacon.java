@@ -29,11 +29,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
@@ -168,7 +166,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
                 for (ICrystal crystal : this.crystalMultiset.elementSet()) {
                     float corruptionChange = crystal.doEffects(entityPlayer, this, this.crystalMultiset.count(crystal));
-                    this.setCorruption(this.getCorruption() + corruptionChange, true);
+                    this.setCorruption(this.getCorruption() + corruptionChange);
                     PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d), changing corruption by %d", crystal.getClass().toString(), this.crystalMultiset.count(crystal), corruptionChange);
                 }
             }
@@ -181,7 +179,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     }
 
     @Override
-    public void setCorruption(float newCorruption, boolean adjustLevel) {
+    public void setCorruption(float newCorruption) {
         if (newCorruption != this.corruption) {
             EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
             if (player != null) {
@@ -190,11 +188,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             }
 
             this.corruption = Math.max(0, newCorruption);
-            if (adjustLevel) {
-                if (newCorruption >= 5000) this.corruptionLevel = 1;
-                else if (newCorruption >= 10000) this.corruptionLevel = 2;
-                else this.corruptionLevel = 0;
-            }
         }
     }
 
@@ -239,7 +232,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         }
     }
 
-    @Override
+/*    @Override
     public void applyCorruption() {
         EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
         if (player != null) {
@@ -261,7 +254,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             }
             if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));
         }
-    }
+    }*/
 
     @Override
     public void updateEntity() {

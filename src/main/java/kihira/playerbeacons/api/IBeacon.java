@@ -2,6 +2,7 @@ package kihira.playerbeacons.api;
 
 import net.minecraft.tileentity.TileEntity;
 
+//TODO convert to scala?
 public interface IBeacon {
 
     public String getOwner();
@@ -10,9 +11,7 @@ public interface IBeacon {
 
     public float getCorruption();
 
-    public void setCorruption(float newCorruption, boolean adjustLevel);
+    public void setCorruption(float newCorruption);
 
     public TileEntity getTileEntity();
-
-    public void applyCorruption();
 }

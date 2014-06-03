@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -26,6 +27,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -113,6 +115,11 @@ public class EventHandler {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload e) {
+        TickHandler.activeCorruptionEffects.remove(e.world);
     }
 
 	@SubscribeEvent

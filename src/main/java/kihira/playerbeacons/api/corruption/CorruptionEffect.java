@@ -62,6 +62,17 @@ public abstract class CorruptionEffect {
         return beacon.getCorruption() >= this.corruptionUnlock;
     }
 
+    /**
+     * Whilst this effect is active, this is called to check if it should keep running.
+     * @param player The player
+     * @param beacon The beacon
+     * @param world The world of the beacon
+     * @return Whether the effect should continue to be applied
+     */
+    public boolean shouldContinue(EntityPlayer player, IBeacon beacon, World world) {
+        return beacon.getCorruption() <= this.corruptionUnlock;
+    }
+
     public String getUnlocalisedName() {
         return "corruption." + this.name + ".name";
     }
