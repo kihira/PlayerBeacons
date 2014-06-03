@@ -1,5 +1,7 @@
 package kihira.playerbeacons.common.block;
 
+import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.IBeaconBase;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -7,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockDefiledSoulConductor extends Block {
+public class BlockDefiledSoulConductor extends Block implements IBeaconBase {
 
 	public BlockDefiledSoulConductor() {
 		super(Material.rock);
@@ -27,4 +29,9 @@ public class BlockDefiledSoulConductor extends Block {
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
 		return !(entity instanceof EntityDragon);
 	}
+
+    @Override
+    public boolean isValidForBeacon(IBeacon beacon) {
+        return true;
+    }
 }

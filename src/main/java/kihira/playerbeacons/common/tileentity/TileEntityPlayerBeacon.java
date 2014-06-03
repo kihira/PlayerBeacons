@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.IBeaconBase;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
@@ -121,8 +122,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         //Check 5x5 underneath and above
         for (int i = -2; i <= 2; i++) {
             for (int j = -2; j <= 2; j++) {
-                if (this.worldObj.getBlock(this.xCoord + i, this.yCoord - 1, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock) return false;
-                if (this.worldObj.getBlock(this.xCoord + i, this.yCoord + 3, this.zCoord + j) != PlayerBeacons.defiledSoulConductorBlock) return false;
+                if (!(this.worldObj.getBlock(this.xCoord + i, this.yCoord - 1, this.zCoord + j) instanceof IBeaconBase)) return false;
+                if (!(this.worldObj.getBlock(this.xCoord + i, this.yCoord + 3, this.zCoord + j) instanceof IBeaconBase)) return false;
             }
         }
         //Check pylons
@@ -144,7 +145,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                 boolean flag = true;
                 for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
                     for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-                        if (!(this.worldObj.getBlock(k, j, l) == PlayerBeacons.defiledSoulConductorBlock)) {
+                        if (!(this.worldObj.getBlock(k, j, l) instanceof IBeaconBase) || !((IBeaconBase) this.worldObj.getBlock(k, j, l)).isValidForBeacon(this)) {
                             flag = false;
                             break;
                         }
