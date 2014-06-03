@@ -1,9 +1,6 @@
 package kihira.playerbeacons.client.render;
 
-import kihira.playerbeacons.common.item.BrownCrystalItem;
-import kihira.playerbeacons.common.item.GreenCrystalItem;
-import kihira.playerbeacons.common.item.LightBlueCrystalItem;
-import kihira.playerbeacons.common.item.RedCrystalItem;
+import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -15,20 +12,12 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
 	private final ModelPylonBase modelPylonBase;
 	private final ModelPylon modelPylon;
-	private final ModelCrystalPort modelCrystalPortDefault;
-	private final ModelCrystalPort modelCrystalPortBrown;
-	private final ModelCrystalPort modelCrystalPortGreen;
-	private final ModelCrystalPort modelCrystalPortLightBlue;
-	private final ModelCrystalPort modelCrystalPortBlack;
+	private final ModelCrystalPort modelCrystalPort;
 
 	public BlockDefiledSoulPylonRenderer() {
 		modelPylon = new ModelPylon();
 		modelPylonBase = new ModelPylonBase();
-		modelCrystalPortDefault = new ModelCrystalPort(0);
-		modelCrystalPortBrown = new ModelCrystalPort(24);
-		modelCrystalPortGreen = new ModelCrystalPort(6);
-		modelCrystalPortLightBlue = new ModelCrystalPort(12);
-		modelCrystalPortBlack = new ModelCrystalPort(18);
+		modelCrystalPort = new ModelCrystalPort();
 	}
 
 	@Override
@@ -36,7 +25,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) tileentity;
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		if (tileEntityDefiledSoulPylon.isPylonBase()) {
@@ -44,34 +33,36 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
 			bindTexture(ClientProxy.pylonTextureBase);
-			modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            this.modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		else if (tileEntityDefiledSoulPylon.isPylonTop()) {
 			GL11.glTranslated(x + 0.5d, y - 0.5d, z + 0.5d);
 			GL11.glRotatef(0F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
 			bindTexture(ClientProxy.pylonTextureBase);
-			modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            this.modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		else {
 			GL11.glTranslated(x + 0.5d, y + 1.5001d, z + 0.5d);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			GL11.glScalef(1F, 1F, 1F);
+            //Render the pylon
 			bindTexture(ClientProxy.pylonTexture);
-			modelPylon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            this.modelPylon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            //Then the crystal port
+            this.bindTexture(ClientProxy.pylonCrystalPortTexture);
+            this.modelCrystalPort.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            //Then the overlay
 			ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-			bindTexture(ClientProxy.pylonCrystalPortTexture);
-			if (itemStack != null) {
-				//TODO Update this to new API. Use similar system to potions/thaumcraft aspects?
-				if (itemStack.getItem() instanceof BrownCrystalItem) modelCrystalPortBrown.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof GreenCrystalItem) modelCrystalPortGreen.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof LightBlueCrystalItem) modelCrystalPortLightBlue.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else if (itemStack.getItem() instanceof RedCrystalItem) modelCrystalPortBlack.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-				else modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+			if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
+                double[] rgba = ((ICrystal) itemStack.getItem()).getRGBA();
+				GL11.glColor4d(rgba[0], rgba[1], rgba[2], rgba[3]);
 			}
-			else {
-				modelCrystalPortDefault.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-			}
+            else {
+                GL11.glColor4d(0.8F, 0.8F, 0.8F, 1F);
+            }
+            this.bindTexture(ClientProxy.pylonCrystalPortOverlayTexture);
+            this.modelCrystalPort.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_CULL_FACE);

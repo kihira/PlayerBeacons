@@ -3,8 +3,8 @@ package kihira.playerbeacons.proxy;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.client.render.*;
+import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -14,16 +14,14 @@ import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-import java.util.Random;
-
 public class ClientProxy extends CommonProxy {
 
 	public static final ResourceLocation playerBeaconTexture = new ResourceLocation("playerbeacon", "textures/model/playerbeacon.png");
 	public static final ResourceLocation pylonTextureBase = new ResourceLocation("playerbeacon", "textures/model/pylonbase.png");
 	public static final ResourceLocation pylonTexture = new ResourceLocation("playerbeacon", "textures/model/pylon.png");
 	public static final ResourceLocation pylonCrystalPortTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports.png");
+    public static final ResourceLocation pylonCrystalPortOverlayTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports_overlay.png");
 	public static final ResourceLocation santaHatTexture = new ResourceLocation("playerbeacon", "textures/model/santahat.png");
-    private Random rand = new Random();
 
     @Override
 	public void registerRenderers() {

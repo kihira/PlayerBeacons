@@ -11,27 +11,27 @@ public class ModelCrystalPort extends ModelBase {
 	private final ModelRenderer crystalport3;
 	private final ModelRenderer crystalport4;
 
-	public ModelCrystalPort(int textureYOffset) {
+	public ModelCrystalPort() {
 
 		textureWidth = 64;
 		textureHeight = 32;
 
-		crystalport1 = new ModelRenderer(this, 0, textureYOffset);
+		crystalport1 = new ModelRenderer(this, 0, 0);
 		crystalport1.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport1.setRotationPoint(0F, 13F, 4.5F);
 		crystalport1.mirror = true;
 		setRotation(crystalport1, 0F, 0F, 0F);
-		crystalport2 = new ModelRenderer(this, 0, textureYOffset);
+		crystalport2 = new ModelRenderer(this, 0, 0);
 		crystalport2.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport2.setRotationPoint(4.5F, 13F, 0F);
 		crystalport2.mirror = true;
 		setRotation(crystalport2, 0F, 1.570796F, 0F);
-		crystalport3 = new ModelRenderer(this, 0, textureYOffset);
+		crystalport3 = new ModelRenderer(this, 0, 0);
 		crystalport3.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport3.setRotationPoint(0F, 13F, -4.5F);
 		crystalport3.mirror = true;
 		setRotation(crystalport3, 0F, 3.141593F, 0F);
-		crystalport4 = new ModelRenderer(this, 0, textureYOffset);
+		crystalport4 = new ModelRenderer(this, 0, 0);
 		crystalport4.addBox(-2F, 0F, -0.5F, 4, 5, 1);
 		crystalport4.setRotationPoint(-4.5F, 13F, 0F);
 		crystalport4.mirror = true;

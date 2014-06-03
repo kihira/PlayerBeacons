@@ -1,11 +1,14 @@
 package kihira.playerbeacons.client.render;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	private final ModelPylon model;
@@ -13,7 +16,7 @@ public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	public ItemDefiledSoulPylonRenderer() {
 		model = new ModelPylon();
-		modelCrystalPortDefault = new ModelCrystalPort(0);
+		modelCrystalPortDefault = new ModelCrystalPort();
 	}
 
 	@Override
