@@ -116,7 +116,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         super.invalidate();
     }
 
-    /*
     private boolean isCloneConstruct() {
         if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) return false;
         //Check 5x5 underneath and above
@@ -135,7 +134,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         }
         return true;
     }
-*/
 
     public void checkBeacon() {
         this.levels = 0;

@@ -1,10 +1,12 @@
 package kihira.playerbeacons.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -21,7 +23,6 @@ import kihira.playerbeacons.common.potion.CorruptionPotion;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.EventHandler;
-import kihira.playerbeacons.common.util.ThaumcraftHandler;
 import kihira.playerbeacons.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -104,6 +105,7 @@ public class PlayerBeacons {
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
 
 		registerBuffs();
+        registerRecipes();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
         FMLCommonHandler.instance().bus().register(new TickHandler());
 		proxy.registerRenderers();
@@ -123,15 +125,6 @@ public class PlayerBeacons {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		//Thaumcraft Integration
-		if (Loader.isModLoaded("Thaumcraft") && config.enableThaumcraft) {
-			logger.info("Thaumcraft detected, enabling integration");
-			new ThaumcraftHandler();
-		}
-		else {
-			registerRecipes();
-		}
-
         FMLInterModComms.sendMessage("Waila", "register", "playerbeacons.client.HUDPlayerBeacon.callbackRegister");
 	}
 
@@ -148,8 +141,8 @@ public class PlayerBeacons {
 	}
 
 	private void registerRecipes() {
-		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulConductorBlock, 4), "OOO", "MPM", "OOO", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(Items.ender_eye), 'M', new ItemStack(Blocks.mycelium));
-		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulPylonBlock, 2), "OPO", "G G", "OPO", 'O', new ItemStack(defiledSoulConductorBlock), 'P', new ItemStack(Items.ender_eye), 'G', new ItemStack(Items.gold_ingot));
+		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulConductorBlock, 6), "OOO", "MPM", "OOO", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(Items.ender_eye), 'M', new ItemStack(Blocks.mycelium));
+		GameRegistry.addShapedRecipe(new ItemStack(defiledSoulPylonBlock, 3), "OPO", "G G", "OPO", 'O', new ItemStack(defiledSoulConductorBlock), 'P', new ItemStack(Items.ender_eye), 'G', new ItemStack(Items.gold_ingot));
 		GameRegistry.addShapedRecipe(new ItemStack(playerBeaconBlock), "PNP", "GBG", "OOO", 'O', new ItemStack(defiledSoulConductorBlock), 'P', new ItemStack(Items.ender_eye), 'G', new ItemStack(Items.gold_ingot), 'N', new ItemStack(Items.nether_star), 'B', new ItemStack(Blocks.beacon));
 		GameRegistry.addShapedRecipe(new ItemStack(lightBlueCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 12), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(brownCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 3), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
