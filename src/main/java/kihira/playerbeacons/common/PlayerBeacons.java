@@ -14,6 +14,7 @@ import kihira.playerbeacons.common.buff.HasteBuff;
 import kihira.playerbeacons.common.buff.JumpBuff;
 import kihira.playerbeacons.common.buff.ResistanceBuff;
 import kihira.playerbeacons.common.buff.SpeedBuff;
+import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
 import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.potion.CorruptionPotion;
@@ -73,6 +74,8 @@ public class PlayerBeacons {
     public static final Block playerBeaconBlock = new BlockPlayerBeacon();
     public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
     public static final Block defiledSoulPylonBlock = new BlockDefiledSoulPylon();
+
+    private static final EndermanAggroCorruption endermanCorr = new EndermanAggroCorruption();
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
