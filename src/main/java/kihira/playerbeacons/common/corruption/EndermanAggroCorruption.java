@@ -24,7 +24,7 @@ public class EndermanAggroCorruption extends CorruptionEffect {
     }
 
     @Override
-    public void finish(EntityPlayer player) {
+    public void finish(EntityPlayer player, IBeacon beacon) {
         player.removePotionEffect(PlayerBeacons.config.corruptionPotionID);
     }
 }
