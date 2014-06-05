@@ -85,6 +85,17 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     }
 
     @Override
+    public boolean isBeaconValid() {
+        return this.checkBeacon();
+    }
+
+    @Override
+    public void update() {
+        this.calcPylons();
+        this.doEffects();
+    }
+
+    @Override
     public String getOwner() {
         return this.owner;
     }
@@ -134,7 +145,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         return true;
     }
 
-    public void checkBeacon() {
+    public boolean checkBeacon() {
         this.levels = 0;
         if (!this.getOwner().equals(" ")) {
             for (int i = 1; i <= 4; this.levels = i++) {
@@ -152,6 +163,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                 if (!flag) break;
             }
         }
+        return this.levels > 0;
 /*		AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord), (double) (this.yCoord + 1), (double) (this.zCoord));
 		List entities = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
 		if ((entities != null) && (this.isCloneConstruct())) {

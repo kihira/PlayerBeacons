@@ -6,7 +6,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import kihira.playerbeacons.api.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
-import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.BeaconDataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -16,23 +15,23 @@ import java.util.Iterator;
 
 public class TickHandler {
 
-    public static final  HashMap<World, Multimap<EntityPlayer, CorruptionEffect>> activeCorruptionEffects = new HashMap<World, Multimap<EntityPlayer, CorruptionEffect>>();
+    public static final HashMap<World, Multimap<EntityPlayer, CorruptionEffect>> activeCorruptionEffects = new HashMap<World, Multimap<EntityPlayer, CorruptionEffect>>();
 
     private short cycle = 0;
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.side.isServer() && event.player.worldObj.getTotalWorldTime() % 20 == 0) { //TODO every tick
-            TileEntityPlayerBeacon playerBeacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.worldObj.provider.dimensionId); //TODO switch to IBeacon
-            if (playerBeacon != null && playerBeacon.getWorldObj().provider.dimensionId == event.player.worldObj.provider.dimensionId) {
-                playerBeacon.checkBeacon();
+            IBeacon playerBeacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension); //TODO switch to IBeacon
+            if (playerBeacon != null && playerBeacon.getTileEntity().getWorldObj().provider.dimensionId == event.player.dimension) {
+                playerBeacon.isBeaconValid();
                 if (this.cycle % 2 == 0) {
-                    if (!PlayerBeacons.config.disableCorruption) {
-                        playerBeacon.calcPylons();
-                        this.calculateCorruption(event.player, playerBeacon, event.player.worldObj);
+                    playerBeacon.update();
+                    this.calculateCorruption(event.player, playerBeacon, event.player.worldObj);
+
+                    if (this.cycle % 4 == 0) {
+                        event.player.worldObj.markBlockForUpdate(playerBeacon.getTileEntity().xCoord, playerBeacon.getTileEntity().yCoord, playerBeacon.getTileEntity().zCoord);
                     }
-                    if (!playerBeacon.getOwner().equals(" ")) playerBeacon.doEffects();
-                    if (this.cycle % 4 == 0) event.player.worldObj.markBlockForUpdate(playerBeacon.xCoord, playerBeacon.yCoord, playerBeacon.zCoord);
                 }
                 if (this.cycle >= 32000) this.cycle = 0;
             }

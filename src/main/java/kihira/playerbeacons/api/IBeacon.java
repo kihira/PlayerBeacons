@@ -5,6 +5,10 @@ import net.minecraft.tileentity.TileEntity;
 //TODO convert to scala?
 public interface IBeacon {
 
+    public boolean isBeaconValid();
+
+    public void update();
+
     public String getOwner();
 
     public int getLevels();

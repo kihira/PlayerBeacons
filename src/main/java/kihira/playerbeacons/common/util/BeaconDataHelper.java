@@ -1,6 +1,7 @@
 package kihira.playerbeacons.common.util;
 
-import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,15 +13,15 @@ public class BeaconDataHelper {
         return beaconData.hasKey(String.valueOf(dimID));
     }
 
-    public static void setBeaconForDim(EntityPlayer player, TileEntityPlayerBeacon playerBeacon, int dimID) {
+    public static void setBeaconForDim(EntityPlayer player, IBeacon playerBeacon, int dimID) {
         if (player != null) {
             String dimKey = String.valueOf(dimID);
             NBTTagCompound beaconData = getBeaconDataTag(player);
             NBTTagCompound worldBeaconData = beaconData.getCompoundTag(dimKey);
             if (playerBeacon != null) {
-                worldBeaconData.setInteger("xPos", playerBeacon.xCoord);
-                worldBeaconData.setInteger("yPos", playerBeacon.yCoord);
-                worldBeaconData.setInteger("zPos", playerBeacon.zCoord);
+                worldBeaconData.setInteger("xPos", playerBeacon.getTileEntity().xCoord);
+                worldBeaconData.setInteger("yPos", playerBeacon.getTileEntity().yCoord);
+                worldBeaconData.setInteger("zPos", playerBeacon.getTileEntity().zCoord);
 
                 //Set tag just incase it didn't alredy exist
                 beaconData.setTag(dimKey, worldBeaconData);
@@ -31,7 +32,7 @@ public class BeaconDataHelper {
         }
     }
 
-    public static TileEntityPlayerBeacon getBeaconForDim(EntityPlayer player, int dimID) {
+    public static IBeacon getBeaconForDim(EntityPlayer player, int dimID) {
         if (player != null) {
             NBTTagCompound beaconData = getBeaconDataTag(player);
             String dimKey = String.valueOf(dimID);
@@ -42,9 +43,9 @@ public class BeaconDataHelper {
                 int y = worldBeaconData.getInteger("yPos");
                 int z = worldBeaconData.getInteger("zPos");
                 TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
-                if (tileEntity instanceof TileEntityPlayerBeacon) return (TileEntityPlayerBeacon) tileEntity;
+                if (tileEntity instanceof IBeacon) return (IBeacon) tileEntity;
                 else {
-                    //Beacon no longer exists, remove it!
+                    PlayerBeacons.logger.warn("Couldn't find beacon for %s in %s at %s, %s, %s!", player.getCommandSenderName(), dimID, x, y, z);
                     setBeaconForDim(player, null, dimID);
                 }
             }
