@@ -1,6 +1,6 @@
 package kihira.playerbeacons.common.corruption;
 
-import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;

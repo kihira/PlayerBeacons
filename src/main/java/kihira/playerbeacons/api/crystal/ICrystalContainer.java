@@ -1,16 +1,8 @@
 package kihira.playerbeacons.api.crystal;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
-
-import java.util.List;
 
 /**
- * This is implemented by TileEntities that can store other IThrottle items/blocks
+ * This is implemented by TileEntities that can store other ICrystal items/blocks
  */
-public interface ICrystalContainer extends IInventory {
-
-    public List<ICrystal> getCrystalList();
-
-    public TileEntity getTileEntity();
-}
+public interface ICrystalContainer extends IInventory {}

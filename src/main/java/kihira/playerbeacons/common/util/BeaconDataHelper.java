@@ -1,6 +1,6 @@
 package kihira.playerbeacons.common.util;
 
-import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

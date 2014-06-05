@@ -131,37 +131,39 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int xPos, int yPos, int zPos, Random rand) {
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(xPos, yPos, zPos);
-        //Calculate levels on the client
-        playerBeacon.checkBeacon();
-        if (!playerBeacon.getOwner().equals(" ") && playerBeacon.getLevels() > 0) {
-            int levels = playerBeacon.getLevels();
+        int levels = playerBeacon.getLevels();
+
+        if (!playerBeacon.isBeaconValid() && levels > 0) {
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels);
-                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer.getCrystalList(), new Random());
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer, new Random());
             }
             for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels);
-                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos - levels, crystalContainer.getCrystalList(), new Random());
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos - levels, crystalContainer, new Random());
             }
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels);
-                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer.getCrystalList(), new Random());
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer, new Random());
             }
             for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels);
-                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer.getCrystalList(), new Random());
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer, new Random());
             }
 		}
 	}
 
-    private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, List<ICrystal> crystalList, Random rand) {
-        if (crystalList != null && !crystalList.isEmpty()) {
-            for (ICrystal crystal : crystalList) {
-                List<String> buffList = crystal.getAffectedBuffs();
-                if (buffList != null && !buffList.isEmpty()) {
-                    for (String buff : buffList) {
-                        for (int j = 0; j < 2; j++) {
-                            Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
+    private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, ICrystalContainer crystalContainer, Random rand) {
+        if (crystalContainer != null && crystalContainer.getSizeInventory() > 0) {
+            for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {
+                ItemStack itemStack = crystalContainer.getStackInSlot(i);
+                if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
+                    List<String> buffList = ((ICrystal) itemStack.getItem()).getAffectedBuffs();
+                    if (buffList != null && !buffList.isEmpty()) {
+                        for (String buff : buffList) {
+                            for (int j = 0; j < 2; j++) {
+                                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
+                            }
                         }
                     }
                 }

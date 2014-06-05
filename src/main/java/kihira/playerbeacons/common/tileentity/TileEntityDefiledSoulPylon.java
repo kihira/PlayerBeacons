@@ -11,9 +11,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalContainer {
 
 	private ItemStack crystal;
@@ -121,16 +118,4 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalCo
 	public boolean isPylonTop() {
 		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
 	}
-
-    @Override
-    public List<ICrystal> getCrystalList() {
-        List<ICrystal> list = new ArrayList<ICrystal>();
-        if (this.crystal != null) list.add((ICrystal) this.crystal.getItem());
-        return list;
-    }
-
-    @Override
-    public TileEntity getTileEntity() {
-        return this;
-    }
 }

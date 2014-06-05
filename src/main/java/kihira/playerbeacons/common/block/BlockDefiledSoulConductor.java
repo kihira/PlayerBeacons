@@ -1,7 +1,7 @@
 package kihira.playerbeacons.common.block;
 
-import kihira.playerbeacons.api.IBeacon;
-import kihira.playerbeacons.api.IBeaconBase;
+import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -33,5 +33,10 @@ public class BlockDefiledSoulConductor extends Block implements IBeaconBase {
     @Override
     public boolean isValidForBeacon(IBeacon beacon) {
         return true;
+    }
+
+    @Override
+    public float getCorruptionReduction(IBeacon beacon) {
+        return 0;
     }
 }

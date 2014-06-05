@@ -55,7 +55,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
             //Then the overlay
 			ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
 			if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
-                double[] rgba = ((ICrystal) itemStack.getItem()).getRGBA();
+                float[] rgba = ((ICrystal) itemStack.getItem()).getRGBA();
 				GL11.glColor4d(rgba[0], rgba[1], rgba[2], rgba[3]);
 			}
             else {

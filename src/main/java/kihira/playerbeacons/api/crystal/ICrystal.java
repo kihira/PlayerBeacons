@@ -2,7 +2,7 @@ package kihira.playerbeacons.api.crystal;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -12,14 +12,18 @@ import java.util.List;
  */
 public interface ICrystal {
 
+    /**
+     * Returns the colour that should be rendered when in a pylon
+     * @return float array length of 4
+     */
     @SideOnly(Side.CLIENT)
 	public float[] getRGBA();
 
     /**
      * This method is called when the beacon is applying buffs. Return the corruption change made by these effects
-     * @param crystalCount
-     * @param beacon
-     * @return
+     * @param crystalCount The number of crystals detected by the beacon
+     * @param beacon The beacon
+     * @return The corruption change caused by the effects
      */
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount);
 

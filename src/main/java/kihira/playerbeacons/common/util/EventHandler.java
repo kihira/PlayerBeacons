@@ -3,7 +3,7 @@ package kihira.playerbeacons.common.util;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;

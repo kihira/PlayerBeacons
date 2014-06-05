@@ -2,7 +2,7 @@ package kihira.playerbeacons.common.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -23,8 +23,8 @@ public class BrownCrystalItem extends CrystalItem {
 
 	@Override
     @SideOnly(Side.CLIENT)
-	public double[] getRGBA() {
-		return new double[]{0.5, 0.4, 0.3, 1};
+	public float[] getRGBA() {
+		return new float[]{0.5F, 0.4F, 0.3F, 1};
 	}
 
     @Override

@@ -6,8 +6,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
-import kihira.playerbeacons.api.IBeacon;
-import kihira.playerbeacons.api.IBeaconBase;
+import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
@@ -23,6 +23,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -37,6 +38,7 @@ import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
@@ -228,18 +230,16 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     private void getCrystals(int x, int y, int z) {
         ICrystalContainer crystalContainer = (ICrystalContainer) this.worldObj.getTileEntity(x, y, z);
-        List<ICrystal> crystalList = crystalContainer.getCrystalList();
 
-        if (crystalList != null && !crystalList.isEmpty()) {
-            for (ICrystal crystal : crystalList) {
-                this.crystalMultiset.add(crystal);
-                /*
-                if (itemStack.getItemDamage() + 1 >= itemStack.getMaxDamage()) iInventory.setInventorySlotContents(0, new ItemStack(PlayerBeacons.crystalItem));
-                else {
-                    itemStack.setItemDamage(itemStack.getItemDamage() + 1);
-                    iInventory.setInventorySlotContents(i, itemStack);
+        for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {
+            ItemStack itemStack = crystalContainer.getStackInSlot(i);
+            if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
+                if (itemStack.attemptDamageItem(1, new Random())) {
+                    crystalContainer.setInventorySlotContents(i, null);
                 }
-                */
+                else {
+                    this.crystalMultiset.add((ICrystal) itemStack.getItem());
+                }
             }
         }
     }
