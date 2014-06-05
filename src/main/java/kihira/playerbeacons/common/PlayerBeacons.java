@@ -10,10 +10,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.block.*;
-import kihira.playerbeacons.common.buff.HasteBuff;
-import kihira.playerbeacons.common.buff.JumpBuff;
-import kihira.playerbeacons.common.buff.ResistanceBuff;
-import kihira.playerbeacons.common.buff.SpeedBuff;
+import kihira.playerbeacons.common.buff.*;
 import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
 import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
@@ -68,6 +65,7 @@ public class PlayerBeacons {
 	public static final BrownCrystalItem brownCrystalItem = new BrownCrystalItem();
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();
 	public static final RedCrystalItem redCrystalItem = new RedCrystalItem();
+    public static final YellowCrystalItem yellowCrystalItem = new YellowCrystalItem();
     public static final PlayerBaconItem playerBaconItem = new PlayerBaconItem();
     public static final ItemStack researchNotes = makeResearchNotes();
 
@@ -99,6 +97,7 @@ public class PlayerBeacons {
 		GameRegistry.registerItem(brownCrystalItem, "brownCrystalItem");
 		GameRegistry.registerItem(greenCrystalItem, "greenCrystalItem");
 		GameRegistry.registerItem(redCrystalItem, "redCrystalItem");
+        GameRegistry.registerItem(yellowCrystalItem, "yellowCrystalItem");
         GameRegistry.registerItem(playerBaconItem, "playerBaconItem");
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
@@ -143,6 +142,7 @@ public class PlayerBeacons {
 		new JumpBuff();
 		new HasteBuff();
 		new ResistanceBuff();
+        new HealthBoostBuff();
 	}
 
 	private void registerRecipes() {

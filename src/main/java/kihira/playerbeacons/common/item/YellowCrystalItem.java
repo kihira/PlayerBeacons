@@ -9,27 +9,27 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LightBlueCrystalItem extends CrystalItem {
-	public LightBlueCrystalItem() {
-        this.setUnlocalizedName("lightBlueCrystalItem");
-	}
+public class YellowCrystalItem extends CrystalItem {
 
-	@Override
-	public List<String> getAffectedBuffs() {
-		List<String> list = new ArrayList<String>();
-		list.add("speed");
-		return list;
-	}
+    public YellowCrystalItem() {
+        this.setUnlocalizedName("yellowCrystalItem");
+    }
 
-	@Override
+    @Override
+    public List<String> getAffectedBuffs() {
+        List<String> list = new ArrayList<String>();
+        list.add("healthBoost");
+        return list;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
-        return new float[]{0.5F, 0.5F, 1, 1};
+        return new float[]{0.9F, 0.8F, 0.1F, 1};
     }
 
     @Override
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
-        Buff buff = Buff.buffs.get("speed");
-        return buff.doBuff(player, beacon, crystalCount);
+        return Buff.buffs.get("healthBoost").doBuff(player, beacon, crystalCount);
     }
 }

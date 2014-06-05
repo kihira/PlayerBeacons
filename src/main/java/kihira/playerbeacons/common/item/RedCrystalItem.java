@@ -23,8 +23,8 @@ public class RedCrystalItem extends CrystalItem {
 
 	@Override
     @SideOnly(Side.CLIENT)
-	public double[] getRGBA() {
-		return new double[]{0.5, 0, 0, 1};
+	public float[] getRGBA() {
+		return new float[]{0.5F, 0, 0, 1};
 	}
 
     @Override

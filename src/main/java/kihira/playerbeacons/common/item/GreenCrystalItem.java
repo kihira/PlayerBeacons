@@ -23,13 +23,12 @@ public class GreenCrystalItem extends CrystalItem {
 
 	@Override
     @SideOnly(Side.CLIENT)
-	public double[] getRGBA() {
-		return new double[]{0.45, 0.6, 0.45, 1};
+	public float[] getRGBA() {
+		return new float[]{0.45F, 0.6F, 0.45F, 1};
 	}
 
     @Override
     public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
-        Buff buff = Buff.buffs.get("jump");
-        return buff.doBuff(player, beacon, crystalCount);
+        return Buff.buffs.get("jump").doBuff(player, beacon, crystalCount);
     }
 }

@@ -57,7 +57,7 @@ public class CrystalItem extends Item implements ICrystal {
 	@Override
 	public int getColorFromItemStack(ItemStack itemStack, int par2) {
 		int i = 0;
-		double[] rgba = this.getRGBA();
+        float[] rgba = this.getRGBA();
         if (rgba != null && rgba.length == 4) {
             i = i | ((int) (rgba[3] * 255) << 24);
             i = i | ((int) (rgba[0] * 255) << 16);
@@ -75,8 +75,8 @@ public class CrystalItem extends Item implements ICrystal {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public double[] getRGBA() {
-        return new double[] {1, 1, 1, 1};
+    public float[] getRGBA() {
+        return new float[] {1, 1, 1, 1};
     }
 
     @Override

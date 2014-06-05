@@ -1,5 +1,6 @@
 package kihira.playerbeacons.common;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -42,7 +43,7 @@ public class TickHandler {
     }
 
     private void calculateCorruption(EntityPlayer player, IBeacon beacon, World world) {
-        Multimap<EntityPlayer, CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.get(world);
+        Multimap<EntityPlayer, CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.containsKey(world) ? activeCorruptionEffects.get(world) : HashMultimap.<EntityPlayer, CorruptionEffect>create();
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {
             if (!playerCurrentEffects.containsEntry(player, corruptionEffect) && corruptionEffect.shouldActivate(player, beacon, world)) {
@@ -52,15 +53,17 @@ public class TickHandler {
         }
 
         //Do the effects and remove any needed
-        Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.get(player).iterator();
-        while (corruptionEffects.hasNext()) {
-            CorruptionEffect corruptionEffect = corruptionEffects.next();
-            if (corruptionEffect.shouldContinue(player, beacon, world)) {
-                corruptionEffect.onUpdate(player, beacon);
-            }
-            else {
-                corruptionEffect.finish(player, beacon);
-                corruptionEffects.remove();
+        if (playerCurrentEffects.containsKey(player)) {
+            Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.get(player).iterator();
+            while (corruptionEffects.hasNext()) {
+                CorruptionEffect corruptionEffect = corruptionEffects.next();
+                if (corruptionEffect.shouldContinue(player, beacon, world)) {
+                    corruptionEffect.onUpdate(player, beacon);
+                }
+                else {
+                    corruptionEffect.finish(player, beacon);
+                    corruptionEffects.remove();
+                }
             }
         }
 

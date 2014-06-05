@@ -13,7 +13,7 @@ import java.util.List;
 public interface ICrystal {
 
     @SideOnly(Side.CLIENT)
-	public double[] getRGBA();
+	public float[] getRGBA();
 
     /**
      * This method is called when the beacon is applying buffs. Return the corruption change made by these effects
