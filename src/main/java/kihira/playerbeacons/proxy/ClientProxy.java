@@ -21,7 +21,9 @@ public class ClientProxy extends CommonProxy {
 	public static final ResourceLocation pylonTexture = new ResourceLocation("playerbeacon", "textures/model/pylon.png");
 	public static final ResourceLocation pylonCrystalPortTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports.png");
     public static final ResourceLocation pylonCrystalPortOverlayTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports_overlay.png");
-	public static final ResourceLocation santaHatTexture = new ResourceLocation("playerbeacon", "textures/model/santahat.png");
+	//public static final ResourceLocation santaHatTexture = new ResourceLocation("playerbeacon", "textures/model/santahat.png");
+
+    public static float playerCorruption = 0F;
 
     @Override
 	public void registerRenderers() {
@@ -37,7 +39,6 @@ public class ClientProxy extends CommonProxy {
         TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
 		BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
-		//MinecraftForgeClient.registerItemRenderer(PlayerBeacons.config.defiledSoulPylonBlockID, new ItemDefiledSoulPylonRenderer());
 	}
 
     @Override

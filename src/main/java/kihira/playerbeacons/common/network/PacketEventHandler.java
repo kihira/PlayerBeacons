@@ -16,9 +16,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 import java.util.Random;
 
@@ -55,12 +54,17 @@ public class PacketEventHandler {
         if (id == Message.CORRUPTION.id) {
             String playerName = ByteBufUtils.readUTF8String(payload);
             float corr = payload.readFloat();
-            World world = Minecraft.getMinecraft().theWorld;
+
+            if (Minecraft.getMinecraft().thePlayer.getCommandSenderName().equals(playerName)) {
+                ClientProxy.playerCorruption = corr;
+            }
+
+/*            World world = Minecraft.getMinecraft().theWorld;
             EntityPlayer player = world.getPlayerEntityByName(playerName);
 
             if (player != null) {
                 PlayerBeacons.proxy.corruptRandomPixels(player, corr);
-            }
+            }*/
         }
     }
 

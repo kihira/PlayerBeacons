@@ -7,8 +7,10 @@ import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,8 +23,11 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -36,6 +41,7 @@ public class EventHandler {
 
 	private final Random random = new Random();
 	private long spawnCooldown = System.currentTimeMillis();
+    private final ResourceLocation vignetteTexPath = new ResourceLocation("playerbeacon", "textures/misc/vignette.png");
 
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent e) {
@@ -120,6 +126,37 @@ public class EventHandler {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload e) {
         TickHandler.activeCorruptionEffects.remove(e.world);
+        if (e.world.isRemote) {
+            ClientProxy.playerCorruption = 0F;
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onRenderGameOverlay(RenderGameOverlayEvent e) {
+        if (e.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+            float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / 10000F, 0F, 1F); //Max corr
+            GL11.glPushMatrix();
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDepthMask(false);
+            OpenGlHelper.glBlendFunc(0, 769, 1, 0);
+            GL11.glColor4f(brightness, brightness, brightness, 1F);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(this.vignetteTexPath);
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
+            tessellator.addVertexWithUV(0.0D, e.resolution.getScaledHeight_double(), -90.0D, 0.0D, 1.0D);
+            tessellator.addVertexWithUV(e.resolution.getScaledWidth_double(), e.resolution.getScaledHeight_double(), -90.0D, 1.0D, 1.0D);
+            tessellator.addVertexWithUV(e.resolution.getScaledWidth_double(), 0.0D, -90.0D, 1.0D, 0.0D);
+            tessellator.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+            tessellator.draw();
+            GL11.glDepthMask(true);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopMatrix();
+        }
     }
 
 	@SubscribeEvent
