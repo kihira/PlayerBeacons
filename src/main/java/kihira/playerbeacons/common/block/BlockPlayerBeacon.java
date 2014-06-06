@@ -87,7 +87,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
         if (player.getCurrentEquippedItem() != null) {
             if (!world.isRemote) {
                 if (player.getCurrentEquippedItem().getItem() == Items.skull && player.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()
-                        && player.getCurrentEquippedItem(). hasTagCompound() && player.getCurrentEquippedItem().getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
+                        && player.getCurrentEquippedItem().hasTagCompound() && player.getCurrentEquippedItem().getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
                     TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
                     if (tileEntityPlayerBeacon.getOwner().equals(" ")) {
                         tileEntityPlayerBeacon.setOwner(player);

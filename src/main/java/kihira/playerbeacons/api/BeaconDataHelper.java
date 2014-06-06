@@ -1,7 +1,6 @@
-package kihira.playerbeacons.common.util;
+package kihira.playerbeacons.api;
 
 import kihira.playerbeacons.api.beacon.IBeacon;
-import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -45,7 +44,6 @@ public class BeaconDataHelper {
                 TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
                 if (tileEntity instanceof IBeacon) return (IBeacon) tileEntity;
                 else {
-                    PlayerBeacons.logger.warn("Couldn't find beacon for %s in %s at %s, %s, %s!", player.getCommandSenderName(), dimID, x, y, z);
                     setBeaconForDim(player, null, dimID);
                 }
             }

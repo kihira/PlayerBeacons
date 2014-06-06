@@ -6,7 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
-import kihira.playerbeacons.common.util.BeaconDataHelper;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

@@ -12,7 +12,7 @@ import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.network.PacketEventHandler;
-import kihira.playerbeacons.common.util.BeaconDataHelper;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
