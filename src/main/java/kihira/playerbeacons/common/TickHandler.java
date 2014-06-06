@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
-import kihira.playerbeacons.api.BeaconDataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -23,11 +23,10 @@ public class TickHandler {
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.side.isServer() && event.player.worldObj.getTotalWorldTime() % 20 == 0) { //TODO every tick
             IBeacon playerBeacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension); //TODO switch to IBeacon
-            if (playerBeacon != null && playerBeacon.getTileEntity().getWorldObj().provider.dimensionId == event.player.dimension) {
-                playerBeacon.isBeaconValid();
+            if (playerBeacon != null && playerBeacon.getTileEntity().getWorldObj().provider.dimensionId == event.player.dimension &&  playerBeacon.isBeaconValid()) {
                 if (this.cycle % 2 == 0) {
                     playerBeacon.update();
-                    this.calculateCorruption(event.player, playerBeacon, event.player.worldObj);
+                    this.calculateCorruptionEffects(event.player, playerBeacon, event.player.worldObj);
 
                     if (this.cycle % 4 == 0) {
                         event.player.worldObj.markBlockForUpdate(playerBeacon.getTileEntity().xCoord, playerBeacon.getTileEntity().yCoord, playerBeacon.getTileEntity().zCoord);
@@ -41,7 +40,7 @@ public class TickHandler {
         }
     }
 
-    private void calculateCorruption(EntityPlayer player, IBeacon beacon, World world) {
+    private void calculateCorruptionEffects(EntityPlayer player, IBeacon beacon, World world) {
         Multimap<EntityPlayer, CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.containsKey(world) ? activeCorruptionEffects.get(world) : HashMultimap.<EntityPlayer, CorruptionEffect>create();
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {

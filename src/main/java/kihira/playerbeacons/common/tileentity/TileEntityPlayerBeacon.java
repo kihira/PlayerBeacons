@@ -6,13 +6,13 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.network.PacketEventHandler;
-import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -178,10 +178,10 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (!this.getOwner().equals(" ")) {
             EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.getOwner());
             if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
-                for (ICrystal crystal : this.crystalMultiset.elementSet()) {
-                    float corruptionChange = crystal.doEffects(entityPlayer, this, this.crystalMultiset.count(crystal));
+                for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
+                    float corruptionChange = entry.getElement().doEffects(entityPlayer, this, entry.getCount());
                     this.setCorruption(this.getCorruption() + corruptionChange);
-                    PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d), changing corruption by %d", crystal.getClass().toString(), this.crystalMultiset.count(crystal), corruptionChange);
+                    //PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d), changing corruption by %d", entry.getElement().getClass().toString(), entry.getCount(), corruptionChange);
                 }
             }
         }

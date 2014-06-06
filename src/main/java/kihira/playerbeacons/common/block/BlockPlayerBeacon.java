@@ -133,7 +133,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(xPos, yPos, zPos);
         int levels = playerBeacon.getLevels();
 
-        if (!playerBeacon.isBeaconValid() && levels > 0) {
+        if (playerBeacon.isBeaconValid() && levels > 0) {
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels);
                 this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer, new Random());
@@ -162,7 +162,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     if (buffList != null && !buffList.isEmpty()) {
                         for (String buff : buffList) {
                             for (int j = 0; j < 2; j++) {
-                                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.6F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
+                                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.4F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
                             }
                         }
                     }
