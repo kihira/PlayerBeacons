@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila")
+@Mod(modid = "PlayerBeacons", dependencies = "after:Waila", version = "$version")
 public class PlayerBeacons {
 
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs("playerbeacons") {
