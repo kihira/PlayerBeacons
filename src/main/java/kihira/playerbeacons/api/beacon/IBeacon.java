@@ -31,16 +31,10 @@ public interface IBeacon {
     public int getLevels();
 
     /**
-     * How much corruption the beacon has generated
+     * How much corruption the beacon has generated per second
      * @return The corruption count
      */
     public float getCorruption();
-
-    /**
-     * Sets the corruption for the beacon
-     * @param newCorruption The new corruption count
-     */
-    public void setCorruption(float newCorruption);
 
     /**
      * Returns the tile entity

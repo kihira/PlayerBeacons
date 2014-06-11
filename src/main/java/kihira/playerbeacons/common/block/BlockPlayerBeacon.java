@@ -104,8 +104,6 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 //If they right click with depleted, disperse all corruption
                 else if (player.getCurrentEquippedItem().getItem() instanceof ICrystal) {
                     player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                    TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-                    tileEntityPlayerBeacon.setCorruption(0);
                     world.markBlockForUpdate(x, y, z);
                     player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
                 }

@@ -7,6 +7,29 @@ import net.minecraft.tileentity.TileEntity;
 
 public class BeaconDataHelper {
 
+    public static float getPlayerCorruptionAmount(EntityPlayer player) {
+        NBTTagCompound data = getBeaconDataTag(player);
+        float corruptionAmount = 0;
+
+        if (data.hasKey("Corruption")) {
+            corruptionAmount = data.getFloat("Corruption");
+        }
+
+        return corruptionAmount;
+    }
+
+    public static void modifyCorruptionAmount(EntityPlayer player, float corrChange) {
+        float corr = getPlayerCorruptionAmount(player);
+        corr += corrChange;
+        setPlayerCorruptionAmount(player, corr);
+    }
+
+    public static void setPlayerCorruptionAmount(EntityPlayer player, float corr) {
+        NBTTagCompound data = getBeaconDataTag(player);
+
+        data.setFloat("Corruption", Math.max(0, corr));
+    }
+
     public static boolean doesPlayerHaveBeaconForDim(EntityPlayer player, int dimID) {
         NBTTagCompound beaconData = getBeaconDataTag(player);
         return beaconData.hasKey(String.valueOf(dimID));

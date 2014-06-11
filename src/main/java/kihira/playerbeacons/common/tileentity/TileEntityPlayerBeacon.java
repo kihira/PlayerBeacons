@@ -3,8 +3,6 @@ package kihira.playerbeacons.common.tileentity;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
@@ -12,7 +10,6 @@ import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,7 +42,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     private Util.EnumHeadType headType = Util.EnumHeadType.NONE;
     private String owner = " ";
     private float corruption = 0;
-    private short corruptionLevel = 0;
     private int levels = 0;
 
     public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
@@ -57,7 +53,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         this.headType = Util.EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
         this.owner = par1NBTTagCompound.getString("owner");
         this.corruption = par1NBTTagCompound.getFloat("badstuff");
-        this.corruptionLevel = par1NBTTagCompound.getShort("badstufflevel");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
     }
@@ -68,7 +63,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
         par1NBTTagCompound.setString("owner", this.owner);
         par1NBTTagCompound.setFloat("badstuff", this.corruption);
-        par1NBTTagCompound.setShort("badstufflevel", this.corruptionLevel);
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
     }
@@ -178,9 +172,11 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (!this.getOwner().equals(" ")) {
             EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.getOwner());
             if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
+                //Reset corruption change amount
+                this.corruption = 0;
+                //Loop through the crystals this beacon has detected
                 for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
-                    float corruptionChange = entry.getElement().doEffects(entityPlayer, this, entry.getCount());
-                    this.setCorruption(this.getCorruption() + corruptionChange);
+                    this.corruption += entry.getElement().doEffects(entityPlayer, this, entry.getCount());
                     //PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d), changing corruption by %d", entry.getElement().getClass().toString(), entry.getCount(), corruptionChange);
                 }
             }
@@ -190,19 +186,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     @Override
     public float getCorruption() {
         return this.corruption;
-    }
-
-    @Override
-    public void setCorruption(float newCorruption) {
-        if (newCorruption != this.corruption) {
-            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
-            if (player != null) {
-                FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(this.getOwner(), this.getCorruption());
-                PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(this.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
-            }
-
-            this.corruption = Math.max(0, newCorruption);
-        }
     }
 
     @Override

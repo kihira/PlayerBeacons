@@ -178,7 +178,7 @@ public class EventHandler {
 						if (corruption >= 15000) string = "Corruption: \u00a74" + String.valueOf(corruption);
 						else if (corruption >= 10000) string = "Corruption: \u00a7c" + String.valueOf(corruption);
 						else if (corruption >= 5000) string = "Corruption: \u00a7e" + String.valueOf(corruption);
-						else string = "Corruption: " + String.valueOf(corruption);
+						else string = "Corruption: " + String.valueOf(corruption) + "/s";
 						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
 						if (owner.equals(" ")) owner = "\u00a7kNo-one";
 						string = "Bound to: \u00a74" + owner;

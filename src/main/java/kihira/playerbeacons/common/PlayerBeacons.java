@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila;")
+@Mod(modid = "PlayerBeacons", dependencies = "after:Thaumcraft;after:Waila")
 public class PlayerBeacons {
 
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs("playerbeacons") {
@@ -124,7 +124,7 @@ public class PlayerBeacons {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-        FMLInterModComms.sendMessage("Waila", "register", "playerbeacons.client.HUDPlayerBeacon.callbackRegister");
+        FMLInterModComms.sendMessage("Waila", "register", "kihira.playerbeacons.client.HUDPlayerBeacon.callbackRegister");
 	}
 
 	@Mod.EventHandler

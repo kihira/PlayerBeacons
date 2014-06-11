@@ -28,7 +28,7 @@ public class HUDPlayerBeacon implements IWailaDataProvider {
         if (accessor.getTileEntity() instanceof TileEntityPlayerBeacon) {
             TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) accessor.getTileEntity();
             if (config.getConfig("pb.showowner")) currenttip.add("Owner: " + tileEntityPlayerBeacon.getOwner());
-            if (config.getConfig("pb.showcorruption")) currenttip.add("Corruption: " + tileEntityPlayerBeacon.getCorruption());
+            if (config.getConfig("pb.showcorruption")) currenttip.add("Corruption: " + tileEntityPlayerBeacon.getCorruption() + "/s");
         }
         else if (accessor.getTileEntity() instanceof TileEntityDefiledSoulPylon) {
             TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) accessor.getTileEntity();

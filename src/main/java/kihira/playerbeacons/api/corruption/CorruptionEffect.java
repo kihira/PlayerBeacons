@@ -1,6 +1,6 @@
 package kihira.playerbeacons.api.corruption;
 
-import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -30,47 +30,42 @@ public abstract class CorruptionEffect {
     /**
      * This is called when the corruption effect is initially applied to the player.
      * @param player The player
-     * @param beacon The beacon
      */
-    public abstract void init(EntityPlayer player, IBeacon beacon);
+    public abstract void init(EntityPlayer player);
 
     /**
      * This is called every tick the corruption effect is active, that the player is in the same dimension as the beacon
      * and that the beacon is not disabled
      * @param player The player
-     * @param beacon The beacon
      */
-    public abstract void onUpdate(EntityPlayer player, IBeacon beacon);
+    public abstract void onUpdate(EntityPlayer player);
 
     /**
      * This is called when the corruption effect is removed from the player (such as when corruption decreases below a
      * certain amount)
      * @param player The player
-     * @param beacon The beacon
      */
-    public abstract void finish(EntityPlayer player, IBeacon beacon);
+    public abstract void finish(EntityPlayer player);
 
     /**
      * This is called to check if the player has met the required conditions for the corruption effect to activate. This
      * is only called whilst the player does not have the corruption effect active
      * @param player The player
-     * @param beacon The beacon
      * @param world The world of the beacon
      * @return Whether the effect should start to be applied
      */
-    public boolean shouldActivate(EntityPlayer player, IBeacon beacon, World world) {
-        return beacon.getCorruption() >= this.corruptionUnlock;
+    public boolean shouldActivate(EntityPlayer player, World world) {
+        return BeaconDataHelper.getPlayerCorruptionAmount(player) >= this.corruptionUnlock;
     }
 
     /**
      * Whilst this effect is active, this is called to check if it should keep running.
      * @param player The player
-     * @param beacon The beacon
      * @param world The world of the beacon
      * @return Whether the effect should continue to be applied
      */
-    public boolean shouldContinue(EntityPlayer player, IBeacon beacon, World world) {
-        return beacon.getCorruption() <= this.corruptionUnlock;
+    public boolean shouldContinue(EntityPlayer player, World world) {
+        return BeaconDataHelper.getPlayerCorruptionAmount(player) <= this.corruptionUnlock;
     }
 
     public String getUnlocalisedName() {
