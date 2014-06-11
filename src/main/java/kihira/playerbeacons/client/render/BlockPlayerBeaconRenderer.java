@@ -21,7 +21,7 @@ import java.util.Random;
 public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
 	private final ModelPlayerBeacon playerBeaconModel;
-	private final ModelSantaHat santaHatModel;
+	//private final ModelSantaHat santaHatModel;
     private final ModelSkull modelSkull;
 
     private final ResourceLocation endSkyTexture = new ResourceLocation("textures/environment/end_sky.png");
@@ -29,20 +29,19 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
     FloatBuffer field_147528_b = GLAllocation.createDirectFloatBuffer(16);
 
 	public BlockPlayerBeaconRenderer() {
-		playerBeaconModel = new ModelPlayerBeacon();
-		santaHatModel = new ModelSantaHat();
-        modelSkull = new ModelSkull();
+		this.playerBeaconModel = new ModelPlayerBeacon();
+		//santaHatModel = new ModelSantaHat();
+        this.modelSkull = new ModelSkull();
 	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) tileentity;
 
-        this.renderPortal(x, y, z);
-
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		bindTexture(ClientProxy.playerBeaconTexture);
+        this.renderPortal(x, y, z);
+        this.bindTexture(ClientProxy.playerBeaconTexture);
 		GL11.glTranslated(x + 0.5d, y + 1.8001d, z + 0.5d);
 		GL11.glRotatef(180F, 0F, 0F, 1F);
 		GL11.glScalef(1.2F, 1.2F, 1.2F);
@@ -50,7 +49,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		playerBeaconModel.render(null, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0.0F, partialTickTime, 0.0625F);
+		this.playerBeaconModel.render(null, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0.0F, partialTickTime, 0.0625F);
 
         /*
 		if (PlayerBeacons.isChristmas && tileentity.getWorldObj().getBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord) == Blocks.skull) {
@@ -69,7 +68,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             GL11.glTranslated(0, 0.55D, 0);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationPitch + (playerBeacon.headRotationPitch - playerBeacon.headRotationPitch), 1.0F, 0.0F, 0.0F);
-            modelSkull.renderWithoutRotation(0.0625F);
+            this.modelSkull.renderWithoutRotation(0.0625F);
         }
 
 		GL11.glDisable(GL11.GL_BLEND);
@@ -94,7 +93,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             float f7 = 1.0F / (f5 + 1.0F);
 
             if (i == 0) {
-                this.bindTexture(endSkyTexture);
+                this.bindTexture(this.endSkyTexture);
                 f7 = 0.1F;
                 f5 = 65.0F;
                 f6 = 0.225F;
@@ -103,7 +102,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             }
 
             if (i == 1) {
-                this.bindTexture(endPortalTexture);
+                this.bindTexture(this.endPortalTexture);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
                 f6 = 0.3F;
