@@ -133,7 +133,7 @@ public class EventHandler {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onRenderGameOverlay(RenderGameOverlayEvent e) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent.Pre e) {
         if (e.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / 10000F, 0F, 1F); //Max corr
             GL11.glPushMatrix();
@@ -199,7 +199,6 @@ public class EventHandler {
 		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-f1, -f1, f1);
-		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -220,9 +219,8 @@ public class EventHandler {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
 		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1);
-		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
 }
