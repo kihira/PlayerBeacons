@@ -174,7 +174,7 @@ public class EventHandler {
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if ((e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)) {
+			if (e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
@@ -185,13 +185,9 @@ public class EventHandler {
 						double viewY = e.target.blockY - RenderManager.renderPosY;
 						double viewZ = e.target.blockZ - RenderManager.renderPosZ;
 						String string;
-						if (corruption >= 15000) string = "Corruption: \u00a74" + String.valueOf(corruption);
-						else if (corruption >= 10000) string = "Corruption: \u00a7c" + String.valueOf(corruption);
-						else if (corruption >= 5000) string = "Corruption: \u00a7e" + String.valueOf(corruption);
-						else string = "Corruption: " + String.valueOf(corruption) + "/s";
-						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 1.8F, (float) viewZ + 0.5F);
+						string = "Corruption: " + String.valueOf(corruption) + "/s\n";
 						if (owner.equals(" ")) owner = "\u00a7kNo-one";
-						string = "Bound to: \u00a74" + owner;
+						string += "Bound to: \u00a74" + owner;
 						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
 					}
 				}
@@ -203,6 +199,8 @@ public class EventHandler {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		RenderManager renderManager = RenderManager.instance;
 		float f1 = 0.016666668F * 1.4F;
+        String[] lines = string.split("\\n");
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef(viewX, viewY, viewZ);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
@@ -214,22 +212,22 @@ public class EventHandler {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		Tessellator tessellator = Tessellator.instance;
-		byte b0 = 0;
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		tessellator.startDrawingQuads();
-		int j = fontRenderer.getStringWidth(string) / 2;
+		int j = fontRenderer.splitStringWidth(string, 400) * 3;
 		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-		tessellator.addVertex((double)(-j - 1), (double)(-1 + b0), 0.0D);
-		tessellator.addVertex((double)(-j - 1), (double)(8 + b0), 0.0D);
-		tessellator.addVertex((double)(j + 1), (double)(8 + b0), 0.0D);
-		tessellator.addVertex((double)(j + 1), (double)(-1 + b0), 0.0D);
+		tessellator.addVertex((double)(-j), (double)(-1), 0.0D);
+		tessellator.addVertex((double)(-j), (double)(8 * lines.length), 0.0D);
+		tessellator.addVertex((double)(j), (double)(8 * lines.length), 0.0D);
+		tessellator.addVertex((double)(j), (double)(-1), 0.0D);
 		tessellator.draw();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, 553648127);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(true);
-		fontRenderer.drawString(string, -fontRenderer.getStringWidth(string) / 2, b0, -1);
-		GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+        for (int i = 0; i < lines.length; i++) {
+            fontRenderer.drawString(lines[i], -fontRenderer.getStringWidth(lines[i]) / 2, 8 * i, -1);
+        }
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
