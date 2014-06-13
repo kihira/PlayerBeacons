@@ -54,7 +54,6 @@ public class BeaconDataHelper {
         }
     }
 
-    //TODO cache result?
     public static IBeacon getBeaconForDim(EntityPlayer player, int dimID) {
         if (player != null) {
             NBTTagCompound beaconData = getBeaconDataTag(player);

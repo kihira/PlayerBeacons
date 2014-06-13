@@ -1,13 +1,10 @@
 package kihira.playerbeacons.common.util;
 
 import kihira.playerbeacons.common.PlayerBeacons;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 
 public class Util {
 
@@ -31,30 +28,21 @@ public class Util {
 
         public static EnumHeadType fromId(int id) {
             switch (id) {
-                case -1:
-                    return NONE;
                 case 0:
                     return SKELETON;
                 case 1:
                     return WITHERSKELETON;
                 case 2:
-                    return WITHERSKELETON;
+                    return ZOMBIE;
                 case 3:
-                    return WITHERSKELETON;
+                    return PLAYER;
                 case 4:
-                    return WITHERSKELETON;
+                    return CREEPER;
                 default:
-                    return null;
+                    return NONE;
             }
         }
     }
-
-	public static MovingObjectPosition getBlockLookAt(EntityPlayer player, double maxBlockDistance) {
-		Vec3 vec3 = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + (player.worldObj.isRemote ? 0.0D : (player.getEyeHeight() - 0.09D)), player.posZ);
-		Vec3 vec31 = player.getLookVec();
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * maxBlockDistance, vec31.yCoord * maxBlockDistance, vec31.zCoord * maxBlockDistance);
-		return player.worldObj.rayTraceBlocks(vec3, vec32);
-	}
 
     public static ItemStack getPlayerBacon(String playerName, int count) {
         ItemStack itemStack = new ItemStack(PlayerBeacons.playerBaconItem, MathHelper.clamp_int(count, 1, 64), 0);
