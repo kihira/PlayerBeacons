@@ -56,11 +56,12 @@ public class TickHandler {
 
     private void calculateCorruptionEffects(EntityPlayer player, World world) {
         Multimap<EntityPlayer, CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.containsKey(world) ? activeCorruptionEffects.get(world) : HashMultimap.<EntityPlayer, CorruptionEffect>create();
+        float corruption = BeaconDataHelper.getPlayerCorruptionAmount(player);
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {
-            if (!playerCurrentEffects.containsEntry(player, corruptionEffect) && corruptionEffect.shouldActivate(player, world)) {
+            if (!playerCurrentEffects.containsEntry(player, corruptionEffect) && corruptionEffect.shouldActivate(player, world, corruption)) {
                 playerCurrentEffects.put(player, corruptionEffect);
-                corruptionEffect.init(player);
+                corruptionEffect.init(player, corruption);
             }
         }
 
@@ -71,12 +72,12 @@ public class TickHandler {
             while (corruptionEffects.hasNext()) {
                 CorruptionEffect corruptionEffect = corruptionEffects.next();
                 //Check if the effect should continue functioning
-                if (corruptionEffect.shouldContinue(player, world)) {
-                    corruptionEffect.onUpdate(player);
+                if (corruptionEffect.shouldContinue(player, world, corruption)) {
+                    corruptionEffect.onUpdate(player, corruption);
                 }
                 //Otherwise we stop it
                 else {
-                    corruptionEffect.finish(player);
+                    corruptionEffect.finish(player, corruption);
                     corruptionEffects.remove();
                 }
             }

@@ -1,6 +1,5 @@
 package kihira.playerbeacons.api.corruption;
 
-import kihira.playerbeacons.api.BeaconDataHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -15,11 +14,16 @@ import java.util.List;
 public abstract class CorruptionEffect {
 
     public static final List<CorruptionEffect> corruptionEffects = new ArrayList<CorruptionEffect>();
+    /**
+     * This value is not a limit but more a guide. When corruption reaches or goes above this level, you should generally
+     * be applying the worst effects you can
+     */
+    public static final float CORRUPTION_MAX = 50000;
 
-    private final String name;
-    private final int corruptionUnlock;
+    protected final String name;
+    protected final float corruptionUnlock;
 
-    public CorruptionEffect(String name, int corruptionUnlock) {
+    public CorruptionEffect(String name, float corruptionUnlock) {
         if (!corruptionEffects.contains(this)) {
             this.name = name;
             this.corruptionUnlock = corruptionUnlock;
@@ -31,21 +35,21 @@ public abstract class CorruptionEffect {
      * This is called when the corruption effect is initially applied to the player.
      * @param player The player
      */
-    public abstract void init(EntityPlayer player);
+    public abstract void init(EntityPlayer player, float corruption);
 
     /**
      * This is called every tick the corruption effect is active, that the player is in the same dimension as the beacon
      * and that the beacon is not disabled
      * @param player The player
      */
-    public abstract void onUpdate(EntityPlayer player);
+    public abstract void onUpdate(EntityPlayer player, float corruption);
 
     /**
      * This is called when the corruption effect is removed from the player (such as when corruption decreases below a
      * certain amount)
      * @param player The player
      */
-    public abstract void finish(EntityPlayer player);
+    public abstract void finish(EntityPlayer player, float corruption);
 
     /**
      * This is called to check if the player has met the required conditions for the corruption effect to activate. This
@@ -54,8 +58,8 @@ public abstract class CorruptionEffect {
      * @param world The world of the beacon
      * @return Whether the effect should start to be applied
      */
-    public boolean shouldActivate(EntityPlayer player, World world) {
-        return BeaconDataHelper.getPlayerCorruptionAmount(player) >= this.corruptionUnlock;
+    public boolean shouldActivate(EntityPlayer player, World world, float corruption) {
+        return corruption >= this.corruptionUnlock;
     }
 
     /**
@@ -64,8 +68,8 @@ public abstract class CorruptionEffect {
      * @param world The world of the beacon
      * @return Whether the effect should continue to be applied
      */
-    public boolean shouldContinue(EntityPlayer player, World world) {
-        return BeaconDataHelper.getPlayerCorruptionAmount(player) <= this.corruptionUnlock;
+    public boolean shouldContinue(EntityPlayer player, World world, float corruption) {
+        return corruption <= this.corruptionUnlock;
     }
 
     public String getUnlocalisedName() {

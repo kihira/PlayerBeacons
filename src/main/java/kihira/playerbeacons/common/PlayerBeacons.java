@@ -11,7 +11,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.block.*;
 import kihira.playerbeacons.common.buff.*;
+import kihira.playerbeacons.common.corruption.EndTeleportCorruption;
 import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
+import kihira.playerbeacons.common.corruption.SlownessCorruption;
 import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.potion.CorruptionPotion;
@@ -73,7 +75,9 @@ public class PlayerBeacons {
     public static final Block defiledSoulConductorBlock = new BlockDefiledSoulConductor();
     public static final Block defiledSoulPylonBlock = new BlockDefiledSoulPylon();
 
-    private static final EndermanAggroCorruption endermanCorr = new EndermanAggroCorruption();
+    private final EndermanAggroCorruption endermanAggroCorruption = new EndermanAggroCorruption();
+    private final EndTeleportCorruption endTeleportCorruption = new EndTeleportCorruption();
+    private final SlownessCorruption slownessCorruption = new SlownessCorruption();
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
