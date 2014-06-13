@@ -9,6 +9,8 @@ public interface IBeacon {
 
     /**
      * Check if the beacon should apply buffs. Called just before update()
+     * This is called by TickHandler every tick so it is advised you cache the result and only run a check every 10-20
+     * ticks to prevent higher resource usage (depending on your setup)
      * @return If beacon is valid
      */
     public boolean isBeaconValid();

@@ -54,6 +54,7 @@ public class BeaconDataHelper {
         }
     }
 
+    //TODO cache result?
     public static IBeacon getBeaconForDim(EntityPlayer player, int dimID) {
         if (player != null) {
             NBTTagCompound beaconData = getBeaconDataTag(player);
@@ -65,7 +66,9 @@ public class BeaconDataHelper {
                 int y = worldBeaconData.getInteger("yPos");
                 int z = worldBeaconData.getInteger("zPos");
                 TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
-                if (tileEntity instanceof IBeacon) return (IBeacon) tileEntity;
+                if (tileEntity instanceof IBeacon) {
+                    return (IBeacon) tileEntity;
+                }
                 else {
                     setBeaconForDim(player, null, dimID);
                 }

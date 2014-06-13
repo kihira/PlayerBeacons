@@ -20,7 +20,8 @@ public interface ICrystal {
 	public float[] getRGBA();
 
     /**
-     * This method is called when the beacon is applying buffs. Return the corruption change made by these effects
+     * This method is called when the beacon is applying buffs. Return the corruption change made by these effects.
+     * This is usually called every tick but this rate can be ignored by other mods
      * @param crystalCount The number of crystals detected by the beacon
      * @param beacon The beacon
      * @return The corruption change caused by the effects
