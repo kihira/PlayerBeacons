@@ -29,19 +29,23 @@ public class TickHandler {
                 //General update method, usually used to do effects
                 playerBeacon.update();
 
-                //We only calculate new corruption effects every 20 ticks
+                //Update the corruption count
                 if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
-                    //Get the corruption change and calculate the corruption effects on the player
                     BeaconDataHelper.modifyCorruptionAmount(event.player, playerBeacon.getCorruption());
-                    this.calculateCorruptionEffects(event.player, event.player.worldObj);
-
-                    //Send corruption update
-                    FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(event.player.getCommandSenderName(), BeaconDataHelper.getPlayerCorruptionAmount(event.player));
-                    PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(event.player.worldObj.provider.dimensionId, event.player.posX, event.player.posY, event.player.posZ, 64));
 
                     //Make the block re-sync
                     event.player.worldObj.markBlockForUpdate(playerBeacon.getTileEntity().xCoord, playerBeacon.getTileEntity().yCoord, playerBeacon.getTileEntity().zCoord);
                 }
+            }
+
+            //We only calculate new corruption effects every 20 ticks and regardless of beacon
+            if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
+                //Calculate the corruption effects on the player
+                this.calculateCorruptionEffects(event.player, event.player.worldObj);
+
+                //Send corruption update
+                FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(event.player.getCommandSenderName(), BeaconDataHelper.getPlayerCorruptionAmount(event.player));
+                PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(event.player.worldObj.provider.dimensionId, event.player.posX, event.player.posY, event.player.posZ, 64));
             }
         }
         else if (event.side.isClient() && PlayerBeacons.config.enableHideParticleEffects && event.player.worldObj.getTotalWorldTime() % 10 == 0) {
@@ -66,9 +70,11 @@ public class TickHandler {
             Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.get(player).iterator();
             while (corruptionEffects.hasNext()) {
                 CorruptionEffect corruptionEffect = corruptionEffects.next();
+                //Check if the effect should continue functioning
                 if (corruptionEffect.shouldContinue(player, world)) {
                     corruptionEffect.onUpdate(player);
                 }
+                //Otherwise we stop it
                 else {
                     corruptionEffect.finish(player);
                     corruptionEffects.remove();
