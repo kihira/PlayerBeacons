@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
@@ -135,7 +136,7 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
     public void onRenderGameOverlay(RenderGameOverlayEvent.Pre e) {
         if (e.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
-            float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / 10000F, 0F, 1F); //Max corr
+            float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / CorruptionEffect.CORRUPTION_MAX, 0F, 1F);
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
