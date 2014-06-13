@@ -160,8 +160,17 @@ public class EventHandler {
         }
     }
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onDebugText(RenderGameOverlayEvent.Text e) {
+        if (e.left != null && e.left.size() > 0) {
+            e.left.add("");
+            e.left.add("Corruption: " + ClientProxy.playerCorruption);
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {

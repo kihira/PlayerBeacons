@@ -20,6 +20,7 @@ import kihira.playerbeacons.common.potion.CorruptionPotion;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.EventHandler;
+import kihira.playerbeacons.proxy.ClientProxy;
 import kihira.playerbeacons.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -134,11 +135,13 @@ public class PlayerBeacons {
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandPlayerHead());
+        e.registerServerCommand(new CommandPlayerBeacons());
 	}
 
     @Mod.EventHandler
     public void serverShutdown(FMLServerStoppedEvent e) {
         TickHandler.activeCorruptionEffects.clear();
+        ClientProxy.playerCorruption = 0F;
     }
 
 	private void registerBuffs() {
