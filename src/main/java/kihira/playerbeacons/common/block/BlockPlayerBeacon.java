@@ -23,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.List;
 import java.util.Random;
@@ -83,51 +84,57 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float par7, float par8, float par9) {
-        if (player.getCurrentEquippedItem() != null) {
-            if (!world.isRemote) {
-                if (player.getCurrentEquippedItem().getItem() == Items.skull && player.getCurrentEquippedItem().getItemDamage() == Util.EnumHeadType.PLAYER.getID()
-                        && player.getCurrentEquippedItem().hasTagCompound() && player.getCurrentEquippedItem().getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
-                    TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-                    if (tileEntityPlayerBeacon.getOwner().equals(" ")) {
-                        tileEntityPlayerBeacon.setOwner(player);
-                        player.setCurrentItemOrArmor(0, null);
-                    }
-                }
-                else if (player.getCurrentEquippedItem().getItem() == Items.emerald) {
-                    ItemStack itemStack = player.getCurrentEquippedItem();
-                    if (itemStack.stackSize == 1) player.setCurrentItemOrArmor(0, null);
-                    else player.setCurrentItemOrArmor(0, new ItemStack(Items.emerald, itemStack.stackSize - 1));
-                    EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
-                    world.spawnEntityInWorld(item);
-                }
-                //If they right click with depleted, disperse all corruption
-                else if (player.getCurrentEquippedItem().getItem() instanceof ICrystal) {
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                    world.markBlockForUpdate(x, y, z);
-                    player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float par7, float par8, float par9) {
+        if (player.getCurrentEquippedItem() != null && !world.isRemote) {
+            ItemStack itemStack = player.getCurrentEquippedItem();
+            //Check if player is holding a skull and that is belongs to them
+            if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == Util.EnumHeadType.PLAYER.getID()
+                    && itemStack.hasTagCompound() && itemStack.getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
+                TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                //If there is no current beacon owner, set it to them
+                if (tileEntityPlayerBeacon.getOwner().equals(" ")) {
+                    tileEntityPlayerBeacon.setOwner(player);
+                    if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
+                    else player.setCurrentItemOrArmor(0, itemStack);
                 }
             }
+            //Create crystal from emeralds
+            else if (itemStack.getItem() == Items.emerald) {
+                if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
+                else player.setCurrentItemOrArmor(0, itemStack);
+                EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
+                world.spawnEntityInWorld(item);
+            }
+            //If they right click with depleted crystal, disperse all corruption
+            else if (itemStack.getItem() instanceof ICrystal) {
+                if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
+                else player.setCurrentItemOrArmor(0, itemStack);
+                world.markBlockForUpdate(x, y, z);
+                player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
+            }
         }
-		return true;
+        return true;
 	}
 
     @Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		if (!world.isRemote) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			if (tileEntity instanceof TileEntityPlayerBeacon) {
-				if (!(player.getCommandSenderName().equals(((TileEntityPlayerBeacon) tileEntity).getOwner())) && !(player.capabilities.isCreativeMode) && !((TileEntityPlayerBeacon) tileEntity).getOwner().equals(" ")) {
-					player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
-					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
-				}
-			}
+			TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+            if (!(player.getCommandSenderName().equals(tileEntity.getOwner())) && !(player.capabilities.isCreativeMode) && !tileEntity.getOwner().equals(" ")) {
+                player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
+                player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
+            }
 		}
 	}
 
     @Override
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int xPos, int yPos, int zPos, Random rand) {
+        //A weird way to limit particles spawned but should work
+        if (Minecraft.getMinecraft().gameSettings.particleSetting > 0) {
+            if (rand.nextInt(5) > Minecraft.getMinecraft().gameSettings.particleSetting || Minecraft.getMinecraft().gameSettings.particleSetting == 2) return;
+        }
+
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(xPos, yPos, zPos);
         int levels = playerBeacon.getLevels();
 
@@ -149,7 +156,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer, new Random());
             }
 		}
-	}
+    }
 
     private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, ICrystalContainer crystalContainer, Random rand) {
         if (crystalContainer != null && crystalContainer.getSizeInventory() > 0) {
