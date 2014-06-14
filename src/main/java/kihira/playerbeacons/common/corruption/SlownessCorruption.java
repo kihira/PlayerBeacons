@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 public class SlownessCorruption extends CorruptionEffect {
 
     public SlownessCorruption() {
-        super("slowness", CORRUPTION_MAX / 20);
+        super("slowness", CORRUPTION_MAX / 15);
     }
 
     @Override
@@ -17,10 +17,8 @@ public class SlownessCorruption extends CorruptionEffect {
 
     @Override
     public void onUpdate(EntityPlayer player, float corruption) {
-        if (player.worldObj.getTotalWorldTime() % 10 == 0) {
-            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, (int) MathHelper.clamp_float(((corruption) / this.corruptionUnlock) - 1, 0, 4)));
-            player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 20, (int) MathHelper.clamp_float(((corruption) / this.corruptionUnlock) - 1, 0, 4)));
-        }
+        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
+        player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 40, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
     }
 
     @Override

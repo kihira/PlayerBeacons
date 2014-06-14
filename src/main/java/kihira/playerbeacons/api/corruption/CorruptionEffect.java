@@ -27,6 +27,7 @@ public abstract class CorruptionEffect {
         if (!corruptionEffects.contains(this)) {
             this.name = name;
             this.corruptionUnlock = corruptionUnlock;
+            corruptionEffects.add(this);
         }
         else throw new IllegalArgumentException(String.format("%s has already been registered as a corruption!", name));
     }
@@ -69,7 +70,7 @@ public abstract class CorruptionEffect {
      * @return Whether the effect should continue to be applied
      */
     public boolean shouldContinue(EntityPlayer player, World world, float corruption) {
-        return corruption <= this.corruptionUnlock;
+        return corruption >= this.corruptionUnlock;
     }
 
     public String getUnlocalisedName() {

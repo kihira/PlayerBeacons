@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.block.*;
 import kihira.playerbeacons.common.buff.*;
+import kihira.playerbeacons.common.corruption.BatCorruption;
 import kihira.playerbeacons.common.corruption.EndTeleportCorruption;
 import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
 import kihira.playerbeacons.common.corruption.SlownessCorruption;
@@ -79,6 +80,7 @@ public class PlayerBeacons {
     private final EndermanAggroCorruption endermanAggroCorruption = new EndermanAggroCorruption();
     private final EndTeleportCorruption endTeleportCorruption = new EndTeleportCorruption();
     private final SlownessCorruption slownessCorruption = new SlownessCorruption();
+    private final BatCorruption batCorruption = new BatCorruption();
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
 
