@@ -228,6 +228,8 @@ public class EventHandler {
         }
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
