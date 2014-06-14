@@ -17,7 +17,7 @@ public class EndermanAggroCorruption extends CorruptionEffect {
 
     @Override
     public void onUpdate(EntityPlayer player, float corruption) {
-        player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 20, (int) MathHelper.clamp_float(((corruption) / this.corruptionUnlock) - 1, 0, 2)));
+        player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 40, (int) MathHelper.clamp_float(((corruption) / this.corruptionUnlock) - 1, 0, 2)));
     }
 
     @Override
