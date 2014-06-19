@@ -27,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -71,7 +72,7 @@ public class EventHandler {
                     else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
                     else if (deadEntity instanceof EntityPlayer) {
                         EntityPlayer deadPlayer = (EntityPlayer) deadEntity;
-                        deadPlayer.func_110142_aN().func_94547_a(PlayerBeacons.damageBehead, 1, 1);
+                        deadPlayer.func_110142_aN().func_94547_a(PlayerBeacons.damageBehead, 1, 1); //Sets last damage as beheading so it displays our message instead
                         e.entityLiving.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
                     }
                 }
@@ -173,24 +174,25 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
+        //Check needed stuff isn't null and GUI is enabled
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
 			if (e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
+                //Check it is a tileentity
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
 					String owner = tileEntityPlayerBeacon.getOwner();
-					if (e.target.blockX == tileEntityPlayerBeacon.getTileEntity().xCoord && e.target.blockY == tileEntityPlayerBeacon.getTileEntity().yCoord && e.target.blockZ == tileEntityPlayerBeacon.getTileEntity().zCoord) {
-						double viewX = e.target.blockX - RenderManager.renderPosX;
-						double viewY = e.target.blockY - RenderManager.renderPosY;
-						double viewZ = e.target.blockZ - RenderManager.renderPosZ;
-						String string;
-						string = "Corruption: " + String.valueOf(corruption) + "/s\n";
-						if (owner.equals(" ")) owner = "\u00a7kNo-one";
-						string += "Bound to: \u00a74" + owner;
-						this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
-					}
-				}
+                    double viewX = e.target.blockX - RenderManager.renderPosX;
+                    double viewY = e.target.blockY - RenderManager.renderPosY;
+                    double viewZ = e.target.blockZ - RenderManager.renderPosZ;
+                    String string;
+
+                    string = StatCollector.translateToLocal("text.corruption") + ": " + String.valueOf(corruption) + "/s\n";
+                    if (owner.equals(" ")) owner = "\u00a7kNo-one";
+                    string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + owner;
+                    this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
+                }
 			}
 		}
 	}
@@ -198,7 +200,7 @@ public class EventHandler {
 	private void renderLabel(String string, float viewX, float viewY, float viewZ) {
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		RenderManager renderManager = RenderManager.instance;
-		float f1 = 0.016666668F * 1.4F;
+		float f1 = 0.016666668F * 1.2F;
         String[] lines = string.split("\\n");
 
 		GL11.glPushMatrix();
@@ -214,7 +216,7 @@ public class EventHandler {
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		tessellator.startDrawingQuads();
-		int j = fontRenderer.splitStringWidth(string, 400) * 3;
+		float j = fontRenderer.splitStringWidth(string, 400) * 2.6F;
 		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
 		tessellator.addVertex((double)(-j), (double)(-1), 0.0D);
 		tessellator.addVertex((double)(-j), (double)(8 * lines.length), 0.0D);

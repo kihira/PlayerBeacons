@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class HasteBuff extends Buff {
 
@@ -25,5 +26,15 @@ public class HasteBuff extends Buff {
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
         return new float[] {0.5F, 0.4F, 0.3F, 1F};
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation() {
+        return null;
+    }
+
+    @Override
+    public int[] getUV() {
+        return new int[]{36, 198};
     }
 }

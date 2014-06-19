@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class JumpBuff extends Buff {
 
@@ -25,5 +26,15 @@ public class JumpBuff extends Buff {
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
         return new float[] {0.45F, 0.6F, 0.45F, 1F};
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation() {
+        return null;
+    }
+
+    @Override
+    public int[] getUV() {
+        return new int[]{36, 216};
     }
 }

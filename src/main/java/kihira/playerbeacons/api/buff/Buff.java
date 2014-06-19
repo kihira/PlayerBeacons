@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 
@@ -33,4 +34,10 @@ public abstract class Buff {
 
     @SideOnly(Side.CLIENT)
     public abstract float[] getRGBA();
+
+    @SideOnly(Side.CLIENT)
+    public abstract ResourceLocation getResourceLocation();
+
+    @SideOnly(Side.CLIENT)
+    public abstract int[] getUV();
 }

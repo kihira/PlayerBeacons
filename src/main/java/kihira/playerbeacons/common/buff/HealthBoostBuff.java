@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -39,5 +40,15 @@ public class HealthBoostBuff extends Buff {
     @Override
     public float[] getRGBA() {
         return new float[]{0.9F, 0.8F, 0.1F, 1};
+    }
+
+    @Override
+    public ResourceLocation getResourceLocation() {
+        return null;
+    }
+
+    @Override
+    public int[] getUV() {
+        return new int[]{36, 234};
     }
 }
