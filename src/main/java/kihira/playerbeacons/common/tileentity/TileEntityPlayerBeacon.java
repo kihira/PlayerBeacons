@@ -3,7 +3,6 @@ package kihira.playerbeacons.common.tileentity;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
@@ -40,7 +39,7 @@ import java.util.Random;
 public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     private Util.EnumHeadType headType = Util.EnumHeadType.NONE;
-    private String owner = " ";
+    private String ownerUUID = " ";
     private float corruption = 0;
     private int levels = 0;
 
@@ -51,7 +50,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
         super.readFromNBT(par1NBTTagCompound);
         this.headType = Util.EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
-        this.owner = par1NBTTagCompound.getString("owner");
+        this.ownerUUID = par1NBTTagCompound.getString("ownerUUID");
         this.corruption = par1NBTTagCompound.getFloat("badstuff");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
@@ -61,7 +60,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
-        par1NBTTagCompound.setString("owner", this.owner);
+        par1NBTTagCompound.setString("ownerUUID", this.ownerUUID);
         par1NBTTagCompound.setFloat("badstuff", this.corruption);
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
@@ -84,7 +83,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public boolean isBeaconValid() {
         if (this.worldObj.getTotalWorldTime() % 20 == 0) {
             this.levels = 0;
-            if (!this.getOwner().equals(" ")) {
+            if (!this.getOwnerUUID().equals(" ")) {
                 for (int i = 1; i <= 4; this.levels = i++) {
                     int j = this.yCoord - i;
                     if (j < 0) break;
@@ -121,8 +120,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     }
 
     @Override
-    public String getOwner() {
-        return this.owner;
+    public String getOwnerUUID() {
+        return this.ownerUUID;
     }
 
     @Override
@@ -130,22 +129,22 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         return this.levels;
     }
 
-    public void setOwner(EntityPlayer player) {
+    public void setOwnerUUID(EntityPlayer player) {
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
-            this.owner = player.getCommandSenderName();
+            this.ownerUUID = player.getUniqueID().toString();
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
         else if (player == null) {
-            this.owner = " ";
+            this.ownerUUID = "";
         }
     }
 
     @Override
     public void invalidate() {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && !this.getOwner().equals(" ")) {
+        if (FMLCommonHandler.instance().getSide().isServer() && !this.getOwnerUUID().equals("")) {
             //Remove player beacon data
-            EntityPlayer player = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().getPlayerForUsername(this.getOwner());
+            EntityPlayer player = Util.getPlayerFromUUID(this.ownerUUID);
             if (player != null) BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
         }
         super.invalidate();
@@ -171,9 +170,9 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     }
 
     private void doEffects() {
-        //Verify the owner is valid for receiving effects
-        if (!this.getOwner().equals(" ")) {
-            EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.getOwner());
+        //Verify the ownerUUID is valid for receiving effects
+        if (!this.getOwnerUUID().equals(" ")) {
+            EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.getOwnerUUID());
             if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
                 //Loop through the crystals this beacon has detected
                 for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
@@ -230,7 +229,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
 /*    @Override
     public void applyCorruption() {
-        EntityPlayer player = this.worldObj.getPlayerEntityByName(this.owner);
+        EntityPlayer player = this.worldObj.getPlayerEntityByName(this.ownerUUID);
         if (player != null) {
             if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
                 player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
@@ -254,8 +253,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
     public void updateEntity() {
-        if (!this.getOwner().equals(" ")) {
-            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwner());
+        if (!this.getOwnerUUID().equals(" ")) {
+            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwnerUUID());
             if (player != null) {
                 this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
 
@@ -276,7 +275,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         }
         if (this.headType != Util.EnumHeadType.PLAYER && this.headType != Util.EnumHeadType.NONE && this.levels > 0) {
             double d0 = (double) (this.levels * 7 + 10);
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
+            AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
             List list = null;
 
             if (this.headType == Util.EnumHeadType.SKELETON || this.headType == Util.EnumHeadType.WITHERSKELETON) {
@@ -294,7 +293,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                 for (Object entry : list) {
                     entityCreature = (EntityCreature) entry;
                     if (!entityCreature.hasPath()) {
-                        Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreature, 16, 7, entityCreature.worldObj.getWorldVec3Pool().getVecFromPool(this.xCoord, this.yCoord, this.zCoord));
+                        Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreature, 16, 7, Vec3.createVectorHelper(this.xCoord, this.yCoord, this.zCoord));
                         PathNavigate entityPathNavigate = entityCreature.getNavigator();
                         if (entityPathNavigate != null && vec3 != null) {
                             PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);

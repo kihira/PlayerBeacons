@@ -26,7 +26,7 @@ public class CorruptionPotion extends Potion {
 
             //Make enderman nearby angry at player
             double d = (1 + level) * 15;
-            AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB(entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, entityLivingBase.posX + 1, entityLivingBase.posY + 1, entityLivingBase.posZ + 1).expand(d, d, d);
+            AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, entityLivingBase.posX + 1, entityLivingBase.posY + 1, entityLivingBase.posZ + 1).expand(d, d, d);
             axisalignedbb.maxY = entityLivingBase.worldObj.getHeight();
             List list = entityLivingBase.worldObj.selectEntitiesWithinAABB(EntityEnderman.class, axisalignedbb, new IEntitySelector() {
                 @Override

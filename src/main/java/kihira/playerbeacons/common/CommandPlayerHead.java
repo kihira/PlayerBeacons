@@ -33,11 +33,11 @@ public class CommandPlayerHead extends CommandBase {
         if (args != null && player != null) {
             if (args.length == 0) {
                 player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, player.getCommandSenderName()), 1);
-                notifyAdmins(commandSender, "commands.playerhead.success", player.getCommandSenderName(), player.getCommandSenderName());
+                func_152373_a(commandSender, this, "commands.playerhead.success", player.getCommandSenderName(), player.getCommandSenderName());
             }
             else if (args.length > 0 && args[0].length() > 0) {
                 player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, args[0]), 1);
-                notifyAdmins(commandSender, "commands.playerhead.success", args[0], player.getCommandSenderName());
+                func_152373_a(commandSender, this, "commands.playerhead.success", args[0], player.getCommandSenderName());
             }
             else throw new WrongUsageException("commands.playerhead.usage", args);
         }

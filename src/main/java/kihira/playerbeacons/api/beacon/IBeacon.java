@@ -24,7 +24,7 @@ public interface IBeacon {
      * Gets the owner of the beacon
      * @return The owner
      */
-    public String getOwner();
+    public String getOwnerUUID();
 
     /**
      * The amount of levels to the beacon

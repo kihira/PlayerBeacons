@@ -63,8 +63,8 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		*/
 
         //Render Skull
-        if (!playerBeacon.getOwner().equals(" ")) {
-            bindTexture(this.getSkullTexture(playerBeacon.getOwner()));
+        if (!playerBeacon.getOwnerUUID().equals(" ")) {
+            bindTexture(this.getSkullTexture(playerBeacon.getOwnerUUID()));
             GL11.glTranslated(0, 0.55D, 0);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationPitch + (playerBeacon.headRotationPitch - playerBeacon.headRotationPitch), 1.0F, 0.0F, 0.0F);
@@ -202,7 +202,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
     }
 
     private ResourceLocation getSkullTexture(String name) {
-        ResourceLocation resourcelocation = AbstractClientPlayer.getLocationSkull(name);
+        ResourceLocation resourcelocation = AbstractClientPlayer.getLocationSkin(name);
         AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name);
         return resourcelocation;
     }

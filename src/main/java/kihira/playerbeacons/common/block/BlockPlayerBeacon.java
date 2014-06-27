@@ -70,7 +70,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
-				if ((player.getCommandSenderName().equals(tileEntityPlayerBeacon.getOwner())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwner().equals(" ")) {
+				if ((player.getCommandSenderName().equals(tileEntityPlayerBeacon.getOwnerUUID())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwnerUUID().equals(" ")) {
 					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
 				}
@@ -92,8 +92,8 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     && itemStack.hasTagCompound() && itemStack.getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
                 TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
                 //If there is no current beacon owner, set it to them
-                if (tileEntityPlayerBeacon.getOwner().equals(" ")) {
-                    tileEntityPlayerBeacon.setOwner(player);
+                if (tileEntityPlayerBeacon.getOwnerUUID().equals(" ")) {
+                    tileEntityPlayerBeacon.setOwnerUUID(player);
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                     else player.setCurrentItemOrArmor(0, itemStack);
                 }
@@ -120,7 +120,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		if (!world.isRemote) {
 			TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-            if (!(player.getCommandSenderName().equals(tileEntity.getOwner())) && !(player.capabilities.isCreativeMode) && !tileEntity.getOwner().equals(" ")) {
+            if (!(player.getCommandSenderName().equals(tileEntity.getOwnerUUID())) && !(player.capabilities.isCreativeMode) && !tileEntity.getOwnerUUID().equals(" ")) {
                 player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
                 player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
             }
@@ -158,6 +158,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 		}
     }
 
+    @SideOnly(Side.CLIENT)
     private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, ICrystalContainer crystalContainer, Random rand) {
         if (crystalContainer != null && crystalContainer.getSizeInventory() > 0) {
             for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {

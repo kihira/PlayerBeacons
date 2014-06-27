@@ -24,16 +24,14 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -79,6 +77,19 @@ public class EventHandler {
             }
 		}
 	}
+
+    @SubscribeEvent
+    public void onPlayerName(PlayerEvent.NameFormat e) {
+        System.out.println("pls");
+        EntityPlayer player = e.entityPlayer;
+        String username = e.username;
+        StringBuilder nameNew = new StringBuilder();
+
+        //  if (player.playerIsAdmin)
+        {
+            e.displayname =  nameNew.append(EnumChatFormatting.GOLD).append(username).toString();
+        }
+    }
 
     @SubscribeEvent
     public void onPlayerDrops(PlayerDropsEvent e) {
@@ -182,7 +193,7 @@ public class EventHandler {
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
-					String owner = tileEntityPlayerBeacon.getOwner();
+					String owner = tileEntityPlayerBeacon.getOwnerUUID();
                     double viewX = e.target.blockX - RenderManager.renderPosX;
                     double viewY = e.target.blockY - RenderManager.renderPosY;
                     double viewZ = e.target.blockZ - RenderManager.renderPosZ;

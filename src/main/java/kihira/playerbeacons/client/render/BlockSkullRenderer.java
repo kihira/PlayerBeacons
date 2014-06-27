@@ -1,7 +1,10 @@
 package kihira.playerbeacons.client.render;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -10,20 +13,26 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.util.Map;
+
 @SideOnly(Side.CLIENT)
 public class BlockSkullRenderer extends TileEntitySkullRenderer {
 
 	private final ModelSkull modelSkull = new ModelSkull();
 
 	@Override
-	public void func_147530_a(float par1, float par2, float par3, int par4, float par5, int par6, String par7Str) {
+	public void func_152674_a(float par1, float par2, float par3, int par4, float par5, int par6, GameProfile gameProfile) {
 		//We only need to override the player head
 		if (par6 == 3) {
 			ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-			if (par7Str != null && par7Str.length() > 0) {
-				resourcelocation = AbstractClientPlayer.getLocationSkull(par7Str);
-				AbstractClientPlayer.getDownloadImageSkin(resourcelocation, par7Str);
-			}
+            if (gameProfile != null) {
+                Minecraft minecraft = Minecraft.getMinecraft();
+                Map map = minecraft.func_152342_ad().func_152788_a(gameProfile);
+
+                if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                    resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+                }
+            }
 			this.bindTexture(resourcelocation);
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_CULL_FACE);
@@ -54,7 +63,7 @@ public class BlockSkullRenderer extends TileEntitySkullRenderer {
 			modelSkull.render(null, 0.0F, 0.0F, 0.0F, par5, 0.0F, 0.0625F);
 			GL11.glPopMatrix();
 		}
-		else super.func_147530_a(par1, par2, par3, par4, par5, par6, par7Str);
+		else super.func_152674_a(par1, par2, par3, par4, par5, par6, gameProfile);
 	}
 
     @Override

@@ -21,7 +21,7 @@ public class CommandPlayerBeacons extends CommandBase {
         if (args.length >= 1) {
             if (args[0].equals("corruption") && args.length >= 2) {
                 BeaconDataHelper.setPlayerCorruptionAmount(getCommandSenderAsPlayer(commandSender), Float.valueOf(args[1]));
-                notifyAdmins(commandSender, "Set corruption to %s", args[1]);
+                func_152373_a(commandSender, this, "Set corruption to %s", args[1]); //Notify admins
             }
         }
     }

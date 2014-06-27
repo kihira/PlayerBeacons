@@ -1,10 +1,15 @@
 package kihira.playerbeacons.common.util;
 
 import kihira.playerbeacons.common.PlayerBeacons;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
+
+import java.util.Iterator;
+import java.util.UUID;
 
 public class Util {
 
@@ -65,4 +70,19 @@ public class Util {
 		}
 		return itemStack;
 	}
+
+    public static EntityPlayerMP getPlayerFromUUID(String uuidString) {
+        UUID uuid = UUID.fromString(uuidString);
+
+        Iterator iterator = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
+        EntityPlayerMP entityplayermp;
+
+        do {
+            if (!iterator.hasNext()) return null;
+            entityplayermp = (EntityPlayerMP)iterator.next();
+        }
+        while (!entityplayermp.getUniqueID().equals(uuid));
+
+        return entityplayermp;
+    }
 }
