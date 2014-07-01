@@ -1,12 +1,10 @@
 package kihira.playerbeacons.common.util;
 
-import com.mojang.authlib.GameProfile;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 
@@ -67,10 +65,7 @@ public class Util {
 		ItemStack itemStack = new ItemStack(Items.skull, 1, id);
 		if (owner != null) {
 			NBTTagCompound tag = new NBTTagCompound();
-            NBTTagCompound gameProfileTag = new NBTTagCompound();
-			//tag.setString("SkullOwner", owner);
-            NBTUtil.func_152460_a(gameProfileTag, new GameProfile(null, owner));
-            tag.setTag("SkullOwner", gameProfileTag);
+			tag.setString("SkullOwner", owner);
 			itemStack.setTagCompound(tag);
 		}
 		return itemStack;

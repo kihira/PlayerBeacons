@@ -216,5 +216,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             }
         }
         return resourcelocation;
+
+        // return Minecraft.getMinecraft().thePlayer.getLocationSkin();
     }
 }

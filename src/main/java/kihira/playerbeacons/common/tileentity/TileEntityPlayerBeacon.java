@@ -1,8 +1,10 @@
 package kihira.playerbeacons.common.tileentity;
 
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
@@ -32,6 +34,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
@@ -59,6 +62,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (par1NBTTagCompound.hasKey("Owner", 10)) {
             this.ownerGameProfile = NBTUtil.func_152459_a(par1NBTTagCompound.getCompoundTag("Owner"));
         }
+
+        this.refreshGameProfileData();
     }
 
     @Override
@@ -143,7 +148,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
-            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            this.refreshGameProfileData();
+            this.markDirty();
         }
         else if (player == null) {
             this.ownerGameProfile = null;
@@ -338,5 +344,25 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (f3 > maxInc) f3 = maxInc;
         if (f3 < -maxInc) f3 = -maxInc;
         return currRot + f3;
+    }
+
+    /**
+     * This loads texture data into the players profile if it is missing
+     */
+    private void refreshGameProfileData() {
+        if (this.ownerGameProfile != null && !StringUtils.isNullOrEmpty(this.ownerGameProfile.getName())) {
+            if (!this.ownerGameProfile.isComplete() || !this.ownerGameProfile.getProperties().containsKey("textures")) {
+                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.ownerGameProfile.getName());
+                if (gameprofile != null) {
+                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
+                    if (property == null) {
+                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
+                    }
+
+                    this.ownerGameProfile = gameprofile;
+                    this.markDirty();
+                }
+            }
+        }
     }
 }

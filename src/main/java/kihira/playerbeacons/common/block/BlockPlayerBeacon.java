@@ -94,12 +94,13 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     && itemStack.hasTagCompound()) {
                 GameProfile gameProfile = null;
                 if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string
-                    gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwneer"));
+                    gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwner"));
                 }
                 else if (itemStack.getTagCompound().hasKey("SkullOwner", 10)) { //The owners game profile
                     gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
                 }
                 TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                System.out.println(tileEntityPlayerBeacon.getOwnerGameProfile());
                 //If there is no current beacon owner, set it to them
                 if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName())) {
                     tileEntityPlayerBeacon.setOwner(player);
