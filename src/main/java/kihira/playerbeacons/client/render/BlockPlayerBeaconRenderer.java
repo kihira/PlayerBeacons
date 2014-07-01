@@ -67,6 +67,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
         //Render Skull
         if (playerBeacon.getOwnerGameProfile() != null) {
+            GL11.glScalef(0.8F, 0.8F, 0.8F);
             bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             GL11.glTranslated(0, 0.55D, 0);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
