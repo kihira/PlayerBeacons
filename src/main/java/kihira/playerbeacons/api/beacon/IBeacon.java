@@ -1,5 +1,6 @@
 package kihira.playerbeacons.api.beacon;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -24,7 +25,7 @@ public interface IBeacon {
      * Gets the owner of the beacon
      * @return The owner
      */
-    public String getOwnerUUID();
+    public GameProfile getOwnerGameProfile();
 
     /**
      * The amount of levels to the beacon

@@ -1,9 +1,11 @@
 package kihira.playerbeacons.client.render;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.proxy.ClientProxy;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -15,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
+import java.util.Map;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
@@ -63,8 +66,8 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		*/
 
         //Render Skull
-        if (!playerBeacon.getOwnerUUID().equals(" ")) {
-            bindTexture(this.getSkullTexture(playerBeacon.getOwnerUUID()));
+        if (playerBeacon.getOwnerGameProfile() != null) {
+            bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             GL11.glTranslated(0, 0.55D, 0);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationPitch + (playerBeacon.headRotationPitch - playerBeacon.headRotationPitch), 1.0F, 0.0F, 0.0F);
@@ -201,9 +204,17 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         return this.field_147528_b;
     }
 
-    private ResourceLocation getSkullTexture(String name) {
-        ResourceLocation resourcelocation = AbstractClientPlayer.getLocationSkin(name);
-        AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name);
+    private ResourceLocation getSkullTexture(GameProfile gameProfile) {
+        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+
+        if (gameProfile != null) {
+            Minecraft minecraft = Minecraft.getMinecraft();
+            Map map = minecraft.func_152342_ad().func_152788_a(gameProfile);
+
+            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+            }
+        }
         return resourcelocation;
     }
 }

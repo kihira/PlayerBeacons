@@ -2,6 +2,7 @@ package kihira.playerbeacons.common.tileentity;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
@@ -21,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -39,7 +41,7 @@ import java.util.Random;
 public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     private Util.EnumHeadType headType = Util.EnumHeadType.NONE;
-    private String ownerUUID = " ";
+    private GameProfile ownerGameProfile;
     private float corruption = 0;
     private int levels = 0;
 
@@ -50,20 +52,28 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
         super.readFromNBT(par1NBTTagCompound);
         this.headType = Util.EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
-        this.ownerUUID = par1NBTTagCompound.getString("ownerUUID");
         this.corruption = par1NBTTagCompound.getFloat("badstuff");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
+
+        if (par1NBTTagCompound.hasKey("Owner", 10)) {
+            this.ownerGameProfile = NBTUtil.func_152459_a(par1NBTTagCompound.getCompoundTag("Owner"));
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
-        par1NBTTagCompound.setString("ownerUUID", this.ownerUUID);
         par1NBTTagCompound.setFloat("badstuff", this.corruption);
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
+
+        if (this.getOwnerGameProfile() != null) {
+            NBTTagCompound gameProfileTag = new NBTTagCompound();
+            NBTUtil.func_152460_a(gameProfileTag, this.getOwnerGameProfile());
+            par1NBTTagCompound.setTag("Owner", gameProfileTag);
+        }
     }
 
     @Override
@@ -83,7 +93,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public boolean isBeaconValid() {
         if (this.worldObj.getTotalWorldTime() % 20 == 0) {
             this.levels = 0;
-            if (!this.getOwnerUUID().equals(" ")) {
+            if (this.getOwnerGameProfile() != null) {
                 for (int i = 1; i <= 4; this.levels = i++) {
                     int j = this.yCoord - i;
                     if (j < 0) break;
@@ -120,8 +130,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     }
 
     @Override
-    public String getOwnerUUID() {
-        return this.ownerUUID;
+    public GameProfile getOwnerGameProfile() {
+        return this.ownerGameProfile;
     }
 
     @Override
@@ -129,23 +139,25 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         return this.levels;
     }
 
-    public void setOwnerUUID(EntityPlayer player) {
+    public void setOwner(EntityPlayer player) {
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
-            this.ownerUUID = player.getUniqueID().toString();
+            this.ownerGameProfile = player.getGameProfile();
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
         else if (player == null) {
-            this.ownerUUID = "";
+            this.ownerGameProfile = null;
         }
     }
 
     @Override
     public void invalidate() {
-        if (FMLCommonHandler.instance().getSide().isServer() && !this.getOwnerUUID().equals("")) {
+        if (FMLCommonHandler.instance().getSide().isServer() && this.getOwnerGameProfile() != null) {
             //Remove player beacon data
-            EntityPlayer player = Util.getPlayerFromUUID(this.ownerUUID);
-            if (player != null) BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
+            EntityPlayer player = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId());
+            if (player != null) {
+                BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
+            }
         }
         super.invalidate();
     }
@@ -171,8 +183,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     private void doEffects() {
         //Verify the ownerUUID is valid for receiving effects
-        if (!this.getOwnerUUID().equals(" ")) {
-            EntityPlayer entityPlayer = this.worldObj.getPlayerEntityByName(this.getOwnerUUID());
+        if (this.getOwnerGameProfile() != null) {
+            EntityPlayer entityPlayer = this.worldObj.func_152378_a(this.getOwnerGameProfile().getId()); //Get player by UUID
             if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
                 //Loop through the crystals this beacon has detected
                 for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
@@ -253,8 +265,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
     public void updateEntity() {
-        if (!this.getOwnerUUID().equals(" ")) {
-            EntityPlayer player = this.worldObj.getPlayerEntityByName(this.getOwnerUUID());
+        if (this.getOwnerGameProfile() != null) {
+            EntityPlayer player = this.worldObj.func_152378_a(this.getOwnerGameProfile().getId()); //Get player by UUID
             if (player != null) {
                 this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
 

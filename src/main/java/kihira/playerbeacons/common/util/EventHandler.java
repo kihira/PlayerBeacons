@@ -1,5 +1,6 @@
 package kihira.playerbeacons.common.util;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -193,15 +194,16 @@ public class EventHandler {
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
 					float corruption = tileEntityPlayerBeacon.getCorruption();
-					String owner = tileEntityPlayerBeacon.getOwnerUUID();
+					GameProfile ownerGameProfile = tileEntityPlayerBeacon.getOwnerGameProfile();
                     double viewX = e.target.blockX - RenderManager.renderPosX;
                     double viewY = e.target.blockY - RenderManager.renderPosY;
                     double viewZ = e.target.blockZ - RenderManager.renderPosZ;
                     String string;
 
                     string = StatCollector.translateToLocal("text.corruption") + ": " + String.valueOf(corruption) + "/s\n";
-                    if (owner.equals(" ")) owner = "\u00a7kNo-one";
-                    string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + owner;
+                    if (ownerGameProfile != null) {
+                        string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + ownerGameProfile.getName();
+                    }
                     this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
                 }
 			}

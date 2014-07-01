@@ -1,5 +1,6 @@
 package kihira.playerbeacons.common.block;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
@@ -19,6 +20,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
@@ -65,12 +67,12 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
 		if (!world.isRemote) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 			if (tileEntity instanceof TileEntityPlayerBeacon) {
 				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
-				if ((player.getCommandSenderName().equals(tileEntityPlayerBeacon.getOwnerUUID())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwnerUUID().equals(" ")) {
+				if ((player.getUniqueID().toString().equals(tileEntityPlayerBeacon.getOwnerGameProfile())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwnerGameProfile().equals("")) {
 					tileEntity.invalidate();
 					return world.setBlockToAir(x, y, z);
 				}
@@ -89,11 +91,18 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
             ItemStack itemStack = player.getCurrentEquippedItem();
             //Check if player is holding a skull and that is belongs to them
             if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == Util.EnumHeadType.PLAYER.getID()
-                    && itemStack.hasTagCompound() && itemStack.getTagCompound().getString("SkullOwner").equals(player.getCommandSenderName())) {
+                    && itemStack.hasTagCompound()) {
+                GameProfile gameProfile = null;
+                if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string
+                    gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwneer"));
+                }
+                else if (itemStack.getTagCompound().hasKey("SkullOwner", 10)) { //The owners game profile
+                    gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
+                }
                 TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
                 //If there is no current beacon owner, set it to them
-                if (tileEntityPlayerBeacon.getOwnerUUID().equals(" ")) {
-                    tileEntityPlayerBeacon.setOwnerUUID(player);
+                if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName())) {
+                    tileEntityPlayerBeacon.setOwner(player);
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                     else player.setCurrentItemOrArmor(0, itemStack);
                 }
@@ -120,7 +129,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		if (!world.isRemote) {
 			TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-            if (!(player.getCommandSenderName().equals(tileEntity.getOwnerUUID())) && !(player.capabilities.isCreativeMode) && !tileEntity.getOwnerUUID().equals(" ")) {
+            if (tileEntity.getOwnerGameProfile() != null && !player.getGameProfile().equals(tileEntity.getOwnerGameProfile()) && !(player.capabilities.isCreativeMode)) {
                 player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
                 player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
             }
