@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
@@ -43,10 +44,13 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        this.renderPortal(x, y, z);
+
+        if (PlayerBeacons.config.enablePortalRenderering) {
+            this.renderPortal(x, y, z);
+        }
+
         this.bindTexture(ClientProxy.playerBeaconTexture);
         GL11.glTranslated(x, y, z);
         GL11.glRotatef(180F, 0F, 0F, 1F);
@@ -77,7 +81,6 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         }
 
 		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}
@@ -87,10 +90,11 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         float f2 = (float)this.field_147501_a.field_147561_k;
         float f3 = (float)this.field_147501_a.field_147558_l;
         GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_CULL_FACE);
         Random random = new Random(31100L);
         float f4 = 0.75F;
 
-        for (int i = 0; i < 16; ++i) {
+        for (int i = 0; i < 8; ++i) {
             GL11.glPushMatrix();
             float f5 = (float)(16 - i);
             float f6 = 0.0625F;
@@ -196,6 +200,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_TEXTURE_GEN_R);
         GL11.glDisable(GL11.GL_TEXTURE_GEN_Q);
         GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_CULL_FACE);
     }
 
     private FloatBuffer func_147525_a(float p_147525_1_, float p_147525_2_, float p_147525_3_, float p_147525_4_) {

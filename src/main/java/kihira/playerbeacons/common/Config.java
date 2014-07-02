@@ -15,6 +15,7 @@ public class Config {
     public boolean enableHideParticleEffects;
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
+    public boolean enablePortalRenderering;
 
 	private final Configuration config;
 
@@ -51,6 +52,9 @@ public class Config {
         prop = config.get(Configuration.CATEGORY_GENERAL, "Hide particle effects", true);
         prop.comment = "Hides all particle effects on the player";
         enableHideParticleEffects = prop.getBoolean(true);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy beacon rendering", true);
+        prop.comment = "Enables the portal style effect on beacons";
+        enablePortalRenderering = prop.getBoolean(true);
 	}
 
 	private void save() {
