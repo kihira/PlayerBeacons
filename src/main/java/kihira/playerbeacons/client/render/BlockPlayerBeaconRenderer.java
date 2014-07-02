@@ -43,16 +43,17 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         this.renderPortal(x, y, z);
         this.bindTexture(ClientProxy.playerBeaconTexture);
-		GL11.glTranslated(x + 0.5d, y + 1.8001d, z + 0.5d);
-		GL11.glRotatef(180F, 0F, 0F, 1F);
+        GL11.glTranslated(x, y, z);
+        GL11.glRotatef(180F, 0F, 0F, 1F);
+		GL11.glTranslated(-0.5F, -1.8F, 0.5F);
 		GL11.glScalef(1.2F, 1.2F, 1.2F);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		this.playerBeaconModel.render(null, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0.0F, partialTickTime, 0.0625F);
+		this.playerBeaconModel.render(null, 0F, 0F, 0F, 0F, partialTickTime, 0.0625F);
 
         /*
 		if (PlayerBeacons.isChristmas && tileentity.getWorldObj().getBlock(tileentity.xCoord, tileentity.yCoord + 1, tileentity.zCoord) == Blocks.skull) {
@@ -66,7 +67,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		*/
 
         //Render Skull
-        if (playerBeacon.getOwnerGameProfile() != null) {
+        if (playerBeacon != null && playerBeacon.getOwnerGameProfile() != null) {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
             bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             GL11.glTranslated(0, 0.55D, 0);
@@ -78,7 +79,6 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glTranslated(x, y + 1, z);
 		GL11.glPopMatrix();
 	}
 
@@ -217,7 +217,5 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             }
         }
         return resourcelocation;
-
-        // return Minecraft.getMinecraft().thePlayer.getLocationSkin();
     }
 }

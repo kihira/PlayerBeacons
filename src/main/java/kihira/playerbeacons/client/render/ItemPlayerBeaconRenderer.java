@@ -1,17 +1,17 @@
 package kihira.playerbeacons.client.render;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import kihira.playerbeacons.proxy.ClientProxy;
+import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
 
 public class ItemPlayerBeaconRenderer implements IItemRenderer {
 
-	private final ModelPlayerBeacon modelPlayerBeacon;
+    TileEntitySpecialRenderer playerBeaconRenderer;
 
 	public ItemPlayerBeaconRenderer() {
-		modelPlayerBeacon = new ModelPlayerBeacon();
+        this.playerBeaconRenderer = TileEntityRendererDispatcher.instance.getSpecialRendererByClass(TileEntityPlayerBeacon.class);
 	}
 
 	@Override
@@ -26,36 +26,26 @@ public class ItemPlayerBeaconRenderer implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		switch (type) {
-			case ENTITY: {
-				renderPlayerBeaconItem(0f, 0f, 0f, 1f);
-				break;
-			}
-			case EQUIPPED: {
-				renderPlayerBeaconItem(0.5f, 1.5f, 0.5f, 1f);
-				break;
-			}
-			case INVENTORY: {
-				renderPlayerBeaconItem(0f, 1f, 0f, 1f);
-				break;
-			}
-			case EQUIPPED_FIRST_PERSON: {
-				renderPlayerBeaconItem(3f, 1.5f, 0.5f, 2f);
-				break;
-			}
-			default: break;
-		}
-	}
-
-	private void renderPlayerBeaconItem(float x, float y, float z, float scale) {
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(ClientProxy.playerBeaconTexture);
-		GL11.glTranslated(x, y, z);
-		GL11.glScalef(scale, scale, scale);
-		GL11.glRotatef(180.0f, 0f, 0f, 1f);
-		modelPlayerBeacon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
+        if (this.playerBeaconRenderer != null) {
+            switch (type) {
+                case ENTITY: {
+                    this.playerBeaconRenderer.renderTileEntityAt(null, -0.5D, -0.1D, -0.5D, 0F);
+                    break;
+                }
+                case EQUIPPED: {
+                    this.playerBeaconRenderer.renderTileEntityAt(null, 0D, 0D, 0D, 0F);
+                    break;
+                }
+                case INVENTORY: {
+                    this.playerBeaconRenderer.renderTileEntityAt(null, 0D, -0.1D, 0D, 0F);
+                    break;
+                }
+                case EQUIPPED_FIRST_PERSON: {
+                    this.playerBeaconRenderer.renderTileEntityAt(null, 0D, -0.1D, 0D, 0F);
+                    break;
+                }
+                default: break;
+            }
+        }
 	}
 }

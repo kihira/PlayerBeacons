@@ -271,7 +271,6 @@ public class ModelPlayerBeacon extends ModelBase {
 	}
 
 	public void render(Entity entity, float x, float y, float z, float f3, float partialTickTime, float f5) {
-		setRotationAngles(x, y, z, f3, partialTickTime, f5, null);
 		base.render(f5);
 		Basefoot1.render(f5);
 		Basefoot2.render(f5);
