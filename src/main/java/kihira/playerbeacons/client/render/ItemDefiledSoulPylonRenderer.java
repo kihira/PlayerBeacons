@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.proxy.ClientProxy;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
@@ -13,10 +14,12 @@ public class ItemDefiledSoulPylonRenderer implements IItemRenderer {
 
 	private final ModelPylon model;
 	private final ModelCrystalPort modelCrystalPortDefault;
+    private final TileEntitySpecialRenderer pylonModelRenderer;
 
-	public ItemDefiledSoulPylonRenderer() {
+	public ItemDefiledSoulPylonRenderer(TileEntitySpecialRenderer pylonModelRenderer) {
 		model = new ModelPylon();
 		modelCrystalPortDefault = new ModelCrystalPort();
+        this.pylonModelRenderer = pylonModelRenderer;
 	}
 
 	@Override

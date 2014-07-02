@@ -1,17 +1,15 @@
 package kihira.playerbeacons.client.render;
 
-import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
 public class ItemPlayerBeaconRenderer implements IItemRenderer {
 
-    TileEntitySpecialRenderer playerBeaconRenderer;
+    private final TileEntitySpecialRenderer playerBeaconRenderer;
 
-	public ItemPlayerBeaconRenderer() {
-        this.playerBeaconRenderer = TileEntityRendererDispatcher.instance.getSpecialRendererByClass(TileEntityPlayerBeacon.class);
+	public ItemPlayerBeaconRenderer(TileEntitySpecialRenderer playerBeaconRenderer) {
+        this.playerBeaconRenderer = playerBeaconRenderer;
 	}
 
 	@Override

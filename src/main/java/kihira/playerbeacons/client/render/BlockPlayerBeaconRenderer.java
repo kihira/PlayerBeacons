@@ -80,6 +80,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             this.modelSkull.renderWithoutRotation(0.0625F);
         }
 
+        GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
@@ -201,6 +202,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_TEXTURE_GEN_Q);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
     }
 
     private FloatBuffer func_147525_a(float p_147525_1_, float p_147525_2_, float p_147525_3_, float p_147525_4_) {
