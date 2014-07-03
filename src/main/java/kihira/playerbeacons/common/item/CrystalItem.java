@@ -20,7 +20,7 @@ public class CrystalItem extends Item implements ICrystal {
 	private IIcon crystalOverlay;
 
 	public CrystalItem() {
-		//This equals one day in real time. Change it depending on how fast we calculate bad stuff
+		//This equals one day in real time. Change it depending on how fast we calculate bad render
 		this.setMaxDamage(43200);
         this.setMaxStackSize(1);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);

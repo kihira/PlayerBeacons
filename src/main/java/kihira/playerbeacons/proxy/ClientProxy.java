@@ -37,9 +37,11 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.defiledSoulPylonBlock), new ItemDefiledSoulPylonRenderer(blockDefiledSoulPylonRenderer));
 
 		//Replace skull renderer
-        TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
-		BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
+        if (PlayerBeacons.config.overrideSkullRenderer) {
+            TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
+            BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
+        }
 	}
 
     @Override

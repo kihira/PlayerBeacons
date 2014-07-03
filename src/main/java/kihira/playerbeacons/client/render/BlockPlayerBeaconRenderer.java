@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -74,7 +75,8 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         if (playerBeacon != null && playerBeacon.getOwnerGameProfile() != null) {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
             bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
-            GL11.glTranslated(0, 0.55D, 0);
+            float yOffset = MathHelper.cos((Minecraft.getSystemTime()) / 2000F) / 30F;
+            GL11.glTranslatef(0F, yOffset + 0.7F, 0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationPitch + (playerBeacon.headRotationPitch - playerBeacon.headRotationPitch), 1.0F, 0.0F, 0.0F);
             this.modelSkull.renderWithoutRotation(0.0625F);

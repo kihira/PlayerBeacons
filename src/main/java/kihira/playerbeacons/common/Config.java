@@ -11,7 +11,7 @@ public class Config {
     public int corruptionPotionID;
 	public int spawnCooldownDuration;
 	public boolean disableCorruption;
-	public boolean enableThaumcraft;
+	public boolean overrideSkullRenderer;
     public boolean enableHideParticleEffects;
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
@@ -46,15 +46,15 @@ public class Config {
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Disable Corruption", false);
 		prop.comment = "Whether to do corruption calculations or not";
 		disableCorruption = prop.getBoolean(false);
-		prop = config.get(Configuration.CATEGORY_GENERAL, "Enable Thaumcraft Intergration", true);
-		prop.comment = "If this is enabled and Thaumcraft is detected, the default recipes will be replaced with TC research and recipes";
-		enableThaumcraft = prop.getBoolean(true);
         prop = config.get(Configuration.CATEGORY_GENERAL, "Hide particle effects", true);
         prop.comment = "Hides all particle effects on the player";
         enableHideParticleEffects = prop.getBoolean(true);
         prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy beacon rendering", true);
         prop.comment = "Enables the portal style effect on beacons";
         enablePortalRenderering = prop.getBoolean(true);
+        prop = config.get(Configuration.CATEGORY_GENERAL, "Override vanilla skull rendering", true);
+        prop.comment = "Replaces the vanilla skull (heads) rendering with one that renders the hat layer";
+        overrideSkullRenderer = prop.getBoolean(true);
 	}
 
 	private void save() {

@@ -186,7 +186,7 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
-        //Check needed stuff isn't null and GUI is enabled
+        //Check needed render isn't null and GUI is enabled
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
 			if (e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
