@@ -56,7 +56,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
-    public TileEntity createNewTileEntity(World var1, int var2) {
+    public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityPlayerBeacon();
 	}
 
@@ -67,30 +67,29 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-		if (!world.isRemote) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
-			if (tileEntity instanceof TileEntityPlayerBeacon) {
-				TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) tileEntity;
-				if ((player.getUniqueID().toString().equals(tileEntityPlayerBeacon.getOwnerGameProfile())) || player.capabilities.isCreativeMode || tileEntityPlayerBeacon.getOwnerGameProfile().equals("")) {
-					tileEntity.invalidate();
-					return world.setBlockToAir(x, y, z);
-				}
-				else {
-					player.attackEntityFrom(PlayerBeacons.damageBehead, 10);
-					player.addChatComponentMessage(new ChatComponentText("block.playerBeacon.guard"));
-				}
-			}
-		}
-		return false;
-	}
+        if (!world.isRemote) {
+            TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+            //If beacon is unbound, owned by player or player is in creative, destroy it
+            if (tileEntityPlayerBeacon.getOwnerGameProfile() == null || player.getGameProfile().equals(tileEntityPlayerBeacon.getOwnerGameProfile()) || player.capabilities.isCreativeMode) {
+                tileEntityPlayerBeacon.invalidate();
+                return world.setBlockToAir(x, y, z);
+            }
+            else {
+                player.attackEntityFrom(PlayerBeacons.damageBehead, 10);
+                player.addChatComponentMessage(new ChatComponentText("block.playerBeacon.guard"));
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float par7, float par8, float par9) {
         if (player.getCurrentEquippedItem() != null && !world.isRemote) {
             ItemStack itemStack = player.getCurrentEquippedItem();
-            //Check if player is holding a skull and that is belongs to them
+            //Check if player is holding a skull and that it belongs to them
             if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == EnumHeadType.PLAYER.getID()
                     && itemStack.hasTagCompound()) {
+                //Get skull gameprofile
                 GameProfile gameProfile = null;
                 if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string
                     gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwner"));
@@ -98,9 +97,9 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 else if (itemStack.getTagCompound().hasKey("SkullOwner", 10)) { //The owners game profile
                     gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
                 }
+
                 TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-                System.out.println(tileEntityPlayerBeacon.getOwnerGameProfile());
-                //If there is no current beacon owner, set it to them
+                //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
                 if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName())) {
                     tileEntityPlayerBeacon.setOwner(player);
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
@@ -129,6 +128,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		if (!world.isRemote) {
 			TileEntityPlayerBeacon tileEntity = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+            //If beacon is unbound, owned by player or player is in creative, allow
             if (tileEntity.getOwnerGameProfile() != null && !player.getGameProfile().equals(tileEntity.getOwnerGameProfile()) && !(player.capabilities.isCreativeMode)) {
                 player.attackEntityFrom(PlayerBeacons.damageBehead, 2);
                 player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("block.playerBeacon.guard")));
@@ -150,34 +150,40 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
         if (playerBeacon.isBeaconValid() && levels > 0) {
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels);
-                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer, new Random());
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer);
             }
             for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos - levels);
-                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos - levels, crystalContainer, new Random());
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos - levels, crystalContainer);
             }
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos + levels);
-                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer, new Random());
+                this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer);
             }
             for (int y = 0; ((world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos + levels, yPos - levels + 1 + y, zPos + levels);
-                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer, new Random());
+                this.doParticles(playerBeacon, xPos + levels + 1, yPos - levels + 1 + y, zPos + levels + 1, crystalContainer);
             }
 		}
     }
 
     @SideOnly(Side.CLIENT)
-    private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, ICrystalContainer crystalContainer, Random rand) {
+    private void doParticles(TileEntityPlayerBeacon playerBeacon, int targetX, int targetY, int targetZ, ICrystalContainer crystalContainer) {
         if (crystalContainer != null && crystalContainer.getSizeInventory() > 0) {
             for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {
                 ItemStack itemStack = crystalContainer.getStackInSlot(i);
+                //Verify it is a crystal
                 if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
                     List<String> buffList = ((ICrystal) itemStack.getItem()).getAffectedBuffs();
+                    //Check buff list isn't empty or null
                     if (buffList != null && !buffList.isEmpty()) {
                         for (String buff : buffList) {
-                            for (int j = 0; j < 2; j++) {
-                                PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, Buff.buffs.get(buff));
+                            //Verify buff exists
+                            if (Buff.buffs.containsKey(buff)) {
+                                Buff theBuff = Buff.buffs.get(buff);
+                                for (int j = 0; j < 2; j++) {
+                                    PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, theBuff);
+                                }
                             }
                         }
                     }
