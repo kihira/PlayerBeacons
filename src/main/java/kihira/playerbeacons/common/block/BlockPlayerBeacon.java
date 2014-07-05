@@ -7,7 +7,6 @@ import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
-import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.block.Block;
@@ -178,7 +177,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                     if (buffList != null && !buffList.isEmpty()) {
                         for (String buff : buffList) {
                             for (int j = 0; j < 2; j++) {
-                                Minecraft.getMinecraft().effectRenderer.addEffect(new EntityBuffParticleFX(targetX + (rand.nextFloat() / 5F), targetY + 0.4F + (rand.nextFloat() / 2F), targetZ + (rand.nextFloat() / 5F), playerBeacon, Buff.buffs.get(buff)));
+                                PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, Buff.buffs.get(buff));
                             }
                         }
                     }

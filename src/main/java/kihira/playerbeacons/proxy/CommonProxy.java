@@ -1,11 +1,12 @@
 package kihira.playerbeacons.proxy;
 
-import net.minecraft.entity.player.EntityPlayer;
+import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 
 public class CommonProxy {
 
-	public void registerRenderers() { }
+	public void registerRenderers() {}
 
-    public void corruptRandomPixels(EntityPlayer player, float corr) { }
+    public void spawnBeaconParticle(double targetX, double targetY, double targetZ, TileEntityPlayerBeacon sourceBeacon, Buff buff) {}
 
 }
