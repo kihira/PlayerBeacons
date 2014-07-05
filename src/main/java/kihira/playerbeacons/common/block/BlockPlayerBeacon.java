@@ -3,13 +3,13 @@ package kihira.playerbeacons.common.block;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
-import kihira.playerbeacons.common.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -90,7 +90,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
         if (player.getCurrentEquippedItem() != null && !world.isRemote) {
             ItemStack itemStack = player.getCurrentEquippedItem();
             //Check if player is holding a skull and that is belongs to them
-            if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == Util.EnumHeadType.PLAYER.getID()
+            if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == EnumHeadType.PLAYER.getID()
                     && itemStack.hasTagCompound()) {
                 GameProfile gameProfile = null;
                 if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string

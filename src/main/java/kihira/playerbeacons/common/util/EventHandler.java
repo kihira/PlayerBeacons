@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.foxlib.client.RenderHelper;
+import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.common.PlayerBeacons;
@@ -11,7 +13,6 @@ import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -25,14 +26,16 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -51,10 +54,10 @@ public class EventHandler {
 
 		//Death by DamageBehead
 		if (e.source == PlayerBeacons.damageBehead) {
-			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadEntity.getCommandSenderName()), 1);
-			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
-			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
+			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, deadEntity.getCommandSenderName()), 1);
+			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.ZOMBIE, null), 1);
+			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(EnumHeadType.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.CREEPER, null), 1);
             return;
 		}
 
@@ -66,31 +69,18 @@ public class EventHandler {
                 int lvl = EnchantmentHelper.getEnchantmentLevel(PlayerBeacons.config.decapitationEnchantmentID, item);
                 Random random = new Random();
                 if (lvl > 0 && (random.nextInt()) % (12 / lvl) == 0) {
-                    if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.ZOMBIE, null), 1);
-                    else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(Util.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
-                    else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(Util.getHead(Util.EnumHeadType.CREEPER, null), 1);
+                    if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.ZOMBIE, null), 1);
+                    else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(EnumHeadType.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
+                    else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.CREEPER, null), 1);
                     else if (deadEntity instanceof EntityPlayer) {
                         EntityPlayer deadPlayer = (EntityPlayer) deadEntity;
                         deadPlayer.func_110142_aN().func_94547_a(PlayerBeacons.damageBehead, 1, 1); //Sets last damage as beheading so it displays our message instead
-                        e.entityLiving.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
+                        e.entityLiving.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
                     }
                 }
             }
 		}
 	}
-
-    @SubscribeEvent
-    public void onPlayerName(PlayerEvent.NameFormat e) {
-        System.out.println("pls");
-        EntityPlayer player = e.entityPlayer;
-        String username = e.username;
-        StringBuilder nameNew = new StringBuilder();
-
-        //  if (player.playerIsAdmin)
-        {
-            e.displayname =  nameNew.append(EnumChatFormatting.GOLD).append(username).toString();
-        }
-    }
 
     @SubscribeEvent
     public void onPlayerDrops(PlayerDropsEvent e) {
@@ -108,7 +98,7 @@ public class EventHandler {
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
 					//spawn within 50 blocks and similar y level
 					if ((player.getDistanceToEntity(entityZombie) < 50) && (player.posY - entityZombie.posY < 5)) {
-						entityZombie.setCurrentItemOrArmor(4, Util.getHead(Util.EnumHeadType.PLAYER, player.getCommandSenderName()));
+						entityZombie.setCurrentItemOrArmor(4, EnumHeadType.getHead(EnumHeadType.PLAYER, player.getCommandSenderName()));
                         entityZombie.setEquipmentDropChance(4, 100);
 						this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
 					}
@@ -201,51 +191,10 @@ public class EventHandler {
                     String string;
 
                     string = StatCollector.translateToLocal("text.corruption") + ": " + String.valueOf(corruption) + "/s\n";
-                    if (ownerGameProfile != null) {
-                        string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + ownerGameProfile.getName();
-                    }
-                    this.renderLabel(string, (float) viewX + 0.5F, (float) viewY + 2.0F, (float) viewZ + 0.5F);
+                    if (ownerGameProfile != null) string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + ownerGameProfile.getName();
+                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D, RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, true);
                 }
 			}
 		}
-	}
-
-	private void renderLabel(String string, float viewX, float viewY, float viewZ) {
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		RenderManager renderManager = RenderManager.instance;
-		float f1 = 0.016666668F * 1.2F;
-        String[] lines = string.split("\\n");
-
-		GL11.glPushMatrix();
-		GL11.glTranslatef(viewX, viewY, viewZ);
-		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-		GL11.glScalef(-f1, -f1, f1);
-		GL11.glDepthMask(false);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Tessellator tessellator = Tessellator.instance;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		tessellator.startDrawingQuads();
-		float j = fontRenderer.splitStringWidth(string, 400) * 2.6F;
-		tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-		tessellator.addVertex((double)(-j), (double)(-1), 0.0D);
-		tessellator.addVertex((double)(-j), (double)(8 * lines.length), 0.0D);
-		tessellator.addVertex((double)(j), (double)(8 * lines.length), 0.0D);
-		tessellator.addVertex((double)(j), (double)(-1), 0.0D);
-		tessellator.draw();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-        for (int i = 0; i < lines.length; i++) {
-            fontRenderer.drawString(lines[i], -fontRenderer.getStringWidth(lines[i]) / 2, 8 * i, -1);
-        }
-
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glPopMatrix();
 	}
 }

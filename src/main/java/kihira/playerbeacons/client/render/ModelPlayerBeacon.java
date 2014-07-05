@@ -50,9 +50,6 @@ public class ModelPlayerBeacon extends ModelBase {
 	private final ModelRenderer StudB2;
 
     public ModelPlayerBeacon() {
-		textureWidth = 64;
-		textureHeight = 32;
-
 		base = new ModelRenderer(this, 0, 11);
 		base.addBox(0F, 0F, 0F, 8, 1, 8);
 		base.setRotationPoint(-4F, 23F, -4F);

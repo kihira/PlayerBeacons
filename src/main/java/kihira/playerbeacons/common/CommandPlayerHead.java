@@ -1,6 +1,6 @@
 package kihira.playerbeacons.common;
 
-import kihira.playerbeacons.common.util.Util;
+import kihira.foxlib.common.EnumHeadType;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -32,11 +32,11 @@ public class CommandPlayerHead extends CommandBase {
         EntityPlayer player = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
         if (args != null && player != null) {
             if (args.length == 0) {
-                player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, player.getCommandSenderName()), 1);
+                player.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, player.getCommandSenderName()), 1);
                 func_152373_a(commandSender, this, "commands.playerhead.success", player.getCommandSenderName(), player.getCommandSenderName());
             }
             else if (args.length > 0 && args[0].length() > 0) {
-                player.entityDropItem(Util.getHead(Util.EnumHeadType.PLAYER, args[0]), 1);
+                player.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, args[0]), 1);
                 func_152373_a(commandSender, this, "commands.playerhead.success", args[0], player.getCommandSenderName());
             }
             else throw new WrongUsageException("commands.playerhead.usage", args);

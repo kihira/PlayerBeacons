@@ -6,6 +6,8 @@ import com.google.common.collect.Multiset;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
+import kihira.foxlib.common.EnumHeadType;
+import kihira.foxlib.common.gson.EntityHelper;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
@@ -33,7 +35,6 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.Vec3;
 
@@ -43,7 +44,7 @@ import java.util.Random;
 
 public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
-    private Util.EnumHeadType headType = Util.EnumHeadType.NONE;
+    private EnumHeadType headType = EnumHeadType.NONE;
     private GameProfile ownerGameProfile;
     private float corruption = 0;
     private int levels = 0;
@@ -54,7 +55,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     @Override
     public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
         super.readFromNBT(par1NBTTagCompound);
-        this.headType = Util.EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
+        this.headType = EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
         this.corruption = par1NBTTagCompound.getFloat("badstuff");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
@@ -291,12 +292,12 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
             this.worldObj.spawnEntityInWorld(dragon);
         }
-        if (this.headType != Util.EnumHeadType.PLAYER && this.headType != Util.EnumHeadType.NONE && this.levels > 0) {
+        if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE && this.levels > 0) {
             double d0 = (double) (this.levels * 7 + 10);
             AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
             List list = null;
 
-            if (this.headType == Util.EnumHeadType.SKELETON || this.headType == Util.EnumHeadType.WITHERSKELETON) {
+            if (this.headType == EnumHeadType.SKELETON || this.headType == EnumHeadType.WITHERSKELETON) {
                 List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisAlignedBB);
                 list = new ArrayList<Object>();
                 for (Object object : list1) {
@@ -304,8 +305,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                     if (skeleton.getSkeletonType() == this.headType.getID()) list.add(object);
                 }
             }
-            else if (this.headType == Util.EnumHeadType.ZOMBIE) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisAlignedBB);
-            else if (this.headType == Util.EnumHeadType.CREEPER) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisAlignedBB);
+            else if (this.headType == EnumHeadType.ZOMBIE) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisAlignedBB);
+            else if (this.headType == EnumHeadType.CREEPER) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisAlignedBB);
             if (list != null && !list.isEmpty()) {
                 EntityCreature entityCreature;
                 for (Object entry : list) {
@@ -326,24 +327,13 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     private void faceEntity(EntityLivingBase par1Entity, double posX, double posY, double posZ) {
         this.prevHeadRotationPitch = this.headRotationPitch;
         this.prevHeadRotationYaw = this.headRotationYaw;
+
         if (par1Entity != null) {
-            double d0 = par1Entity.posX - posX - par1Entity.width;
-            double d2 = par1Entity.posZ - posZ - par1Entity.width;
-            double d1 = par1Entity.posY - posY - par1Entity.height + (double)par1Entity.getEyeHeight() + (this.worldObj.isRemote ? 0.1F : 0.22F);
+            float[] pitchYaw = EntityHelper.getPitchYawToEntity(posX, posY, posZ, par1Entity);
 
-            double d3 = (double) MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-            float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-            float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
-            this.headRotationPitch = this.updateRotation(this.headRotationPitch, f3, 5F);
-            this.headRotationYaw = this.updateRotation(this.headRotationYaw, f2, 5F);
+            this.headRotationPitch = EntityHelper.updateRotation(this.headRotationPitch, pitchYaw[0], 5F);
+            this.headRotationYaw = EntityHelper.updateRotation(this.headRotationYaw, pitchYaw[1], 5F);
         }
-    }
-
-    private float updateRotation(float currRot, float intendedRot, float maxInc) {
-        float f3 = MathHelper.wrapAngleTo180_float(intendedRot - currRot);
-        if (f3 > maxInc) f3 = maxInc;
-        if (f3 < -maxInc) f3 = -maxInc;
-        return currRot + f3;
     }
 
     /**
