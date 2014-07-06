@@ -29,8 +29,6 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
         TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) tileentity;
 
         GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        //GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glTranslated(x + 0.5D, y, z + 0.5D);
@@ -125,6 +123,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
                         tessellator.draw();
                     }
                 }
+                GL11.glEnable(GL11.GL_LIGHTING);
                 this.closeRender();
             }
         }
@@ -133,7 +132,6 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
     private void closeRender() {
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 }
