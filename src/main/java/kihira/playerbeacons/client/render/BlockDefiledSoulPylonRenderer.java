@@ -14,25 +14,25 @@ import org.lwjgl.opengl.GL11;
 
 public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
-	private final ModelPylonBase modelPylonBase;
-	private final ModelPylon modelPylon;
-	private final ModelCrystalPort modelCrystalPort;
+    private final ModelPylonBase modelPylonBase;
+    private final ModelPylon modelPylon;
+    private final ModelCrystalPort modelCrystalPort;
 
-	public BlockDefiledSoulPylonRenderer() {
-		modelPylon = new ModelPylon();
-		modelPylonBase = new ModelPylonBase();
-		modelCrystalPort = new ModelCrystalPort();
-	}
+    public BlockDefiledSoulPylonRenderer() {
+        modelPylon = new ModelPylon();
+        modelPylonBase = new ModelPylonBase();
+        modelCrystalPort = new ModelCrystalPort();
+    }
 
-	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
-		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) tileentity;
+    @Override
+    public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
+        TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) tileentity;
 
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		//GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        //GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glTranslated(x + 0.5D, y, z + 0.5D);
 
         if (tileEntityDefiledSoulPylon != null) {
@@ -81,10 +81,11 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
         this.modelCrystalPort.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
         this.closeRender();
 
-        //Now render the status effect icons
-        if (tileEntityDefiledSoulPylon != null) {
+        //Now render the status effect icons if player is holding crystal
+        if (tileEntityDefiledSoulPylon != null && Minecraft.getMinecraft().thePlayer != null) {
+            ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
             ItemStack itemStack = tileEntityDefiledSoulPylon.getStackInSlot(0);
-            if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
+            if (heldItem != null && heldItem.getItem() instanceof ICrystal && itemStack != null && itemStack.getItem() instanceof ICrystal) {
                 //Reset the render so we can properly rotate
                 GL11.glPushMatrix();
                 GL11.glDisable(GL11.GL_LIGHTING);
@@ -127,7 +128,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
                 this.closeRender();
             }
         }
-	}
+    }
 
     private void closeRender() {
         GL11.glColor4f(1F, 1F, 1F, 1F);
