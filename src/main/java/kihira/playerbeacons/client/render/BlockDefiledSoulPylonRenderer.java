@@ -72,7 +72,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
             }
         }
         else {
-            GL11.glColor4d(0.8F, 0.8F, 0.8F, 1F);
+            GL11.glColor4d(0.6F, 0.6F, 0.6F, 1F);
         }
 
         this.bindTexture(ClientProxy.pylonCrystalPortOverlayTexture);
