@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 
 public class JumpBuff extends Buff {
 
@@ -18,7 +17,9 @@ public class JumpBuff extends Buff {
 
 	@Override
 	public float doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-        player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
+        if (player.worldObj.getTotalWorldTime() % 20 == 0) {
+            player.addPotionEffect(new PotionEffect(Potion.jump.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
+        }
         return MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) * 10;
 	}
 
@@ -26,11 +27,6 @@ public class JumpBuff extends Buff {
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
         return new float[] {0.45F, 0.6F, 0.45F, 1F};
-    }
-
-    @Override
-    public ResourceLocation getResourceLocation() {
-        return null;
     }
 
     @Override
