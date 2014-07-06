@@ -17,7 +17,7 @@ public class Config {
 	public boolean enableZombieHead;
     public boolean enablePortalRenderering;
 
-	private final Configuration config;
+	public final Configuration config;
 
 
 	public Config(File file) {
@@ -27,7 +27,7 @@ public class Config {
 		this.save();
 	}
 
-	private void loadGeneral() {
+	public void loadGeneral() {
 		Property prop;
 
 		prop = config.get(Configuration.CATEGORY_GENERAL, "Decapitation Enchantment ID", 200);

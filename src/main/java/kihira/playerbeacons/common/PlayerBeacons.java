@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = "PlayerBeacons", name = "Player Beacons", dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version", useMetadata = true)
+@Mod(modid = PlayerBeacons.MOD_ID, dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version", useMetadata = true, guiFactory = "kihira.playerbeacons.client.PlayerBeaconsGuiFactory")
 public class PlayerBeacons {
 
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs("playerbeacons") {
@@ -61,7 +61,8 @@ public class PlayerBeacons {
     };
 
 	public static Config config;
-	public static final Logger logger = LogManager.getLogger("PlayerBeacons");
+	public static final Logger logger = LogManager.getLogger(PlayerBeacons.MOD_ID);
+    public static final String MOD_ID = "PlayerBeacons";
 
 	public static final BeheaderItem beheaderItem = new BeheaderItem();
 	public static final CrystalItem crystalItem = new CrystalItem();
@@ -113,7 +114,7 @@ public class PlayerBeacons {
 		registerBuffs();
         registerRecipes();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
-        FMLCommonHandler.instance().bus().register(new TickHandler());
+        FMLCommonHandler.instance().bus().register(new FMLEventHandler());
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
@@ -142,7 +143,7 @@ public class PlayerBeacons {
 
     @Mod.EventHandler
     public void serverShutdown(FMLServerStoppedEvent e) {
-        TickHandler.activeCorruptionEffects.clear();
+        FMLEventHandler.activeCorruptionEffects.clear();
         ClientProxy.playerCorruption = 0F;
     }
 

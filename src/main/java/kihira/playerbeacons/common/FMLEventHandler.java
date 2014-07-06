@@ -2,6 +2,7 @@ package kihira.playerbeacons.common;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class TickHandler {
+public class FMLEventHandler {
 
     public static final HashMap<World, Multimap<EntityPlayer, CorruptionEffect>> activeCorruptionEffects = new HashMap<World, Multimap<EntityPlayer, CorruptionEffect>>();
 
@@ -51,6 +52,13 @@ public class TickHandler {
         else if (event.side.isClient() && PlayerBeacons.config.enableHideParticleEffects && event.player.worldObj.getTotalWorldTime() % 10 == 0) {
             //This is the colour of the potion particle effect, setting to 0 removes it
             event.player.getDataWatcher().updateObject(7, 0); //TODO Remove in 1.8 as this feature will be in vanilla per potion effect
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(PlayerBeacons.MOD_ID)) {
+            PlayerBeacons.config.loadGeneral();
         }
     }
 

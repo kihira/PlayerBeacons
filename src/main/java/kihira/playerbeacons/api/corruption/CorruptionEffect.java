@@ -18,7 +18,7 @@ public abstract class CorruptionEffect {
      * This value is not a limit but more a guide. When corruption reaches or goes above this level, you should generally
      * be applying the worst effects you can
      */
-    public static final float CORRUPTION_MAX = 50000;
+    public static final float CORRUPTION_MAX = 100000;
 
     protected final String name;
     protected final float corruptionUnlock;

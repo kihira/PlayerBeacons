@@ -8,8 +8,8 @@ import kihira.foxlib.client.RenderHelper;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
+import kihira.playerbeacons.common.FMLEventHandler;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.common.TickHandler;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
@@ -129,7 +129,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload e) {
-        TickHandler.activeCorruptionEffects.remove(e.world);
+        FMLEventHandler.activeCorruptionEffects.remove(e.world);
         if (e.world.isRemote) {
             ClientProxy.playerCorruption = 0F;
         }
