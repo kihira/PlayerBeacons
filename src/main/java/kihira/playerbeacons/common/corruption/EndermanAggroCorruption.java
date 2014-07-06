@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 public class EndermanAggroCorruption extends CorruptionEffect {
 
     public EndermanAggroCorruption() {
-        super("enderman", 10000);
+        super("enderman", CORRUPTION_MAX / 5);
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraft.util.MathHelper;
 public class SlownessCorruption extends CorruptionEffect {
 
     public SlownessCorruption() {
-        super("slowness", CORRUPTION_MAX / 14);
+        super("slowness", CORRUPTION_MAX / 10);
     }
 
     @Override
