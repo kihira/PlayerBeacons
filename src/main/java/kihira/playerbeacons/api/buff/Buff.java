@@ -3,7 +3,6 @@ package kihira.playerbeacons.api.buff;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.IBeacon;
-import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,9 +36,7 @@ public abstract class Buff {
     public abstract float[] getRGBA();
 
     @SideOnly(Side.CLIENT)
-    public ResourceLocation getResourceLocation() {
-        return ClientProxy.potionTextures;
-    }
+    public abstract ResourceLocation getResourceLocation();
 
     @SideOnly(Side.CLIENT)
     public abstract int[] getUV();

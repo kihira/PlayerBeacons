@@ -4,10 +4,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class JumpBuff extends Buff {
 
@@ -27,6 +29,12 @@ public class JumpBuff extends Buff {
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
         return new float[] {0.45F, 0.6F, 0.45F, 1F};
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ResourceLocation getResourceLocation() {
+        return ClientProxy.potionTextures;
     }
 
     @Override
