@@ -184,9 +184,7 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                             //Verify buff exists
                             if (Buff.buffs.containsKey(buff)) {
                                 Buff theBuff = Buff.buffs.get(buff);
-                                for (int j = 0; j < 2; j++) {
-                                    PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, theBuff);
-                                }
+                                PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, theBuff);
                             }
                         }
                     }

@@ -1,10 +1,9 @@
 commands.playerhead.usage=playerhead <playername> | Playername is case sensitive!
 commands.playerhead.success=Given a playerhead (%1$s) to %2$s
+
 death.attack.behead=%1$s was beheaded
 death.attack.behead.player=%1$s was beheaded by %2$s
 death.attack.behead.item=%1$s was beheaded by %2$s with %3$s
-enchantment.decapitation=Decapitation
-itemGroup.playerbeacons=Player Beacons
 
 item.brownCrystalItem.name=Brown Crystal
 item.lightBlueCrystalItem.name=Light Blue Crystal
@@ -26,14 +25,22 @@ item.beheader.bindneeded=You need to bind this device to you
 item.beheader.information.0=A cruel device this will
 item.beheader.information.1=behead anyone who wears it
 item.beheader.information.2=Owner:
+item.playerBacon.name=Player Bacon
+item.playerBacon.food=Mmm, tastes like %s!
+
 tile.defiledSoulConductor.name=Defiled Soul Conductor
 tile.defiledSoulPylon.name=Defiled Soul Pylon
 tile.playerBeacon.name=Player Beacon
+
 block.soulconductor.info.1=Safe for Decoration
 block.soulconductor.info.2=Can be used as a beacon base
 block.soulpylon.info.1=Safe for Decoration
 block.playerBeacon.guard=\u00a7d\u00a7oA mystical energy seems to guard this device
+
 potion.corruption=Corruption
+enchantment.decapitation=Decapitation
+itemGroup.playerbeacons=Player Beacons
+
 
 buff.speed.name=Speed
 buff.haste.name=Haste
@@ -42,7 +49,5 @@ buff.resistance.name=Resistance
 buff.healthBoost.name=Health Boost
 
 crystal.dissipation=The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it
-item.playerBacon.name=Player Bacon
-item.playerBacon.food=Mmm, tastes like %s!
-text.corruption=Corruption
+text.corruption=Corr. Prod
 text.bound=Bound to

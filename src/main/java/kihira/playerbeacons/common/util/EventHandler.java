@@ -8,6 +8,7 @@ import kihira.foxlib.client.RenderHelper;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
+import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.FMLEventHandler;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
@@ -26,10 +27,10 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -139,7 +140,7 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
     public void onRenderGameOverlay(RenderGameOverlayEvent.Pre e) {
         if (e.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
-            float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / CorruptionEffect.CORRUPTION_MAX, 0F, 1F);
+            float brightness = MathHelper.clamp_float(ClientProxy.playerCorruption / (CorruptionEffect.CORRUPTION_MAX / 2), 0F, 1F);
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -178,21 +179,19 @@ public class EventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
         //Check needed render isn't null and GUI is enabled
 		if (e.target != null && mc.thePlayer != null && !mc.gameSettings.hideGUI) {
-			if (e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+			if (e.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && e.currentItem != null && e.currentItem.getItem() instanceof ICrystal) {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
                 //Check it is a tileentity
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
                     IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
-					float corruption = tileEntityPlayerBeacon.getCorruption();
 					GameProfile ownerGameProfile = tileEntityPlayerBeacon.getOwnerGameProfile();
                     double viewX = e.target.blockX - RenderManager.renderPosX;
                     double viewY = e.target.blockY - RenderManager.renderPosY;
                     double viewZ = e.target.blockZ - RenderManager.renderPosZ;
-                    String string;
+                    String string = "";
 
-                    string = StatCollector.translateToLocal("text.corruption") + ": " + String.valueOf(corruption) + "/s\n";
-                    if (ownerGameProfile != null) string += StatCollector.translateToLocal("text.bound") + ": \u00a74" + ownerGameProfile.getName();
-                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D, RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, true);
+                    if (ownerGameProfile != null) string += EnumChatFormatting.DARK_PURPLE + ownerGameProfile.getName();
+                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D, RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, false);
                 }
 			}
 		}
