@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = "PlayerBeacons", dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version")
+@Mod(modid = "PlayerBeacons", name = "Player Beacons", dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version", useMetadata = true)
 public class PlayerBeacons {
 
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs("playerbeacons") {

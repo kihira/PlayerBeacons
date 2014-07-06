@@ -5,11 +5,14 @@ death.attack.behead.player=%1$s was beheaded by %2$s
 death.attack.behead.item=%1$s was beheaded by %2$s with %3$s
 enchantment.decapitation=Decapitation
 itemGroup.playerbeacons=Player Beacons
+
 item.brownCrystalItem.name=Brown Crystal
 item.lightBlueCrystalItem.name=Light Blue Crystal
 item.redCrystalItem.name=Red Crystal
 item.greenCrystalItem.name=Green Crystal
+item.yellowCrystalItem.name=Yellow Crystal
 item.crystalitem.name=Depleted Crystal
+
 item.beheader.name=Beheader
 item.beheader.stage.0=%s has clamped a strange device clamp around your head
 item.beheader.stage.0.1=You feel a strange device clamp around your head
@@ -31,10 +34,13 @@ block.soulconductor.info.2=Can be used as a beacon base
 block.soulpylon.info.1=Safe for Decoration
 block.playerBeacon.guard=\u00a7d\u00a7oA mystical energy seems to guard this device
 potion.corruption=Corruption
+
 buff.speed.name=Speed
 buff.haste.name=Haste
 buff.jump.name=Jump
 buff.resistance.name=Resistance
+buff.healthBoost.name=Health Boost
+
 crystal.dissipation=The crystal fizzles away as it interacts with the beacon, releasing the corruption from within it
 item.playerBacon.name=Player Bacon
 item.playerBacon.food=Mmm, tastes like %s!
