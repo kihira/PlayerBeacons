@@ -163,6 +163,7 @@ public class PlayerBeacons {
 		GameRegistry.addShapedRecipe(new ItemStack(brownCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 3), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(greenCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 10), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(redCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 1), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
+        GameRegistry.addShapedRecipe(new ItemStack(yellowCrystalItem), "DGD", "GCG", "DGD", 'D', new ItemStack(Items.dye, 1, 11), 'G', new ItemStack(Blocks.glass), 'C', new ItemStack(crystalItem));
 		GameRegistry.addShapedRecipe(new ItemStack(beheaderItem), "LIL", "IPI", "S S", 'P', new ItemStack(Items.ender_eye), 'S', new ItemStack(Items.iron_sword), 'L', new ItemStack(Items.leather), 'I', new ItemStack(Items.iron_ingot));
 	}
 
