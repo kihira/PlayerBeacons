@@ -59,13 +59,15 @@ public class TickHandler {
         float corruption = BeaconDataHelper.getPlayerCorruptionAmount(player);
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {
+            //If it is currently not active and can be applied to the player
             if (!playerCurrentEffects.containsEntry(player, corruptionEffect) && corruptionEffect.shouldActivate(player, world, corruption)) {
                 playerCurrentEffects.put(player, corruptionEffect);
                 corruptionEffect.init(player, corruption);
+                PlayerBeacons.logger.debug("Started corruption %s for %s", corruptionEffect, player);
             }
         }
 
-        //Do the effects and remove any needed
+        //Check we have the player in the list
         if (playerCurrentEffects.containsKey(player)) {
             //Iterator is used here as we can modify it whilst looping through without it throwing a ConcurrentModificationException
             Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.get(player).iterator();
@@ -79,6 +81,7 @@ public class TickHandler {
                 else {
                     corruptionEffect.finish(player, corruption);
                     corruptionEffects.remove();
+                    PlayerBeacons.logger.debug("Finished corruption %s for %s", corruptionEffect, player);
                 }
             }
         }

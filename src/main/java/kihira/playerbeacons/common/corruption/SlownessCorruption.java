@@ -17,8 +17,10 @@ public class SlownessCorruption extends CorruptionEffect {
 
     @Override
     public void onUpdate(EntityPlayer player, float corruption) {
-        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
-        player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 40, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
+        if (player.worldObj.getTotalWorldTime() % 20 == 0) {
+            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 80, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
+            player.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 80, (int) MathHelper.clamp_float((corruption / this.corruptionUnlock) - 1, 0, 4)));
+        }
     }
 
     @Override

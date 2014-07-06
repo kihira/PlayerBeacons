@@ -2,6 +2,7 @@ package kihira.playerbeacons.common.buff;
 
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -44,7 +45,7 @@ public class HealthBoostBuff extends Buff {
 
     @Override
     public ResourceLocation getResourceLocation() {
-        return null;
+        return ClientProxy.potionTextures;
     }
 
     @Override
