@@ -149,19 +149,21 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
-            this.refreshGameProfileData();
-            this.markDirty();
+            this.refreshGameProfileData();;
         }
         else if (player == null) {
             this.ownerGameProfile = null;
         }
+        this.markDirty();
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override
     public void invalidate() {
         if (FMLCommonHandler.instance().getSide().isServer() && this.getOwnerGameProfile() != null) {
             //Remove player beacon data
-            EntityPlayer player = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId());
+            EntityPlayer player = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId()); //Look for by ID first
+            if (player == null) MinecraftServer.getServer().getConfigurationManager().func_152612_a(this.getOwnerGameProfile().getName()); //Then by username
             if (player != null) {
                 BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
             }
@@ -169,7 +171,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
         super.invalidate();
     }
 
-    private boolean isCloneConstruct() {
+/*    private boolean isCloneConstruct() {
         if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) return false;
         //Check 5x5 underneath and above
         for (int i = -2; i <= 2; i++) {
@@ -186,7 +188,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             if (this.worldObj.getBlock(this.xCoord - 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
         }
         return true;
-    }
+    }*/
 
     private void doEffects() {
         //Verify the ownerUUID is valid for receiving effects
@@ -245,30 +247,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             }
         }
     }
-
-/*    @Override
-    public void applyCorruption() {
-        EntityPlayer player = this.worldObj.getPlayerEntityByName(this.ownerUUID);
-        if (player != null) {
-            if ((this.corruption > 15000) && (this.corruptionLevel == 2)) {
-                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond, pulling you into another dimension"));
-                player.travelToDimension(1);
-                this.corruptionLevel = 0;
-                this.corruption -= this.worldObj.rand.nextInt(9000);
-            }
-            else if ((this.corruption > 10000) && (this.corruptionLevel == 1)) {
-                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at your soul from the beyond, disorientating you"));
-                this.corruptionLevel = 2;
-                this.corruption -= this.worldObj.rand.nextInt(2000);
-            }
-            else if ((this.corruption > 5000) && (this.corruptionLevel == 0)) {
-                player.addChatComponentMessage(new ChatComponentText("\u00a74\u00a7oYou feel an unknown force grasp at you from the beyond"));
-                this.corruptionLevel = 1;
-                this.corruption -= this.worldObj.rand.nextInt(1000);
-            }
-            if (this.corruptionLevel - 1 > -1) player.addPotionEffect(new PotionEffect(PlayerBeacons.config.corruptionPotionID, 6000, this.corruptionLevel - 1));
-        }
-    }*/
 
     @Override
     public void updateEntity() {
@@ -351,6 +329,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
                     this.ownerGameProfile = gameprofile;
                     this.markDirty();
+                    this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 }
             }
         }

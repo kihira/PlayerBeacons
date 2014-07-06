@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.foxlib.common.EnumHeadType;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
@@ -99,8 +100,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 }
 
                 TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                System.out.println(tileEntityPlayerBeacon.getOwnerGameProfile());
                 //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
-                if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName())) {
+                if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
+                        !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
                     tileEntityPlayerBeacon.setOwner(player);
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                     else player.setCurrentItemOrArmor(0, itemStack);
