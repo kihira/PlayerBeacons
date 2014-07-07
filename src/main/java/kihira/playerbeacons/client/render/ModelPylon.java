@@ -35,107 +35,119 @@ public class ModelPylon extends ModelBase {
 		Main.addBox(-4F, 0F, -4F, 8, 16, 8);
 		Main.setRotationPoint(0F, 8F, 0F);
 		Main.mirror = true;
-		setRotation(Main, 0F, 0F, 0F);
+
 		acc1 = new ModelRenderer(this, 24, 0);
 		acc1.addBox(-0.5F, 0F, -2F, 1, 1, 4);
-		acc1.setRotationPoint(-4.5F, 8F, 0F);
+		acc1.setRotationPoint(-4.4F, 8.001F, 0F);
 		acc1.mirror = true;
-		setRotation(acc1, 0F, 0F, 0F);
+
 		acc2 = new ModelRenderer(this, 24, 0);
 		acc2.addBox(-0.5F, 0F, -2F, 1, 1, 4);
-		acc2.setRotationPoint(4.5F, 8F, 0F);
+		acc2.setRotationPoint(4.4F, 8.001F, 0F);
 		acc2.mirror = true;
 		setRotation(acc2, 0F, 3.141593F, 0F);
+
 		acc3 = new ModelRenderer(this, 24, 0);
 		acc3.addBox(-0.5F, 0F, -2F, 1, 1, 4);
-		acc3.setRotationPoint(0F, 8F, 4.5F);
+		acc3.setRotationPoint(0F, 8.001F, 4.4F);
 		acc3.mirror = true;
 		setRotation(acc3, 0F, 1.570796F, 0F);
+
 		acc4 = new ModelRenderer(this, 24, 0);
 		acc4.addBox(-0.5F, 0F, -2F, 1, 1, 4);
-		acc4.setRotationPoint(0F, 8F, -4.5F);
+		acc4.setRotationPoint(0F, 8.001F, -4.4F);
 		acc4.mirror = true;
 		setRotation(acc4, 0F, -1.570796F, 0F);
+
 		acc11 = new ModelRenderer(this, 24, 0);
 		acc11.addBox(-0.5F, 0F, -2F, 1, 2, 4);
 		acc11.setRotationPoint(-4.4F, 21.9F, 0F);
 		acc11.mirror = true;
-		setRotation(acc11, 0F, 0F, 0F);
+
 		acc21 = new ModelRenderer(this, 24, 0);
 		acc21.addBox(-0.5F, 0F, -2F, 1, 2, 4);
 		acc21.setRotationPoint(4.4F, 21.9F, 0F);
 		acc21.mirror = true;
 		setRotation(acc21, 0F, 3.141593F, 0F);
+
 		acc31 = new ModelRenderer(this, 24, 0);
 		acc31.addBox(-0.5F, 0F, -2F, 1, 2, 4);
 		acc31.setRotationPoint(0F, 21.9F, 4.4F);
 		acc31.mirror = true;
 		setRotation(acc31, 0F, 1.570796F, 0F);
+
 		acc41 = new ModelRenderer(this, 24, 0);
 		acc41.addBox(-0.5F, 0F, -2F, 1, 2, 4);
 		acc41.setRotationPoint(0F, 21.9F, -4.4F);
 		acc41.mirror = true;
 		setRotation(acc41, 0F, -1.570796F, 0F);
+
 		acc42 = new ModelRenderer(this, 34, 0);
 		acc42.addBox(-5F, 0F, -0.5F, 10, 1, 1);
 		acc42.setRotationPoint(0F, 23F, -4.5F);
 		acc42.mirror = true;
-		setRotation(acc42, 0F, 0F, 0F);
+
 		acc32 = new ModelRenderer(this, 34, 0);
 		acc32.addBox(-5F, 0F, -0.5F, 10, 1, 1);
 		acc32.setRotationPoint(0F, 23F, 4.5F);
 		acc32.mirror = true;
 		setRotation(acc32, 0F, 3.141593F, 0F);
+
 		acc12 = new ModelRenderer(this, 34, 0);
 		acc12.addBox(-5F, 0F, -0.5F, 10, 1, 1);
 		acc12.setRotationPoint(-4.5F, 23F, 0F);
 		acc12.mirror = true;
 		setRotation(acc12, 0F, 1.570796F, 0F);
+
 		acc22 = new ModelRenderer(this, 34, 0);
 		acc22.addBox(-5F, 0F, -0.5F, 10, 1, 1);
 		acc22.setRotationPoint(4.5F, 23F, 0F);
 		acc22.mirror = true;
 		setRotation(acc22, 0F, -1.570796F, 0F);
+
 		support1 = new ModelRenderer(this, 0, 24);
 		support1.addBox(-0.5F, 0F, -1F, 1, 13, 2);
-		support1.setRotationPoint(4.4F, 9F, 0F);
+		support1.setRotationPoint(4.3F, 9F, 0F);
 		support1.mirror = true;
-		setRotation(support1, 0F, 0F, 0F);
+
 		support2 = new ModelRenderer(this, 0, 24);
 		support2.addBox(-0.5F, 0F, -1F, 1, 13, 2);
-		support2.setRotationPoint(0F, 9F, 4.4F);
+		support2.setRotationPoint(0F, 9F, 4.3F);
 		support2.mirror = true;
 		setRotation(support2, 0F, -1.570796F, 0F);
+
 		support3 = new ModelRenderer(this, 0, 24);
 		support3.addBox(-0.5F, 0F, -1F, 1, 13, 2);
-		support3.setRotationPoint(0F, 9F, -4.4F);
+		support3.setRotationPoint(0F, 9F, -4.3F);
 		support3.mirror = true;
 		setRotation(support3, 0F, 1.570796F, 0F);
+
 		support4 = new ModelRenderer(this, 0, 24);
 		support4.addBox(-0.5F, 0F, -1F, 1, 13, 2);
-		support4.setRotationPoint(-4.4F, 9F, 0F);
+		support4.setRotationPoint(-4.3F, 9F, 0F);
 		support4.mirror = true;
 		setRotation(support4, 0F, 3.141593F, 0F);
+
 		Addon1 = new ModelRenderer(this, 14, 30);
 		Addon1.addBox(-4F, 0F, -1F, 8, 1, 2);
 		Addon1.setRotationPoint(0F, 7.5F, 0F);
 		Addon1.mirror = true;
-		setRotation(Addon1, 0F, 0F, 0F);
+
 		Addon2 = new ModelRenderer(this, 14, 30);
 		Addon2.addBox(-4F, 0F, -1F, 8, 1, 2);
 		Addon2.setRotationPoint(0F, 7.5F, 0F);
 		Addon2.mirror = true;
 		setRotation(Addon2, 0F, 1.570796F, 0F);
+
 		topbase = new ModelRenderer(this, 6, 24);
 		topbase.addBox(-2F, 0F, -2F, 4, 2, 4);
 		topbase.setRotationPoint(0F, 6F, 0F);
 		topbase.mirror = true;
-		setRotation(topbase, 0F, 0F, 0F);
+
 		toptop = new ModelRenderer(this, 6, 30);
 		toptop.addBox(-1F, 0F, -1F, 2, 6, 2);
 		toptop.setRotationPoint(0F, 0F, 0F);
 		toptop.mirror = true;
-		setRotation(toptop, 0F, 0F, 0F);
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
