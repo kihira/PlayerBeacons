@@ -41,7 +41,10 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partialTickTime) {
-        TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) tileentity;
+        TileEntityPlayerBeacon playerBeacon = null;
+        if (tileentity != null) {
+            playerBeacon = (TileEntityPlayerBeacon) tileentity;
+        }
 
 		GL11.glPushMatrix();
         if (PlayerBeacons.config.enablePortalRenderering) {
@@ -70,7 +73,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		*/
 
         //Render Skull
-        if (playerBeacon != null && playerBeacon.getOwnerGameProfile() != null) {
+        if (playerBeacon != null && playerBeacon.getOwnerGameProfile() != null && playerBeacon.getWorldObj().isAirBlock(playerBeacon.xCoord, playerBeacon.yCoord + 1, playerBeacon.zCoord)) {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
             bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             float yOffset = MathHelper.cos((Minecraft.getSystemTime()) / 2000F) / 30F;
@@ -83,7 +86,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
         GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
-	}
+    }
 
     private void renderPortal(double x, double y, double z) {
         float f1 = (float)this.field_147501_a.field_147560_j;

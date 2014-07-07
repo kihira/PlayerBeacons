@@ -140,6 +140,11 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
 	}
 
     @Override
+    public boolean isNormalCube(IBlockAccess world, int x, int y, int z) {
+        return false;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int xPos, int yPos, int zPos, Random rand) {
         //A weird way to limit particles spawned but should work

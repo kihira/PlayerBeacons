@@ -99,7 +99,8 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     public boolean isBeaconValid() {
         if (this.worldObj.getTotalWorldTime() % 20 == 0) {
             this.levels = 0;
-            if (this.getOwnerGameProfile() != null) {
+            //Check if there is an owner and that there is no block above
+            if (this.getOwnerGameProfile() != null && this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord)) {
                 for (int i = 1; i <= 4; this.levels = i++) {
                     int j = this.yCoord - i;
                     if (j < 0) break;
