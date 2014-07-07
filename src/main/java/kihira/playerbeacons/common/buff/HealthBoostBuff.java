@@ -22,18 +22,27 @@ public class HealthBoostBuff extends Buff {
 
     @Override
     public float doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
-        if (player.worldObj.getTotalWorldTime() % 10 == 0 && theBeacon.getLevels() >= 2) {
+        if (player.worldObj.getTotalWorldTime() % 10 == 0) {
             IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
             AttributeModifier attributeModifier = attribute.getModifier(this.uuid);
-            int modifierAmount = MathHelper.clamp_int(crystalCount, 1, theBeacon.getLevels() - 1) * 2;
-            if (attributeModifier != null && attributeModifier.getAmount() != modifierAmount) {
+            //Remove the effect if no crystals
+            if (crystalCount == 0 && attributeModifier != null) {
                 attribute.removeModifier(attributeModifier);
-                attributeModifier = null;
+                player.setHealth(player.getMaxHealth());
             }
-            if (attributeModifier == null) {
-                attribute.applyModifier(new AttributeModifier(this.uuid, "healthBoost", modifierAmount, 0));
+            if (theBeacon.getLevels() >= 2) {
+                int modifierAmount = MathHelper.clamp_int(crystalCount, 1, theBeacon.getLevels() - 1) * 2;
+                if (attributeModifier != null && attributeModifier.getAmount() != modifierAmount) {
+                    attribute.removeModifier(attributeModifier);
+                    attributeModifier = null;
+                    player.setHealth(player.getMaxHealth());
+                }
+                if (attributeModifier == null) {
+                    attribute.applyModifier(new AttributeModifier(this.uuid, "healthBoost", modifierAmount, 0));
+                    player.setHealth(player.getMaxHealth());
+                }
+                return (modifierAmount) * 20;
             }
-            return (modifierAmount) * 20;
         }
         return 0;
     }

@@ -1,8 +1,6 @@
 package kihira.playerbeacons.common.tileentity;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multiset;
+import com.google.common.collect.*;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -217,7 +215,10 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     public void calcPylons() {
         if (this.levels > 0) {
+            ImmutableMultiset<ICrystal> copyCrystal = Multisets.copyHighestCountFirst(this.crystalMultiset);
+            EntityPlayer entityPlayer = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId());
             this.crystalMultiset.clear();
+
             for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
                 this.doCrystals(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
             }
@@ -229,6 +230,14 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
             }
             for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
                 this.doCrystals(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
+            }
+
+            //Loop through and check if any crystals are missing from previous. If so, do effects with count 0
+            //TODO should a global list of ICrystals be maintained? Then we just loop though that in doEffects so we can easily send 0
+            if (entityPlayer != null && copyCrystal.size() > 0) {
+                for (Multiset.Entry<ICrystal> crystal : copyCrystal.entrySet()) {
+                    if (!this.crystalMultiset.contains(crystal.getElement())) crystal.getElement().doEffects(entityPlayer, this, 0);
+                }
             }
         }
     }
