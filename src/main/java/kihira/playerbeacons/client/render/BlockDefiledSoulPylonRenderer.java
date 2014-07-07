@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
+
 public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
 
     private final ModelPylonBase modelPylonBase;
@@ -103,25 +105,28 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.7F); //Make it slightly transparent
                 GL11.glScalef(0.03F, 0.03F, 0.03F);
                 //TODO limit to one buff or scale to fit both
-                for (String buffName : ((ICrystal) itemStack.getItem()).getAffectedBuffs()) {
-                    Buff buff = Buff.buffs.get(buffName);
-                    if (buff != null) {
-                        //Bind the texture
-                        this.bindTexture(buff.getResourceLocation() != null ? buff.getResourceLocation() : ClientProxy.potionTextures);
+                List<String> buffList = ((ICrystal) itemStack.getItem()).getAffectedBuffs();
+                if (buffList != null && buffList.size() > 0) {
+                    for (String buffName : buffList) {
+                        Buff buff = Buff.buffs.get(buffName);
+                        if (buff != null) {
+                            //Bind the texture
+                            this.bindTexture(buff.getResourceLocation() != null ? buff.getResourceLocation() : ClientProxy.potionTextures);
 
-                        //Set the UV
-                        int[] uv = buff.getUV();
-                        if (uv == null || uv.length != 2) {
-                            uv = new int[]{0, 0};
+                            //Set the UV
+                            int[] uv = buff.getUV();
+                            if (uv == null || uv.length != 2) {
+                                uv = new int[]{0, 0};
+                            }
+
+                            Tessellator tessellator = Tessellator.instance;
+                            tessellator.startDrawingQuads();
+                            tessellator.addVertexWithUV(0, 18, 0, uv[0] * scale, (uv[1] + 18) * scale);
+                            tessellator.addVertexWithUV(18, 18, 0, (uv[0] + 18) * scale, (uv[1] + 18) * scale);
+                            tessellator.addVertexWithUV(18, 0, 0, (uv[0] + 18) * scale, uv[1] * scale);
+                            tessellator.addVertexWithUV(0, 0, 0, uv[0] * scale, uv[1] * scale);
+                            tessellator.draw();
                         }
-
-                        Tessellator tessellator = Tessellator.instance;
-                        tessellator.startDrawingQuads();
-                        tessellator.addVertexWithUV(0, 18, 0, uv[0] * scale, (uv[1] + 18) * scale);
-                        tessellator.addVertexWithUV(18, 18, 0, (uv[0] + 18) * scale, (uv[1] + 18) * scale);
-                        tessellator.addVertexWithUV(18, 0, 0, (uv[0] + 18) * scale, uv[1] * scale);
-                        tessellator.addVertexWithUV(0, 0, 0, uv[0] * scale, uv[1] * scale);
-                        tessellator.draw();
                     }
                 }
                 GL11.glEnable(GL11.GL_LIGHTING);
