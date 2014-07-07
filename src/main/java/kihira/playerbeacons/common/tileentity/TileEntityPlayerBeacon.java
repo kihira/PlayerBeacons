@@ -226,7 +226,6 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
     public float getCorruption() {
-        System.out.println(this.corruption + " " + this.corruptionReduction + " " + (this.levels * 20));
         //Return corruption minus the reduction from base blocks and the natural reduction from beacon
         return MathHelper.clamp_float(this.corruption - this.corruptionReduction - (this.levels * 20), 0, Float.MAX_VALUE);
     }
