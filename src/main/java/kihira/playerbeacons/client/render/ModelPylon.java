@@ -151,30 +151,34 @@ public class ModelPylon extends ModelBase {
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5);
-		Main.render(f5);
-		acc1.render(f5);
-		acc2.render(f5);
-		acc3.render(f5);
-		acc4.render(f5);
-		acc11.render(f5);
-		acc21.render(f5);
-		acc31.render(f5);
-		acc41.render(f5);
-		acc42.render(f5);
-		acc32.render(f5);
-		acc12.render(f5);
-		acc22.render(f5);
-		support1.render(f5);
-		support2.render(f5);
-		support3.render(f5);
-		support4.render(f5);
+        this.renderWithoutTop(entity, f, f1, f2, f3, f4, f5);
 		Addon1.render(f5);
 		Addon2.render(f5);
 		topbase.render(f5);
 		toptop.render(f5);
 	}
+
+    public void renderWithoutTop(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        super.render(entity, f, f1, f2, f3, f4, f5);
+        this.setRotationAngles(f, f1, f2, f3, f4, f5);
+        Main.render(f5);
+        acc1.render(f5);
+        acc2.render(f5);
+        acc3.render(f5);
+        acc4.render(f5);
+        acc11.render(f5);
+        acc21.render(f5);
+        acc31.render(f5);
+        acc41.render(f5);
+        acc42.render(f5);
+        acc32.render(f5);
+        acc12.render(f5);
+        acc22.render(f5);
+        support1.render(f5);
+        support2.render(f5);
+        support3.render(f5);
+        support4.render(f5);
+    }
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;

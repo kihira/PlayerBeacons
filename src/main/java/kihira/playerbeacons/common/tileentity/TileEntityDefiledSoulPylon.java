@@ -3,6 +3,7 @@ package kihira.playerbeacons.common.tileentity;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -112,17 +113,23 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalCo
 	}
 
     public void checkPylon() {
+        Block topBlock = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
+        Block bottomBlock = this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord);
+        //No top part
+        if (topBlock == PlayerBeacons.defiledSoulPylonBlock && bottomBlock == PlayerBeacons.defiledSoulPylonBlock) {
+            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 3, 2);
+        }
         //Base
-        if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock) {
-            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 2, 2);
+        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && bottomBlock != PlayerBeacons.defiledSoulPylonBlock) {
+            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 2, 2);
         }
         //Top
-        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock) {
-            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 1, 2);
+        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && topBlock != PlayerBeacons.defiledSoulPylonBlock) {
+            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 2);
         }
         //Neither
         else {
-            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 0, 2);
+            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 2);
         }
     }
 

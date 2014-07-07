@@ -56,7 +56,8 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
         GL11.glRotatef(180F, 0F, 0F, 1F);
         //Render the pylon
         this.bindTexture(ClientProxy.pylonTexture);
-        this.modelPylon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+        if (tileEntityDefiledSoulPylon != null && tileEntityDefiledSoulPylon.getBlockMetadata() == 3) this.modelPylon.renderWithoutTop(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+        else this.modelPylon.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
         //Then the crystal port
         this.bindTexture(ClientProxy.pylonCrystalPortTexture);
         this.modelCrystalPort.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);

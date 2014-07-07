@@ -129,6 +129,14 @@ public class BlockDefiledSoulPylon extends BlockContainer {
     }
 
     @Override
+    public void onBlockAdded(World world, int x, int y, int z) {
+        super.onBlockAdded(world, x, y, z);
+
+        TileEntityDefiledSoulPylon defiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
+        defiledSoulPylon.checkPylon();
+    }
+
+    @Override
 	public TileEntity createNewTileEntity(World world, int var2) {
 		return new TileEntityDefiledSoulPylon();
 	}
