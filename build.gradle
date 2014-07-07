@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "2.0.0-beta1"
+version = "2.0.0-beta2"
 group= "kihira.playerbeacons" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "PlayerBeacons"
 
