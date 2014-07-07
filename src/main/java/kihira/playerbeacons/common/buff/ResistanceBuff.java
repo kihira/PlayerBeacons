@@ -22,7 +22,7 @@ public class ResistanceBuff extends Buff {
         if (player.worldObj.getTotalWorldTime() % 20 == 0) {
             player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels() - 2) - 1, true));
         }
-        return (MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 2) * 20;
+        return MathHelper.clamp_int(crystalCount, 0, 1) * 40;
 	}
 
     @Override

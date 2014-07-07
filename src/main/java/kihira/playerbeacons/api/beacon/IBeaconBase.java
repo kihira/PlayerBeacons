@@ -15,7 +15,8 @@ public interface IBeaconBase {
     /**
      * The amount of corruption the block reduces
      * @param beacon The beacon
-     * @return
+     * @param blockCount The amount of blocks detected by the beacon
+     * @return the reduction for the count of all blocks
      */
-    public float getCorruptionReduction(IBeacon beacon);
+    public float getCorruptionReduction(IBeacon beacon, int blockCount);
 }

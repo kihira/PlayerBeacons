@@ -41,7 +41,7 @@ public class HealthBoostBuff extends Buff {
                     attribute.applyModifier(new AttributeModifier(this.uuid, "healthBoost", modifierAmount, 0));
                     player.setHealth(player.getMaxHealth());
                 }
-                return (modifierAmount) * 20;
+                return (modifierAmount) * 13;
             }
         }
         return 0;

@@ -36,7 +36,7 @@ public class BlockDefiledSoulConductor extends Block implements IBeaconBase {
     }
 
     @Override
-    public float getCorruptionReduction(IBeacon beacon) {
-        return 0;
+    public float getCorruptionReduction(IBeacon beacon, int blockCount) {
+        return beacon.getLevels() * 10F;
     }
 }

@@ -33,6 +33,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.Vec3;
 
@@ -45,6 +46,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     private EnumHeadType headType = EnumHeadType.NONE;
     private GameProfile ownerGameProfile;
     private float corruption = 0;
+    private float corruptionReduction = 0;
     private int levels = 0;
 
     public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
@@ -96,24 +98,43 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
     @Override
     public boolean isBeaconValid() {
         if (this.worldObj.getTotalWorldTime() % 20 == 0) {
-            this.levels = 0;
+            int levels = 0;
+            this.corruptionReduction = 0;
             //Check if there is an owner and that there is no block above
             if (this.getOwnerGameProfile() != null && this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord)) {
-                for (int i = 1; i <= 4; this.levels = i++) {
-                    int j = this.yCoord - i;
-                    if (j < 0) break;
+                Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
+                for (int i = 1; i <= 4; levels = i++) {
+                    int y = this.yCoord - i;
+                    if (y < 0) break;
                     boolean flag = true;
-                    for (int k = this.xCoord - i; k <= this.xCoord + i && flag; ++k) {
-                        for (int l = this.zCoord - i; l <= this.zCoord + i; ++l) {
-                            if (!(this.worldObj.getBlock(k, j, l) instanceof IBeaconBase) || !((IBeaconBase) this.worldObj.getBlock(k, j, l)).isValidForBeacon(this)) {
+                    for (int x = this.xCoord - i; x <= this.xCoord + i && flag; ++x) {
+                        for (int z = this.zCoord - i; z <= this.zCoord + i; ++z) {
+                            //If not beacon base or not valid, break
+                            if (this.worldObj.getBlock(x, y, z) instanceof IBeaconBase) {
+                                IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(x, y, z);
+                                if (beaconBase.isValidForBeacon(this)) {
+                                    beaconBaseCount.add(beaconBase);
+                                }
+                                else {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            else {
                                 flag = false;
                                 break;
                             }
                         }
                     }
+
                     if (!flag) break;
                 }
+                for (Multiset.Entry<IBeaconBase> beaconBase : beaconBaseCount.entrySet()) {
+                    this.corruptionReduction += beaconBase.getElement().getCorruptionReduction(this, beaconBase.getCount());
+                }
             }
+            this.levels = levels;
+
             //Calculate pylons to get crystals
             this.calcPylons();
         }
@@ -205,7 +226,9 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
     public float getCorruption() {
-        return this.corruption;
+        System.out.println(this.corruption + " " + this.corruptionReduction + " " + (this.levels * 20));
+        //Return corruption minus the reduction from base blocks and the natural reduction from beacon
+        return MathHelper.clamp_float(this.corruption - this.corruptionReduction - (this.levels * 20), 0, Float.MAX_VALUE);
     }
 
     @Override
