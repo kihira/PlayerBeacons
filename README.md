@@ -1,25 +1,7 @@
 Player Beacons
 ================================
 
-REPORT ALL ISSUES HERE - https://bitbucket.org/Kihira/modjam2/issues - IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
-
-##Build instruction for Player Beacons
-
-1) Setup Forge/MCP dev enviroment by downloading from minecraftforge.net (Build 804) and running /install.sh or /install.cmd
-
-2) Copy all files and folders from the "src" folder to /mcp/src/minecraft/
-
-	- You should now have /mcp/src/minecraft/playerbeacons and /mcp/src/minecraft/assets
-
-3) Now run /mcp/recompile.sh (or recompile.bat)
-
-4) Now run /mcp/reobfuscate_srg.sh (or reobfuscate_srg.bat)
-
-5) Copy the folder /mcp/reobf/minecraft/playerbeacons into a new zip file. Your zip file should look like /playerbeacons
-
-6) Copy the folder /mcp/src/minecraft/assets into the zip file so you have /assets and /playerbeacons in the zip file.
-
-7) Now enjoy!
+REPORT ALL ISSUES HERE - https://github.com/kihira/PlayerBeacons/issues- IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
 
 ##Mod Information
 
@@ -86,10 +68,6 @@ If you do manage to though, they will be notified that it was you who did it and
 ####License
 Source code is available under Public Domain except where listed below.
 All non-Source Code such as, but not limited to, textures, sounds and binaries are under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License: http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB
-
-Lightning Render code provided by Machine Muse and is provided with the following notice:
-Copyright (c) 2013, MachineMuse (Claire Semple)
-All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
