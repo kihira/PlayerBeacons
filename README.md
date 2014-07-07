@@ -1,7 +1,7 @@
 Player Beacons
 ================================
 
-REPORT ALL ISSUES HERE - https://github.com/kihira/PlayerBeacons/issues- IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
+REPORT ALL ISSUES HERE - https://github.com/kihira/PlayerBeacons/issues - IF YOU DON'T I'LL POKE YOU WITH A SHARP ONION
 
 ##Mod Information
 
