@@ -111,11 +111,26 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalCo
 		return i == 0 && (itemstack == null || itemstack.getItem() instanceof ICrystal);
 	}
 
+    public void checkPylon() {
+        //Base
+        if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock) {
+            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 2, 2);
+        }
+        //Top
+        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock) {
+            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 1, 2);
+        }
+        //Neither
+        else {
+            this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock, 0, 2);
+        }
+    }
+
 	public boolean isPylonBase() {
-		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
+		return this.getBlockMetadata() == 2;
 	}
 
 	public boolean isPylonTop() {
-		return !this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) != PlayerBeacons.defiledSoulPylonBlock;
+		return this.getBlockMetadata() == 1;
 	}
 }

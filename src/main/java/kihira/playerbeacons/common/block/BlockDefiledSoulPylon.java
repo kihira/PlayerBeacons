@@ -22,8 +22,8 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 
 	public BlockDefiledSoulPylon() {
 		super(Material.rock);
-        this.setHardness(8f);
-        this.setResistance(100.0F);
+        this.setHardness(8F);
+        this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setBlockName("defiledSoulPylon");
         this.setBlockTextureName("playerbeacon:pyramidBrick");
@@ -32,21 +32,20 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 
     @Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List list, Entity entity) {
-		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
-		if (tileEntityDefiledSoulPylon.isPylonBase() || tileEntityDefiledSoulPylon.isPylonTop()) {
+		TileEntityDefiledSoulPylon defiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
+		if (defiledSoulPylon.isPylonBase() || defiledSoulPylon.isPylonTop()) {
             this.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
-			super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
 		}
 		else {
             this.setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
-			super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
 		}
+        super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
 	}
 
     @Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		TileEntityDefiledSoulPylon tileEntityDefiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
-		if (tileEntityDefiledSoulPylon.isPylonBase() || tileEntityDefiledSoulPylon.isPylonTop()) return AxisAlignedBB.getBoundingBox(x + 0F, y + 0F, z + 0F, x + 1F, y + 1F, z + 1F);
+		TileEntityDefiledSoulPylon defiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
+        if (defiledSoulPylon.isPylonTop() || defiledSoulPylon.isPylonBase()) return AxisAlignedBB.getBoundingBox(x + 0F, y + 0F, z + 0F, x + 1F, y + 1F, z + 1F);
 		else return  AxisAlignedBB.getBoundingBox(x + 0.20D, y + 0.0F, z + 0.20F, x +  0.8F, y + 1.0F, z + 0.8F);
 	}
 
@@ -117,12 +116,14 @@ public class BlockDefiledSoulPylon extends BlockContainer {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbourBlock) {
-        TileEntityDefiledSoulPylon soulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
-        if (soulPylon.isPylonTop() || soulPylon.isPylonBase()) {
-            ItemStack itemStack = soulPylon.getStackInSlotOnClosing(0);
+        TileEntityDefiledSoulPylon defiledSoulPylon = (TileEntityDefiledSoulPylon) world.getTileEntity(x, y, z);
+        defiledSoulPylon.checkPylon();
+
+        if (defiledSoulPylon.isPylonTop() || defiledSoulPylon.isPylonBase()) {
+            ItemStack itemStack = defiledSoulPylon.getStackInSlotOnClosing(0);
             if (itemStack != null) {
                 world.spawnEntityInWorld(new EntityItem(world, x, y, z, itemStack));
-                soulPylon.setInventorySlotContents(0, null);
+                defiledSoulPylon.setInventorySlotContents(0, null);
             }
         }
     }

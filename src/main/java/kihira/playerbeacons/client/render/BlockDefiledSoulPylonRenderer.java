@@ -19,9 +19,9 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
     private final ModelCrystalPort modelCrystalPort;
 
     public BlockDefiledSoulPylonRenderer() {
-        modelPylon = new ModelPylon();
-        modelPylonBase = new ModelPylonBase();
-        modelCrystalPort = new ModelCrystalPort();
+        this.modelPylon = new ModelPylon();
+        this.modelPylonBase = new ModelPylonBase();
+        this.modelCrystalPort = new ModelCrystalPort();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
         GL11.glTranslated(x + 0.5D, y, z + 0.5D);
 
         if (tileEntityDefiledSoulPylon != null) {
-            if (tileEntityDefiledSoulPylon.isPylonBase()) {
+            if (tileEntityDefiledSoulPylon.getBlockMetadata() == 2) {
                 GL11.glTranslatef(0F, 1.5001F, 0F);
                 GL11.glRotatef(180F, 0F, 0F, 1F);
                 this.bindTexture(ClientProxy.pylonTextureBase);
@@ -42,7 +42,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
                 this.closeRender();
                 return;
             }
-            else if (tileEntityDefiledSoulPylon.isPylonTop()) {
+            else if (tileEntityDefiledSoulPylon.getBlockMetadata() == 1) {
                 GL11.glTranslatef(0F, -0.5F, 0F);
                 this.bindTexture(ClientProxy.pylonTextureBase);
                 this.modelPylonBase.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
@@ -72,7 +72,7 @@ public class BlockDefiledSoulPylonRenderer extends TileEntitySpecialRenderer {
             }
         }
         else {
-            GL11.glColor4d(0.6F, 0.6F, 0.6F, 1F);
+            GL11.glColor4d(0.8F, 0.8F, 0.8F, 1F);
         }
 
         this.bindTexture(ClientProxy.pylonCrystalPortOverlayTexture);
