@@ -22,7 +22,7 @@ group= "kihira.playerbeacons" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "PlayerBeacons"
 
 minecraft {
-    version = "1.7.10-10.13.0.1152"
+    version = "1.7.10-10.13.0.1180"
 }
 dependencies {
     compile files (
