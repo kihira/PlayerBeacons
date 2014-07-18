@@ -8,7 +8,6 @@ import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
-import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.block.material.Material;
@@ -103,10 +102,10 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                 if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
                         !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
                     playerBeacon.setOwner(player);
-                    Beacon beacon = BeaconDataHelper.getBeaconForDim(player, player.dimension);
-                    if (beacon.checkStructure(playerBeacon)) {
-                        beacon.formStructure(playerBeacon);
-                    }
+                    //Generate the Beacon instance
+                    BeaconDataHelper.getBeaconForDim(player, player.dimension);
+                    //Then validate
+                    BeaconDataHelper.markBeaconDirty(playerBeacon);
 
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                     else player.setCurrentItemOrArmor(0, itemStack);

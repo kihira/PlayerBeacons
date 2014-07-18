@@ -74,6 +74,7 @@ public class BeaconDataHelper {
         Loc4 loc = new Loc4(tileEntity.getWorldObj().provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         if (beaconMap.containsKey(loc)) {
             Beacon beacon = beaconMap.get(loc);
+            beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed?
             //If beacon is valid, reload all information for safety
             if (beacon.checkStructure(theBeacon)) {
                 beacon.formStructure(theBeacon);
