@@ -1,5 +1,6 @@
 package kihira.playerbeacons.api;
 
+import com.google.common.base.Stopwatch;
 import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.Beacon;
@@ -10,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class BeaconDataHelper {
 
@@ -69,16 +71,27 @@ public class BeaconDataHelper {
         }
     }
 
-    public static void markBeaconDirty(IBeacon theBeacon) {
+    public static void markBeaconDirty(final IBeacon theBeacon) {
         TileEntity tileEntity = theBeacon.getTileEntity();
         Loc4 loc = new Loc4(tileEntity.getWorldObj().provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         if (beaconMap.containsKey(loc)) {
-            Beacon beacon = beaconMap.get(loc);
-            beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed?
-            //If beacon is valid, reload all information for safety
-            if (beacon.checkStructure(theBeacon)) {
-                beacon.formStructure(theBeacon);
-            }
+            final Beacon beacon = beaconMap.get(loc);
+
+            //TODO Test this a million times
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Stopwatch stopwatch = Stopwatch.createStarted();
+                    beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed?
+                    //If beacon is valid, reload all information for safety
+                    if (beacon.checkStructure(theBeacon)) {
+                        beacon.formStructure(theBeacon);
+                    }
+                    stopwatch.stop();
+                    System.out.println(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                }
+            };
+            runnable.run();
         }
     }
 

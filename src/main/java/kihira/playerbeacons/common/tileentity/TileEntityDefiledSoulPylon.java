@@ -145,9 +145,12 @@ public class TileEntityDefiledSoulPylon extends TileEntityMultiBlock implements 
 
     @Override
     public void setBeacon(IBeacon theBeacon) {
-        if (theBeacon.getTileEntity() instanceof TileEntityMultiBlock) {
-            TileEntityMultiBlock multiBlock = (TileEntityMultiBlock) theBeacon.getTileEntity();
-            this.setParent(multiBlock);
+        if (theBeacon != null) {
+            if (theBeacon.getTileEntity() instanceof TileEntityMultiBlock) {
+                TileEntityMultiBlock multiBlock = (TileEntityMultiBlock) theBeacon.getTileEntity();
+                this.setParent(multiBlock);
+            }
         }
+        else this.setParent(null);
     }
 }

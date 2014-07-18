@@ -39,6 +39,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
 
     private EnumHeadType headType = EnumHeadType.NONE;
     private GameProfile ownerGameProfile;
+    private int levels;
 
     public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
 
@@ -48,12 +49,11 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         this.headType = EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
+        this.levels = par1NBTTagCompound.getInteger("levels");
 
         if (par1NBTTagCompound.hasKey("Owner", 10)) {
             this.ownerGameProfile = NBTUtil.func_152459_a(par1NBTTagCompound.getCompoundTag("Owner"));
         }
-
-        this.refreshGameProfileData();
     }
 
     @Override
@@ -62,6 +62,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
+        par1NBTTagCompound.setInteger("levels", this.levels);
 
         if (this.ownerGameProfile != null) {
             NBTTagCompound gameProfileTag = new NBTTagCompound();
@@ -70,9 +71,11 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         }
     }
 
+    //TODO only sync what is needed
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
         this.readFromNBT(pkt.func_148857_g());
+        this.refreshGameProfileData();
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
@@ -87,7 +90,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
-            this.refreshGameProfileData();;
+            this.refreshGameProfileData();
         }
         else if (player == null) {
             this.ownerGameProfile = null;
@@ -116,7 +119,13 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
 
     @Override
     public int getLevels() {
-        return 0;
+        return this.levels;
+    }
+
+    @Override
+    public void setLevels(int levels) {
+        this.levels = levels;
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override

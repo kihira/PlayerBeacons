@@ -157,6 +157,7 @@ public class Beacon {
                 }
             }*/
         }
+        theBeacon.setLevels(this.levels);
     }
 
     public void invalidateStructure(IBeacon theBeacon) {
@@ -211,6 +212,7 @@ public class Beacon {
         this.corruption = 0;
         this.levels = 0;
         this.crystalMultiset.clear();
+        theBeacon.setLevels(0);
     }
 
     /**
@@ -251,6 +253,6 @@ public class Beacon {
     }
 
     public int getLevels() {
-        return levels;
+        return this.levels;
     }
 }

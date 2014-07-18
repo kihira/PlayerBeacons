@@ -21,6 +21,11 @@ public interface IBeacon {
     public int getLevels();
 
     /**
+     * Sets the amount of levels on this beacon. Used only by {@link kihira.playerbeacons.common.Beacon}
+     */
+    public void setLevels(int levels);
+
+    /**
      * Returns the tile entity
      * @return
      */
