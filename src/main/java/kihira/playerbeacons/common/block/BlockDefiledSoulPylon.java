@@ -4,7 +4,6 @@ import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -18,7 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class BlockDefiledSoulPylon extends BlockContainer {
+public class BlockDefiledSoulPylon extends BlockMultiBlock {
 
 	public BlockDefiledSoulPylon() {
 		super(Material.rock);

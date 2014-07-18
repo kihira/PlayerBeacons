@@ -10,8 +10,6 @@ import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -30,7 +28,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.util.List;
 import java.util.Random;
 
-public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
+public class BlockPlayerBeacon extends BlockMultiBlock {
 
     public BlockPlayerBeacon() {
 		super(Material.rock);
@@ -104,6 +102,10 @@ public class BlockPlayerBeacon extends Block implements ITileEntityProvider {
                 if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
                         !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
                     tileEntityPlayerBeacon.setOwner(player);
+                    if (tileEntityPlayerBeacon.checkStructure()) {
+                        tileEntityPlayerBeacon.formStructure();
+                    }
+
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                     else player.setCurrentItemOrArmor(0, itemStack);
                 }

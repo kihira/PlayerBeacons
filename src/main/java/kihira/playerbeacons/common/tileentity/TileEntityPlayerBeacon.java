@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
+public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBeacon {
 
     private EnumHeadType headType = EnumHeadType.NONE;
     private GameProfile ownerGameProfile;
@@ -97,54 +97,7 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
 
     @Override
     public boolean isBeaconValid() {
-        if (this.worldObj.getTotalWorldTime() % 20 == 0) {
-            int levels = 0;
-            this.corruptionReduction = 0;
-            //Check if there is an owner and that there is no block above
-            if (this.getOwnerGameProfile() != null && this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord)) {
-                Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
-                for (int i = 1; i <= 4; levels = i++) {
-                    int y = this.yCoord - i;
-                    if (y < 0) break;
-                    boolean flag = true;
-                    for (int x = this.xCoord - i; x <= this.xCoord + i && flag; ++x) {
-                        for (int z = this.zCoord - i; z <= this.zCoord + i; ++z) {
-                            //If not beacon base or not valid, break
-                            if (this.worldObj.getBlock(x, y, z) instanceof IBeaconBase) {
-                                IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(x, y, z);
-                                if (beaconBase.isValidForBeacon(this)) {
-                                    beaconBaseCount.add(beaconBase);
-                                }
-                                else {
-                                    flag = false;
-                                    break;
-                                }
-                            }
-                            else {
-                                flag = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!flag) break;
-                }
-                for (Multiset.Entry<IBeaconBase> beaconBase : beaconBaseCount.entrySet()) {
-                    this.corruptionReduction += beaconBase.getElement().getCorruptionReduction(this, beaconBase.getCount());
-                }
-            }
-            this.levels = levels;
-
-            //Calculate pylons to get crystals
-            this.calcPylons();
-        }
         return this.levels > 0;
-/*		AxisAlignedBB axisalignedbb = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord), (double) (this.yCoord + 1), (double) (this.zCoord));
-		List entities = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
-		if ((entities != null) && (this.isCloneConstruct())) {
-            //TODO Clone construct
-			EntityPlayer entityPlayer = (EntityPlayer) entities.get(0);
-		}*/
     }
 
     @Override
@@ -363,6 +316,91 @@ public class TileEntityPlayerBeacon extends TileEntity implements IBeacon {
                     this.markDirty();
                     this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 }
+            }
+        }
+    }
+
+    //Validates the current structure. We only need to make sure the base is correct, not the pylons
+    @Override
+    public boolean checkStructure() {
+        if (this.getOwnerGameProfile() != null && this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord)) {
+            this.levels = 0;
+            Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
+
+            for (int i = 1; i <= 4; this.levels = i++) {
+                int checkY = this.yCoord - i;
+                if (checkY < 0) break;
+                boolean flag = true;
+
+                //Loop through once to check if it is valid
+                for (int checkX = this.xCoord - i; checkX <= this.xCoord + i && flag; ++checkX) {
+                    for (int checkZ = this.zCoord - i; checkZ <= this.zCoord + i; ++checkZ) {
+                        //If not beacon base or not valid, break
+                        if (this.worldObj.getBlock(checkX, checkY, checkZ) instanceof IBeaconBase) {
+                            IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(checkX, checkY, checkZ);
+                            if (beaconBase.isValidForBeacon(this) && (beaconBase.getBeacon(this.worldObj, checkX, checkY, checkZ) == null
+                                    || beaconBase.getBeacon(this.worldObj, checkX, checkY, checkZ) == this)) {
+                                beaconBaseCount.add(beaconBase);
+                            }
+                            else {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        else {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if (!flag) break;
+            }
+            if (this.levels > 0) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void invalidateStructure() {}
+
+    @Override
+    public void formStructure() {
+        this.setIsParent();
+        //Loop through and own the base blocks
+        for (int i = 1; i <= this.levels; i++) {
+            int checkY = this.yCoord - i;
+            if (checkY < 0) break;
+
+            //Loop through once to check if it is valid
+            for (int checkX = this.xCoord - i; checkX <= this.xCoord + i; ++checkX) {
+                for (int checkZ = this.zCoord - i; checkZ <= this.zCoord + i; ++checkZ) {
+                    //We assume everything is valid
+                    IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(checkX, checkY, checkZ);
+                    beaconBase.setBeacon(this.worldObj, checkX, checkY, checkZ, this);
+                }
+            }
+        }
+        //Now the pylons
+        if (this.levels > 0) {
+            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
+                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
+                else break;
+            }
+            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
+                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
+                else break;
+            }
+            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
+                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
+                else break;
+            }
+            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
+                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
+                else break;
             }
         }
     }

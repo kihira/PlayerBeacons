@@ -1,5 +1,6 @@
 package kihira.playerbeacons.common.tileentity;
 
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
@@ -10,9 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalContainer {
+public class TileEntityDefiledSoulPylon extends TileEntityDummy implements ICrystalContainer {
 
 	private ItemStack crystal;
 
@@ -140,4 +140,18 @@ public class TileEntityDefiledSoulPylon extends TileEntity implements ICrystalCo
 	public boolean isPylonTop() {
 		return this.getBlockMetadata() == 1;
 	}
+
+    @Override
+    public IBeacon getBeacon() {
+        if (this.hasParent && this.isParentValid()) return (IBeacon) this.worldObj.getTileEntity(this.parentX, this.parentY, this.parentZ);
+        else return null;
+    }
+
+    @Override
+    public void setBeacon(IBeacon theBeacon) {
+        if (theBeacon.getTileEntity() instanceof TileEntityMultiBlock) {
+            TileEntityMultiBlock multiBlock = (TileEntityMultiBlock) theBeacon.getTileEntity();
+            this.setParent(multiBlock);
+        }
+    }
 }
