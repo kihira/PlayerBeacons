@@ -12,7 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
-public class TileEntityDefiledSoulPylon extends TileEntityDummy implements ICrystalContainer {
+public class TileEntityDefiledSoulPylon extends TileEntityMultiBlock implements ICrystalContainer {
 
 	private ItemStack crystal;
 
@@ -78,6 +78,7 @@ public class TileEntityDefiledSoulPylon extends TileEntityDummy implements ICrys
 		if (i == 0) {
 			this.crystal = itemstack;
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock);
 		}
 	}
 

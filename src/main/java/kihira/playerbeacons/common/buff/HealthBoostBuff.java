@@ -1,7 +1,7 @@
 package kihira.playerbeacons.common.buff;
 
-import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -21,7 +21,7 @@ public class HealthBoostBuff extends Buff {
     }
 
     @Override
-    public float doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+    public float doBuff(EntityPlayer player, Beacon theBeacon, int crystalCount) {
         if (player.worldObj.getTotalWorldTime() % 10 == 0) {
             IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
             AttributeModifier attributeModifier = attribute.getModifier(this.uuid);

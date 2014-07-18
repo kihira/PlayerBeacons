@@ -2,8 +2,8 @@ package kihira.playerbeacons.common.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.common.Beacon;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class YellowCrystalItem extends CrystalItem {
     }
 
     @Override
-    public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
+    public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
         return Buff.buffs.get("healthBoost").doBuff(player, beacon, crystalCount);
     }
 }

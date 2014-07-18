@@ -29,7 +29,7 @@ public class HUDPlayerBeacon implements IWailaDataProvider {
             TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) accessor.getTileEntity();
             if (tileEntityPlayerBeacon.getOwnerGameProfile() != null) {
                 if (config.getConfig("pb.showowner")) currenttip.add("Owner: " + tileEntityPlayerBeacon.getOwnerGameProfile().getName());
-                if (config.getConfig("pb.showcorruption")) currenttip.add("Corruption: " + tileEntityPlayerBeacon.getCorruption() + "/s");
+                //if (config.getConfig("pb.showcorruption")) currenttip.add("Corruption: " + tileEntityPlayerBeacon.getCorruption() + "/s");
             }
         }
         else if (accessor.getTileEntity() instanceof TileEntityDefiledSoulPylon) {

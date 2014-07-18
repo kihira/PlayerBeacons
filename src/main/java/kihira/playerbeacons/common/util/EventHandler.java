@@ -1,14 +1,15 @@
 package kihira.playerbeacons.common.util;
 
-import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.foxlib.client.RenderHelper;
 import kihira.foxlib.common.EnumHeadType;
+import kihira.foxlib.common.Loc4;
+import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.api.crystal.ICrystal;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.FMLEventHandler;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
@@ -16,7 +17,6 @@ import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -27,7 +27,6 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +39,8 @@ import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 public class EventHandler {
@@ -131,6 +132,14 @@ public class EventHandler {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload e) {
         FMLEventHandler.activeCorruptionEffects.remove(e.world);
+
+        //Use iterator to prevent CME
+        Iterator<Map.Entry<Loc4, Beacon>> iterator = BeaconDataHelper.beaconMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Loc4, Beacon> entry = iterator.next();
+            if (entry.getKey().dimID() == e.world.provider.dimensionId) BeaconDataHelper.beaconMap.remove(entry.getKey());
+        }
+
         if (e.world.isRemote) {
             ClientProxy.playerCorruption = 0F;
         }
@@ -183,7 +192,8 @@ public class EventHandler {
 				TileEntity tileEntity = mc.theWorld.getTileEntity(e.target.blockX, e.target.blockY, e.target.blockZ);
                 //Check it is a tileentity
 				if (tileEntity != null && tileEntity instanceof IBeacon) {
-                    IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
+                    //TODO
+/*                    IBeacon tileEntityPlayerBeacon = (IBeacon) tileEntity;
 					GameProfile ownerGameProfile = tileEntityPlayerBeacon.getOwnerGameProfile();
                     double viewX = e.target.blockX - RenderManager.renderPosX;
                     double viewY = e.target.blockY - RenderManager.renderPosY;
@@ -191,7 +201,7 @@ public class EventHandler {
                     String string = "";
 
                     if (ownerGameProfile != null) string += EnumChatFormatting.DARK_PURPLE + ownerGameProfile.getName();
-                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D, RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, false);
+                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D, RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, false);*/
                 }
 			}
 		}

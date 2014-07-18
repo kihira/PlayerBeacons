@@ -4,11 +4,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import kihira.playerbeacons.api.BeaconDataHelper;
-import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,18 +24,18 @@ public class FMLEventHandler {
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.side.isServer()) {
-            IBeacon playerBeacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension);
+            Beacon beacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension);
             //Check player has a beacon, is in same dimension and that the beacon is active
-            if (playerBeacon != null && playerBeacon.getTileEntity().getWorldObj().provider.dimensionId == event.player.dimension &&  playerBeacon.isBeaconValid()) {
+            if (beacon != null && beacon.dimID == event.player.dimension && beacon.getLevels() > 0) {
                 //General update method, usually used to do effects
-                playerBeacon.update();
+                beacon.doEffects(event.player);
 
                 //Update the corruption count
                 if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
-                    BeaconDataHelper.modifyCorruptionAmount(event.player, playerBeacon.getCorruption());
+                    BeaconDataHelper.modifyCorruptionAmount(event.player, beacon.getCorruption());
 
                     //Make the block re-sync
-                    event.player.worldObj.markBlockForUpdate(playerBeacon.getTileEntity().xCoord, playerBeacon.getTileEntity().yCoord, playerBeacon.getTileEntity().zCoord);
+                    //event.player.worldObj.markBlockForUpdate(beacon.posX, beacon.getTileEntity().yCoord, beacon.getTileEntity().zCoord);
                 }
             }
 
@@ -59,6 +59,30 @@ public class FMLEventHandler {
     public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equals(PlayerBeacons.MOD_ID)) {
             PlayerBeacons.config.loadGeneral();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        //Loads the beacon on player login
+        if (event.player != null) {
+            BeaconDataHelper.getBeaconForDim(event.player, event.player.worldObj.provider.dimensionId);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        //Unload the beacon for the player on logout
+        if (event.player != null) {
+            BeaconDataHelper.unloadBeacon(BeaconDataHelper.getBeaconForDim(event.player, event.player.worldObj.provider.dimensionId));
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerSwitchDim(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (event.player != null) {
+            BeaconDataHelper.unloadBeacon(BeaconDataHelper.getBeaconForDim(event.player, event.fromDim));
+            BeaconDataHelper.getBeaconForDim(event.player, event.toDim);
         }
     }
 

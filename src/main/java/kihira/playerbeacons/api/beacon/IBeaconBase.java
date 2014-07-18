@@ -1,5 +1,6 @@
 package kihira.playerbeacons.api.beacon;
 
+import kihira.playerbeacons.common.Beacon;
 import net.minecraft.world.World;
 
 /**
@@ -8,19 +9,12 @@ import net.minecraft.world.World;
 public interface IBeaconBase {
 
     /**
-     * Called to check if this block is valid for the beacon
-     * @param beacon The beacon
-     * @return if valid
-     */
-    public boolean isValidForBeacon(IBeacon beacon);
-
-    /**
      * The amount of corruption the block reduces
      * @param beacon The beacon
      * @param blockCount The amount of blocks detected by the beacon
      * @return the reduction for the count of all blocks
      */
-    public float getCorruptionReduction(IBeacon beacon, int blockCount);
+    public float getCorruptionReduction(Beacon beacon, int blockCount);
 
     /**
      * Returns the beacon it is already being used by

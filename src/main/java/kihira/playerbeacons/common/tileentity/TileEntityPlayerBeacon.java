@@ -1,16 +1,13 @@
 package kihira.playerbeacons.common.tileentity;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
+import kihira.foxlib.common.EntityHelper;
 import kihira.foxlib.common.EnumHeadType;
-import kihira.foxlib.common.gson.EntityHelper;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
-import kihira.playerbeacons.api.beacon.IBeaconBase;
-import kihira.playerbeacons.api.crystal.ICrystal;
-import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
@@ -22,7 +19,6 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
@@ -33,30 +29,23 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBeacon {
 
     private EnumHeadType headType = EnumHeadType.NONE;
     private GameProfile ownerGameProfile;
-    private float corruption = 0;
-    private float corruptionReduction = 0;
-    private int levels = 0;
 
     public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
-    private Multiset<ICrystal> crystalMultiset = HashMultiset.create();
 
     @Override
     public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
         super.readFromNBT(par1NBTTagCompound);
         this.headType = EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
-        this.corruption = par1NBTTagCompound.getFloat("badstuff");
         this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
         this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
 
@@ -71,13 +60,12 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
-        par1NBTTagCompound.setFloat("badstuff", this.corruption);
         par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
         par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
 
-        if (this.getOwnerGameProfile() != null) {
+        if (this.ownerGameProfile != null) {
             NBTTagCompound gameProfileTag = new NBTTagCompound();
-            NBTUtil.func_152460_a(gameProfileTag, this.getOwnerGameProfile());
+            NBTUtil.func_152460_a(gameProfileTag, this.ownerGameProfile);
             par1NBTTagCompound.setTag("Owner", gameProfileTag);
         }
     }
@@ -95,29 +83,6 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
     }
 
-    @Override
-    public boolean isBeaconValid() {
-        return this.levels > 0;
-    }
-
-    @Override
-    public void update() {
-        //Reset corruption change amount
-        this.corruption = 0;
-        //Do the effects
-        this.doEffects();
-    }
-
-    @Override
-    public GameProfile getOwnerGameProfile() {
-        return this.ownerGameProfile;
-    }
-
-    @Override
-    public int getLevels() {
-        return this.levels;
-    }
-
     public void setOwner(EntityPlayer player) {
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
@@ -133,10 +98,10 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
 
     @Override
     public void invalidate() {
-        if (FMLCommonHandler.instance().getSide().isServer() && this.getOwnerGameProfile() != null) {
+        if (FMLCommonHandler.instance().getSide().isServer() && this.ownerGameProfile != null) {
             //Remove player beacon data
-            EntityPlayer player = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId()); //Look for by ID first
-            if (player == null) MinecraftServer.getServer().getConfigurationManager().func_152612_a(this.getOwnerGameProfile().getName()); //Then by username
+            EntityPlayer player = Util.getPlayerFromUUID(this.ownerGameProfile.getId()); //Look for by ID first
+            if (player == null) MinecraftServer.getServer().getConfigurationManager().func_152612_a(this.ownerGameProfile.getName()); //Then by username
             if (player != null) {
                 BeaconDataHelper.setBeaconForDim(player, null, this.worldObj.provider.dimensionId);
             }
@@ -144,43 +109,14 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         super.invalidate();
     }
 
-/*    private boolean isCloneConstruct() {
-        if (this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.skull) return false;
-        //Check 5x5 underneath and above
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-                if (!(this.worldObj.getBlock(this.xCoord + i, this.yCoord - 1, this.zCoord + j) instanceof IBeaconBase)) return false;
-                if (!(this.worldObj.getBlock(this.xCoord + i, this.yCoord + 3, this.zCoord + j) instanceof IBeaconBase)) return false;
-            }
-        }
-        //Check pylons
-        for (int i = 0; i <= 3; i++) {
-            if (this.worldObj.getBlock(this.xCoord + 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
-            if (this.worldObj.getBlock(this.xCoord + 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
-            if (this.worldObj.getBlock(this.xCoord - 2, this.yCoord + i, this.zCoord + 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
-            if (this.worldObj.getBlock(this.xCoord - 2, this.yCoord + i, this.zCoord - 2) != PlayerBeacons.defiledSoulPylonBlock) return false;
-        }
-        return true;
-    }*/
-
-    private void doEffects() {
-        //Verify the ownerUUID is valid for receiving effects
-        if (this.getOwnerGameProfile() != null) {
-            EntityPlayer entityPlayer = this.worldObj.func_152378_a(this.getOwnerGameProfile().getId()); //Get player by UUID
-            if (entityPlayer != null && entityPlayer.dimension == this.worldObj.provider.dimensionId) {
-                //Loop through the crystals this beacon has detected
-                for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
-                    this.corruption += entry.getElement().doEffects(entityPlayer, this, entry.getCount());
-                    //PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d), changing corruption by %d", entry.getElement().getClass().toString(), entry.getCount(), corruptionChange);
-                }
-            }
-        }
+    @Override
+    public GameProfile getOwnerGameProfile() {
+        return this.ownerGameProfile;
     }
 
     @Override
-    public float getCorruption() {
-        //Return corruption minus the reduction from base blocks and the natural reduction from beacon
-        return MathHelper.clamp_float(this.corruption - this.corruptionReduction - (this.levels * 20), 0, Float.MAX_VALUE);
+    public int getLevels() {
+        return 0;
     }
 
     @Override
@@ -188,55 +124,10 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         return this;
     }
 
-    public void calcPylons() {
-        if (this.levels > 0) {
-            ImmutableMultiset<ICrystal> copyCrystal = Multisets.copyHighestCountFirst(this.crystalMultiset);
-            EntityPlayer entityPlayer = Util.getPlayerFromUUID(this.getOwnerGameProfile().getId());
-            this.crystalMultiset.clear();
-
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                this.doCrystals(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                this.doCrystals(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                this.doCrystals(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                this.doCrystals(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
-            }
-
-            //Loop through and check if any crystals are missing from previous. If so, do effects with count 0
-            //TODO should a global list of ICrystals be maintained? Then we just loop though that in doEffects so we can easily send 0
-            if (entityPlayer != null && copyCrystal.size() > 0) {
-                for (Multiset.Entry<ICrystal> crystal : copyCrystal.entrySet()) {
-                    if (!this.crystalMultiset.contains(crystal.getElement())) crystal.getElement().doEffects(entityPlayer, this, 0);
-                }
-            }
-        }
-    }
-
-    private void doCrystals(int x, int y, int z) {
-        ICrystalContainer crystalContainer = (ICrystalContainer) this.worldObj.getTileEntity(x, y, z);
-
-        for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {
-            ItemStack itemStack = crystalContainer.getStackInSlot(i);
-            if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
-                if (itemStack.attemptDamageItem(1, new Random())) {
-                    crystalContainer.setInventorySlotContents(i, null);
-                }
-                else {
-                    this.crystalMultiset.add((ICrystal) itemStack.getItem());
-                }
-            }
-        }
-    }
-
     @Override
     public void updateEntity() {
-        if (this.getOwnerGameProfile() != null) {
-            EntityPlayer player = this.worldObj.func_152378_a(this.getOwnerGameProfile().getId()); //Get player by UUID
+        if (this.ownerGameProfile != null) {
+            EntityPlayer player = this.worldObj.func_152378_a(this.ownerGameProfile.getId()); //Get player by UUID
             if (player != null) {
                 this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
 
@@ -255,8 +146,8 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
             dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
             this.worldObj.spawnEntityInWorld(dragon);
         }
-        if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE && this.levels > 0) {
-            double d0 = (double) (this.levels * 7 + 10);
+        if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE) {
+            double d0 = 30D;
             AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
             List list = null;
 
@@ -316,91 +207,6 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
                     this.markDirty();
                     this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 }
-            }
-        }
-    }
-
-    //Validates the current structure. We only need to make sure the base is correct, not the pylons
-    @Override
-    public boolean checkStructure() {
-        if (this.getOwnerGameProfile() != null && this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord)) {
-            this.levels = 0;
-            Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
-
-            for (int i = 1; i <= 4; this.levels = i++) {
-                int checkY = this.yCoord - i;
-                if (checkY < 0) break;
-                boolean flag = true;
-
-                //Loop through once to check if it is valid
-                for (int checkX = this.xCoord - i; checkX <= this.xCoord + i && flag; ++checkX) {
-                    for (int checkZ = this.zCoord - i; checkZ <= this.zCoord + i; ++checkZ) {
-                        //If not beacon base or not valid, break
-                        if (this.worldObj.getBlock(checkX, checkY, checkZ) instanceof IBeaconBase) {
-                            IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(checkX, checkY, checkZ);
-                            if (beaconBase.isValidForBeacon(this) && (beaconBase.getBeacon(this.worldObj, checkX, checkY, checkZ) == null
-                                    || beaconBase.getBeacon(this.worldObj, checkX, checkY, checkZ) == this)) {
-                                beaconBaseCount.add(beaconBase);
-                            }
-                            else {
-                                flag = false;
-                                break;
-                            }
-                        }
-                        else {
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-                if (!flag) break;
-            }
-            if (this.levels > 0) return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void invalidateStructure() {}
-
-    @Override
-    public void formStructure() {
-        this.setIsParent();
-        //Loop through and own the base blocks
-        for (int i = 1; i <= this.levels; i++) {
-            int checkY = this.yCoord - i;
-            if (checkY < 0) break;
-
-            //Loop through once to check if it is valid
-            for (int checkX = this.xCoord - i; checkX <= this.xCoord + i; ++checkX) {
-                for (int checkZ = this.zCoord - i; checkZ <= this.zCoord + i; ++checkZ) {
-                    //We assume everything is valid
-                    IBeaconBase beaconBase = (IBeaconBase) this.worldObj.getBlock(checkX, checkY, checkZ);
-                    beaconBase.setBeacon(this.worldObj, checkX, checkY, checkZ, this);
-                }
-            }
-        }
-        //Now the pylons
-        if (this.levels > 0) {
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
-                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
-                else break;
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord - this.levels);
-                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
-                else break;
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord + this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
-                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
-                else break;
-            }
-            for (int y = 0; ((this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
-                ICrystalContainer tileEntity = (ICrystalContainer) this.worldObj.getTileEntity(this.xCoord - this.levels, this.yCoord - this.levels + 1 + y, this.zCoord + this.levels);
-                if (tileEntity.getBeacon() == null || tileEntity.getBeacon() == this) tileEntity.setBeacon(this);
-                else break;
             }
         }
     }

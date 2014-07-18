@@ -1,5 +1,7 @@
 package kihira.playerbeacons.common.block;
 
+import kihira.playerbeacons.api.BeaconDataHelper;
+import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -21,11 +23,8 @@ public abstract class BlockMultiBlock extends BlockContainer {
             //Only make the parent recheck, children are basically dummies
             if (tileEntity.hasParent && !tileEntity.isParent) {
                 if (tileEntity.isParentValid()) {
-                    TileEntityMultiBlock parent = (TileEntityMultiBlock) world.getTileEntity(tileEntity.parentX, tileEntity.parentY, tileEntity.parentZ);
-                    //If the structure is no longer valid, break. Block metadata is same as parents
-                    if (!parent.checkStructure()) {
-                        parent.invalidateStructure();
-                    }
+                    IBeacon parent = (IBeacon) world.getTileEntity(tileEntity.parentX, tileEntity.parentY, tileEntity.parentZ);
+                    BeaconDataHelper.markBeaconDirty(parent);
                 }
                 else {
                     //Parent doesn't exist, invalidate ourself

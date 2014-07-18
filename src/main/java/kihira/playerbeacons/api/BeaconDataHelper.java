@@ -1,11 +1,18 @@
 package kihira.playerbeacons.api;
 
+import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.common.Beacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import java.util.HashMap;
+
 public class BeaconDataHelper {
+
+    //TODO move to better loc?
+    public static HashMap<Loc4, Beacon> beaconMap = new HashMap<Loc4, Beacon>();
 
     public static float getPlayerCorruptionAmount(EntityPlayer player) {
         NBTTagCompound data = getBeaconDataTag(player);
@@ -49,12 +56,30 @@ public class BeaconDataHelper {
                 beaconData.setTag(dimKey, worldBeaconData);
             }
             else {
+                int x = worldBeaconData.getInteger("xPos");
+                int y = worldBeaconData.getInteger("yPos");
+                int z = worldBeaconData.getInteger("zPos");
+                Loc4 loc = new Loc4(dimID, x, y, z);
+
+                if (beaconMap.containsKey(loc) && beaconMap.get(loc).dimID == dimID) beaconMap.remove(loc);
                 beaconData.removeTag(dimKey);
             }
         }
     }
 
-    public static IBeacon getBeaconForDim(EntityPlayer player, int dimID) {
+    public static void markBeaconDirty(IBeacon theBeacon) {
+        TileEntity tileEntity = theBeacon.getTileEntity();
+        Loc4 loc = new Loc4(tileEntity.getWorldObj().provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+        if (beaconMap.containsKey(loc)) {
+            Beacon beacon = beaconMap.get(loc);
+            //If beacon is valid, reload all information for safety
+            if (beacon.checkStructure(theBeacon)) {
+                beacon.formStructure(theBeacon);
+            }
+        }
+    }
+
+    public static Beacon getBeaconForDim(EntityPlayer player, int dimID) {
         if (player != null) {
             NBTTagCompound beaconData = getBeaconDataTag(player);
             String dimKey = String.valueOf(dimID);
@@ -64,9 +89,18 @@ public class BeaconDataHelper {
                 int x = worldBeaconData.getInteger("xPos");
                 int y = worldBeaconData.getInteger("yPos");
                 int z = worldBeaconData.getInteger("zPos");
+
+                Loc4 loc = new Loc4(dimID, x, y, z);
+                if (beaconMap.containsKey(loc) && beaconMap.get(loc).dimID == dimID) return beaconMap.get(loc);
+
                 TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
                 if (tileEntity instanceof IBeacon) {
-                    return (IBeacon) tileEntity;
+                    //TODO allow API to have custom Beacon instances?
+                    Beacon beacon = new Beacon(dimID, x, y, z, player.getGameProfile());
+                    beaconMap.put(loc, beacon);
+                    markBeaconDirty((IBeacon) tileEntity);
+
+                    return beacon;
                 }
                 else {
                     setBeaconForDim(player, null, dimID);
@@ -74,6 +108,10 @@ public class BeaconDataHelper {
             }
         }
         return null;
+    }
+
+    public static void unloadBeacon(Beacon beacon) {
+        if (beacon != null) beaconMap.remove(new Loc4(beacon.dimID, beacon.posX, beacon.posY, beacon.posZ));
     }
 
     private static NBTTagCompound getBeaconDataTag(EntityPlayer player) {

@@ -2,8 +2,8 @@ package kihira.playerbeacons.common.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.crystal.ICrystal;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,7 +80,7 @@ public class CrystalItem extends Item implements ICrystal {
     }
 
     @Override
-    public float doEffects(EntityPlayer player, IBeacon beacon, int crystalCount) {
+    public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
         return 0;
     }
 

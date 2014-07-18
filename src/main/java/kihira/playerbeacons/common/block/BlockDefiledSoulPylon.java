@@ -125,6 +125,7 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
                 defiledSoulPylon.setInventorySlotContents(0, null);
             }
         }
+        super.onNeighborBlockChange(world, x, y, z, neighbourBlock);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
     }
 
     @Override
-	public TileEntity createNewTileEntity(World world, int var2) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityDefiledSoulPylon();
 	}
 }

@@ -8,6 +8,7 @@ import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.block.material.Material;
@@ -97,13 +98,14 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                     gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
                 }
 
-                TileEntityPlayerBeacon tileEntityPlayerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
+                TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
                 //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
-                if (tileEntityPlayerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
+                if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
                         !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
-                    tileEntityPlayerBeacon.setOwner(player);
-                    if (tileEntityPlayerBeacon.checkStructure()) {
-                        tileEntityPlayerBeacon.formStructure();
+                    playerBeacon.setOwner(player);
+                    Beacon beacon = BeaconDataHelper.getBeaconForDim(player, player.dimension);
+                    if (beacon.checkStructure(playerBeacon)) {
+                        beacon.formStructure(playerBeacon);
                     }
 
                     if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
@@ -145,6 +147,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
         return false;
     }
 
+    //TODO fix this (levels == 0)
     @Override
     @SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int xPos, int yPos, int zPos, Random rand) {
@@ -156,7 +159,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
         TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(xPos, yPos, zPos);
         int levels = playerBeacon.getLevels();
 
-        if (playerBeacon.isBeaconValid() && levels > 0) {
+        if (levels > 0) {
             for (int y = 0; ((world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels) instanceof ICrystalContainer) && (y < (1 + levels))); y++) {
                 ICrystalContainer crystalContainer = (ICrystalContainer) world.getTileEntity(xPos - levels, yPos - levels + 1 + y, zPos - levels);
                 this.doParticles(playerBeacon, xPos - levels, yPos - levels + 1 + y, zPos - levels, crystalContainer);

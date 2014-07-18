@@ -2,8 +2,9 @@ package kihira.playerbeacons.common.block;
 
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.common.tileentity.TileEntityDummy;
+import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -33,17 +34,27 @@ public class BlockDefiledSoulConductor extends BlockMultiBlock implements IBeaco
 	}
 
     @Override
-    public boolean isValidForBeacon(IBeacon beacon) {
-        return true;
-    }
-
-    @Override
-    public float getCorruptionReduction(IBeacon beacon, int blockCount) {
+    public float getCorruptionReduction(Beacon beacon, int blockCount) {
         return beacon.getLevels() * 10F;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        return new TileEntityDummy();
+    public IBeacon getBeacon(World world, int x, int y, int z) {
+        TileEntityMultiBlock multiBlock = (TileEntityMultiBlock) world.getTileEntity(x, y, z);
+        if (multiBlock.hasParent && multiBlock.isParentValid()) {
+            return (IBeacon) world.getTileEntity(multiBlock.parentX, multiBlock.parentY, multiBlock.parentZ);
+        }
+        return null;
+    }
+
+    @Override
+    public void setBeacon(World world, int x, int y, int z, IBeacon theBeacon) {
+        TileEntityMultiBlock multiBlock = (TileEntityMultiBlock) world.getTileEntity(x, y, z);
+        multiBlock.setParent((TileEntityMultiBlock) theBeacon); //TODO cast check
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileEntityMultiBlock();
     }
 }

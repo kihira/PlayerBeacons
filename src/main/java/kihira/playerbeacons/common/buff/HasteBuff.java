@@ -2,8 +2,8 @@ package kihira.playerbeacons.common.buff;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -18,7 +18,7 @@ public class HasteBuff extends Buff {
 	}
 
 	@Override
-	public float doBuff(EntityPlayer player, IBeacon theBeacon, int crystalCount) {
+	public float doBuff(EntityPlayer player, Beacon theBeacon, int crystalCount) {
         if (player.worldObj.getTotalWorldTime() % 20 == 0) {
             player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 300, MathHelper.clamp_int(crystalCount, 0, theBeacon.getLevels()) - 1, true));
         }

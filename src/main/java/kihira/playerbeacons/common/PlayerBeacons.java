@@ -19,7 +19,7 @@ import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.potion.CorruptionPotion;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
-import kihira.playerbeacons.common.tileentity.TileEntityDummy;
+import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.common.util.EventHandler;
 import kihira.playerbeacons.proxy.ClientProxy;
@@ -111,7 +111,7 @@ public class PlayerBeacons {
 
 		GameRegistry.registerTileEntity(TileEntityPlayerBeacon.class, "playerBeaconBlock");
 		GameRegistry.registerTileEntity(TileEntityDefiledSoulPylon.class, "defiledSoulPylonBlock");
-        GameRegistry.registerTileEntity(TileEntityDummy.class, PlayerBeacons.MOD_ID + ":dummyMultiBlock");
+        GameRegistry.registerTileEntity(TileEntityMultiBlock.class, PlayerBeacons.MOD_ID + ":multiBlock");
 
 		registerBuffs();
         registerRecipes();

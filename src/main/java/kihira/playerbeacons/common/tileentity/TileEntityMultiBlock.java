@@ -6,7 +6,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public abstract class TileEntityMultiBlock extends TileEntity {
+public class TileEntityMultiBlock extends TileEntity {
 
     public int parentX;
     public int parentY;
@@ -101,10 +101,4 @@ public abstract class TileEntityMultiBlock extends TileEntity {
     public String toString() {
         return String.valueOf(this.getClass()) + "[hasParent: " + this.hasParent + ", isParent: " + this.isParent + ", parentX: " + this.parentX + ", parentY: " + this.parentY + ", parentZ: " + this.parentZ + "]";
     }
-
-    public abstract boolean checkStructure();
-
-    public abstract void invalidateStructure();
-
-    public abstract void formStructure();
 }
