@@ -101,7 +101,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
 
     @Override
     public void invalidate() {
-        if (FMLCommonHandler.instance().getSide().isServer() && this.ownerGameProfile != null) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isServer() && this.ownerGameProfile != null) {
             //Remove player beacon data
             EntityPlayer player = Util.getPlayerFromUUID(this.ownerGameProfile.getId()); //Look for by ID first
             if (player == null) MinecraftServer.getServer().getConfigurationManager().func_152612_a(this.ownerGameProfile.getName()); //Then by username
