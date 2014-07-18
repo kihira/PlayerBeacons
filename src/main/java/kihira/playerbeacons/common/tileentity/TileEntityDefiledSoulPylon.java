@@ -44,11 +44,6 @@ public class TileEntityDefiledSoulPylon extends TileEntityMultiBlock implements 
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
 	}
 
-    @Override
-    public boolean canUpdate() {
-        return false;
-    }
-
 	@Override
 	public int getSizeInventory() {
 		return 1;

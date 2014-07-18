@@ -210,4 +210,9 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
             }
         }
     }
+
+    @Override
+    public boolean canUpdate() {
+        return true;
+    }
 }

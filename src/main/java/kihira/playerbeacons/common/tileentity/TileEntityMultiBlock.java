@@ -98,6 +98,11 @@ public class TileEntityMultiBlock extends TileEntity {
     }
 
     @Override
+    public boolean canUpdate() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(this.getClass()) + "[hasParent: " + this.hasParent + ", isParent: " + this.isParent + ", parentX: " + this.parentX + ", parentY: " + this.parentY + ", parentZ: " + this.parentZ + "]";
     }
