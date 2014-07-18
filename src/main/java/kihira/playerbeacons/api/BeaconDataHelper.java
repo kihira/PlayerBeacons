@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.Beacon;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -88,7 +89,7 @@ public class BeaconDataHelper {
                         beacon.formStructure(theBeacon);
                     }
                     stopwatch.stop();
-                    System.out.println(stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                    PlayerBeacons.logger.debug("Multiblock loop took " + stopwatch.elapsed(TimeUnit.MICROSECONDS));
                 }
             };
             runnable.run();
