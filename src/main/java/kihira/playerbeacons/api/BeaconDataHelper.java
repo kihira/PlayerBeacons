@@ -5,7 +5,9 @@ import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.common.Beacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 import java.util.HashMap;
 
@@ -91,9 +93,10 @@ public class BeaconDataHelper {
                 int z = worldBeaconData.getInteger("zPos");
 
                 Loc4 loc = new Loc4(dimID, x, y, z);
-                if (beaconMap.containsKey(loc) && beaconMap.get(loc).dimID == dimID) return beaconMap.get(loc);
+                if (beaconMap.containsKey(loc)) return beaconMap.get(loc);
 
-                TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
+                World world = MinecraftServer.getServer().worldServerForDimension(dimID);
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
                 if (tileEntity instanceof IBeacon) {
                     //TODO allow API to have custom Beacon instances?
                     Beacon beacon = new Beacon(dimID, x, y, z, player.getGameProfile());
