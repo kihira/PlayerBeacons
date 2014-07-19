@@ -90,6 +90,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
+            this.headType = EnumHeadType.PLAYER;
             this.refreshGameProfileData();
         }
         else if (player == null) {
@@ -149,37 +150,44 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
                 }
             }
         }
-        else if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
-            this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
-            EntityDragon dragon = new EntityDragon(this.worldObj);
-            dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
-            this.worldObj.spawnEntityInWorld(dragon);
-        }
-        if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE) {
-            double d0 = 30D;
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
-            List list = null;
-
-            if (this.headType == EnumHeadType.SKELETON || this.headType == EnumHeadType.WITHERSKELETON) {
-                List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisAlignedBB);
-                list = new ArrayList<Object>();
-                for (Object object : list1) {
-                    EntitySkeleton skeleton = (EntitySkeleton) object;
-                    if (skeleton.getSkeletonType() == this.headType.getID()) list.add(object);
-                }
+        if (!this.worldObj.isRemote) {
+            //No levels but valid head
+            if (this.levels == 0 && this.headType == EnumHeadType.PLAYER && this.worldObj.getWorldTime() % 20 == 0) {
+                //Mark this as dirty to recheck if we have a valid structure
+                BeaconDataHelper.markBeaconDirty(this);
             }
-            else if (this.headType == EnumHeadType.ZOMBIE) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisAlignedBB);
-            else if (this.headType == EnumHeadType.CREEPER) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisAlignedBB);
-            if (list != null && !list.isEmpty()) {
-                EntityCreature entityCreature;
-                for (Object entry : list) {
-                    entityCreature = (EntityCreature) entry;
-                    if (!entityCreature.hasPath()) {
-                        Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreature, 16, 7, Vec3.createVectorHelper(this.xCoord, this.yCoord, this.zCoord));
-                        PathNavigate entityPathNavigate = entityCreature.getNavigator();
-                        if (entityPathNavigate != null && vec3 != null) {
-                            PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-                            if (entityPathEntity != null) entityPathNavigate.setPath(entityPathEntity, 1.1D);
+            if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
+                this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
+                EntityDragon dragon = new EntityDragon(this.worldObj);
+                dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
+                this.worldObj.spawnEntityInWorld(dragon);
+            }
+            if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE) {
+                double d0 = 30D;
+                AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
+                List list = null;
+
+                if (this.headType == EnumHeadType.SKELETON || this.headType == EnumHeadType.WITHERSKELETON) {
+                    List list1 = this.worldObj.getEntitiesWithinAABB(EntitySkeleton.class, axisAlignedBB);
+                    list = new ArrayList<Object>();
+                    for (Object object : list1) {
+                        EntitySkeleton skeleton = (EntitySkeleton) object;
+                        if (skeleton.getSkeletonType() == this.headType.getID()) list.add(object);
+                    }
+                }
+                else if (this.headType == EnumHeadType.ZOMBIE) list = this.worldObj.getEntitiesWithinAABB(EntityZombie.class, axisAlignedBB);
+                else if (this.headType == EnumHeadType.CREEPER) list = this.worldObj.getEntitiesWithinAABB(EntityCreeper.class, axisAlignedBB);
+                if (list != null && !list.isEmpty()) {
+                    EntityCreature entityCreature;
+                    for (Object entry : list) {
+                        entityCreature = (EntityCreature) entry;
+                        if (!entityCreature.hasPath()) {
+                            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entityCreature, 16, 7, Vec3.createVectorHelper(this.xCoord, this.yCoord, this.zCoord));
+                            PathNavigate entityPathNavigate = entityCreature.getNavigator();
+                            if (entityPathNavigate != null && vec3 != null) {
+                                PathEntity entityPathEntity = entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+                                if (entityPathEntity != null) entityPathNavigate.setPath(entityPathEntity, 1.1D);
+                            }
                         }
                     }
                 }

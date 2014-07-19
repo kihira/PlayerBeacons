@@ -33,9 +33,10 @@ public class Beacon {
     }
 
     /**
-     * Checks if this structure is valid. Will return false if not or if it has changed since last check
+     * Checks if the structure has changed since it was formed. Will return false if it has changed and true if it is
+     * the same.
      * @param theBeacon The beacon
-     * @return Whether the structure is valid
+     * @return If it has changed
      */
     public boolean checkStructure(IBeacon theBeacon) {
         World world = theBeacon.getTileEntity().getWorldObj();
@@ -43,6 +44,8 @@ public class Beacon {
         int beaconY = theBeacon.getTileEntity().yCoord;
         int beaconZ = theBeacon.getTileEntity().zCoord;
         Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
+        Multiset<ICrystal> crystals = HashMultiset.create();
+        int levels = this.levels;
         this.levels = 0;
 
         if (this.ownerGameProfile != null && world.isAirBlock(beaconX, beaconY + 1, beaconZ)) {
@@ -73,7 +76,57 @@ public class Beacon {
                 }
                 if (!flag) break;
             }
-            if (this.levels > 0) return true;
+
+            //Now the pylons
+            if (this.levels > 0) {
+                //ImmutableMultiset<ICrystal> copyCrystal = Multisets.copyHighestCountFirst(this.crystalMultiset);
+                int checkX = this.posX - this.levels;
+                int checkZ = this.posZ - this.levels;
+                int checkY = this.posY - this.levels + 1;
+                for (int y = 0; ((world.getTileEntity(checkX, checkY + y, checkZ) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                    ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
+                    if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
+                        tileEntity.setBeacon(theBeacon);
+                        crystals.addAll(this.countCrystals(tileEntity));
+                    }
+                    else break;
+                }
+
+                checkX = this.posX + this.levels;
+                for (int y = 0; ((world.getTileEntity(checkX, checkY + y, checkZ) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                    ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
+                    if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
+                        tileEntity.setBeacon(theBeacon);
+                        crystals.addAll(this.countCrystals(tileEntity));
+                    }
+                    else break;
+                }
+
+                checkZ = this.posZ + this.levels;
+                for (int y = 0; ((world.getTileEntity(checkX, checkY + y, checkZ) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                    ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
+                    if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
+                        tileEntity.setBeacon(theBeacon);
+                        crystals.addAll(this.countCrystals(tileEntity));
+                    }
+                    else break;
+                }
+
+                checkX = this.posX - this.levels;
+                for (int y = 0; ((world.getTileEntity(checkX, checkY + y, checkZ) instanceof ICrystalContainer) && (y < (1 + this.levels))); y++) {
+                    ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
+                    if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
+                        tileEntity.setBeacon(theBeacon);
+                        crystals.addAll(this.countCrystals(tileEntity));
+                    }
+                    else break;
+                }
+            }
+
+            //If levels and crystal count is the same, return true. TODO double check containsAll is what we need for this
+            if (this.levels == levels && crystals.containsAll(this.crystalMultiset)) {
+                return true;
+            }
         }
         return false;
     }
@@ -114,7 +167,7 @@ public class Beacon {
                 ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
                 if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
                     tileEntity.setBeacon(theBeacon);
-                    this.doCrystals(tileEntity);
+                    this.crystalMultiset.addAll(this.countCrystals(tileEntity));
                 }
                 else break;
             }
@@ -124,7 +177,7 @@ public class Beacon {
                 ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
                 if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
                     tileEntity.setBeacon(theBeacon);
-                    this.doCrystals(tileEntity);
+                    this.crystalMultiset.addAll(this.countCrystals(tileEntity));
                 }
                 else break;
             }
@@ -134,7 +187,7 @@ public class Beacon {
                 ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
                 if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
                     tileEntity.setBeacon(theBeacon);
-                    this.doCrystals(tileEntity);
+                    this.crystalMultiset.addAll(this.countCrystals(tileEntity));
                 }
                 else break;
             }
@@ -144,7 +197,7 @@ public class Beacon {
                 ICrystalContainer tileEntity = (ICrystalContainer) world.getTileEntity(checkX, checkY + y, checkZ);
                 if (tileEntity.getBeacon() == theBeacon || tileEntity.getBeacon() == null) {
                     tileEntity.setBeacon(theBeacon);
-                    this.doCrystals(tileEntity);
+                    this.crystalMultiset.addAll(this.countCrystals(tileEntity));
                 }
                 else break;
             }
@@ -220,13 +273,15 @@ public class Beacon {
      * {@link #crystalMultiset}
      * @param crystalContainer The container
      */
-    private void doCrystals(ICrystalContainer crystalContainer) {
+    private Multiset<ICrystal> countCrystals(ICrystalContainer crystalContainer) {
+        Multiset<ICrystal> crystals = HashMultiset.create();
         for (int i = 0; i < crystalContainer.getSizeInventory(); i++) {
             ItemStack itemStack = crystalContainer.getStackInSlot(i);
             if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
-                this.crystalMultiset.add((ICrystal) itemStack.getItem());
+                crystals.add((ICrystal) itemStack.getItem());
             }
         }
+        return crystals;
     }
 
 

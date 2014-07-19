@@ -83,9 +83,11 @@ public class BeaconDataHelper {
                 @Override
                 public void run() {
                     Stopwatch stopwatch = Stopwatch.createStarted();
-                    beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed?
-                    //If beacon is valid, reload all information for safety
-                    if (beacon.checkStructure(theBeacon)) {
+                    //beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed? Possible lag cause
+                    //If checkStructure is false, something has changed
+                    if (!beacon.checkStructure(theBeacon)) {
+                        beacon.invalidateStructure(theBeacon);
+                        beacon.checkStructure(theBeacon); //Figure out the levels
                         beacon.formStructure(theBeacon);
                     }
                     stopwatch.stop();
