@@ -122,7 +122,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
             else if (itemStack.getItem() instanceof ICrystal) {
                 if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                 else player.setCurrentItemOrArmor(0, itemStack);
-                world.markBlockForUpdate(x, y, z);
+                BeaconDataHelper.setPlayerCorruptionAmount(player, 0);
                 player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
             }
         }
