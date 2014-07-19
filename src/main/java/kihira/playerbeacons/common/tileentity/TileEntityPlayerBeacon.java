@@ -91,7 +91,6 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
             this.headType = EnumHeadType.PLAYER;
-            this.refreshGameProfileData();
         }
         else if (player == null) {
             this.ownerGameProfile = null;
