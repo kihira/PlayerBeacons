@@ -22,7 +22,7 @@ public class Beacon {
     private float corruption = 0;
     private float corruptionReduction = 0;
     private GameProfile ownerGameProfile;
-    private Multiset<ICrystal> crystalMultiset = HashMultiset.create();
+    private HashMultiset<ICrystal> crystalMultiset = HashMultiset.create();
 
     public Beacon(int dimID, int posX, int posY, int posZ, GameProfile gameProfile) {
         this.dimID = dimID;
@@ -43,8 +43,8 @@ public class Beacon {
         int beaconX = theBeacon.getTileEntity().xCoord;
         int beaconY = theBeacon.getTileEntity().yCoord;
         int beaconZ = theBeacon.getTileEntity().zCoord;
-        Multiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
-        Multiset<ICrystal> crystals = HashMultiset.create();
+        HashMultiset<IBeaconBase> beaconBaseCount = HashMultiset.create();
+        HashMultiset<ICrystal> crystals = HashMultiset.create();
         int levels = this.levels;
         this.levels = 0;
 
@@ -79,7 +79,6 @@ public class Beacon {
 
             //Now the pylons
             if (this.levels > 0) {
-                //ImmutableMultiset<ICrystal> copyCrystal = Multisets.copyHighestCountFirst(this.crystalMultiset);
                 int checkX = this.posX - this.levels;
                 int checkZ = this.posZ - this.levels;
                 int checkY = this.posY - this.levels + 1;
@@ -123,8 +122,8 @@ public class Beacon {
                 }
             }
 
-            //If levels and crystal count is the same, return true. TODO double check containsAll is what we need for this
-            if (this.levels == levels && crystals.containsAll(this.crystalMultiset)) {
+            //If levels and crystal count is the same, return true.
+            if (this.levels == levels && crystals.equals(this.crystalMultiset)) {
                 return true;
             }
         }
