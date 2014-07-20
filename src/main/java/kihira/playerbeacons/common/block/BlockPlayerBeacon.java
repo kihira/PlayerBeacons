@@ -102,6 +102,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                 if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
                         !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
                     playerBeacon.setOwner(player);
+                    playerBeacon.setIsParent();
                     //Generate the Beacon instance
                     BeaconDataHelper.getBeaconForDim(player, player.dimension);
                     //Then validate

@@ -21,7 +21,7 @@ public abstract class BlockMultiBlock extends BlockContainer {
             TileEntityMultiBlock tileEntity = (TileEntityMultiBlock) world.getTileEntity(x, y, z);
 
             //Only make the parent recheck, children are basically dummies
-            if (tileEntity.hasParent && !tileEntity.isParent) {
+            if (tileEntity.hasParent) {
                 if (tileEntity.isParentValid()) {
                     IBeacon parent = (IBeacon) world.getTileEntity(tileEntity.parentX, tileEntity.parentY, tileEntity.parentZ);
                     BeaconDataHelper.markBeaconDirty(parent);
@@ -32,6 +32,7 @@ public abstract class BlockMultiBlock extends BlockContainer {
                     world.notifyBlockChange(x, y, z, this);
                 }
             }
+            else if (tileEntity.isParent) BeaconDataHelper.markBeaconDirty((IBeacon) tileEntity);
         }
     }
 }

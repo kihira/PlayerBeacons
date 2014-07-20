@@ -48,6 +48,11 @@ public class Beacon {
         int levels = this.levels;
         this.levels = 0;
 
+        //Having a block above is not a valid structure
+        if (!world.isAirBlock(this.posX, this.posY + 1, this.posZ)) {
+            return false;
+        }
+
         if (this.ownerGameProfile != null && world.isAirBlock(beaconX, beaconY + 1, beaconZ)) {
             for (int i = 1; i <= 4; this.levels = i++) {
                 int checkY = beaconY - i;
@@ -135,6 +140,12 @@ public class Beacon {
         Multiset<IBeaconBase> beaconBases = HashMultiset.create();
         this.corruptionReduction = 0;
         this.crystalMultiset.clear();
+
+        //Having a block above is not a valid structure
+        if (!world.isAirBlock(this.posX, this.posY + 1, this.posZ)) {
+            this.levels = 0;
+            return;
+        }
 
         //Loop through and own the base blocks
         for (int i = 1; i <= this.levels; i++) {
