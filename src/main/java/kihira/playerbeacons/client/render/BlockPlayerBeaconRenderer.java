@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -77,6 +78,13 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
             bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             float yOffset = MathHelper.cos((Minecraft.getSystemTime()) / 2000F) / 30F;
+
+            //Update the rotation client side if we have the player in view
+            EntityPlayer player = Minecraft.getMinecraft().theWorld.func_152378_a(playerBeacon.getOwnerGameProfile().getId()); //Get player by UUID
+            if (player != null) {
+                playerBeacon.faceEntity(player, playerBeacon.xCoord, playerBeacon.yCoord, playerBeacon.zCoord, 0.3F); //Update rotation
+            }
+
             GL11.glTranslatef(0F, yOffset + 0.7F, 0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationYaw + (playerBeacon.headRotationYaw - playerBeacon.prevHeadRotationYaw) + 180, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(playerBeacon.prevHeadRotationPitch + (playerBeacon.headRotationPitch - playerBeacon.headRotationPitch), 1.0F, 0.0F, 0.0F);

@@ -135,32 +135,34 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
 
     @Override
     public void updateEntity() {
-        if (this.ownerGameProfile != null) {
-            EntityPlayer player = this.worldObj.func_152378_a(this.ownerGameProfile.getId()); //Get player by UUID
-            if (player != null) {
-                this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
-
-                //Only send packet updates if player is greater then client knows about and is server
-                if (!this.worldObj.isRemote && (this.worldObj.getWorldTime() % 5 == 0) && (this.getDistanceFrom(player.posX, player.posY, player.posZ) > MinecraftServer.getServer().getConfigurationManager().getEntityViewDistance() * 16)) {
-                    this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord); //Update rotation
-                    if ((this.headRotationPitch != this.prevHeadRotationPitch) || (this.headRotationYaw != this.prevHeadRotationYaw)) {
-                        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        if (!this.worldObj.isRemote) {
+            //Update head facing rotation
+            if (this.ownerGameProfile != null) {
+                EntityPlayer player = this.worldObj.func_152378_a(this.ownerGameProfile.getId()); //Get player by UUID
+                if (player != null) {
+                    //Only send packet updates if player is greater then client knows about and is server
+                    if (!this.worldObj.isRemote && (this.worldObj.getWorldTime() % 5 == 0) && (this.getDistanceFrom(player.posX, player.posY, player.posZ) > MinecraftServer.getServer().getConfigurationManager().getEntityViewDistance() * 16)) {
+                        this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord, 5F); //Update rotation
+                        //Only send update if rotation has changed
+                        if ((this.headRotationPitch != this.prevHeadRotationPitch) || (this.headRotationYaw != this.prevHeadRotationYaw)) {
+                            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                        }
                     }
                 }
             }
-        }
-        if (!this.worldObj.isRemote) {
             //No levels but valid head
             if (this.levels == 0 && this.headType == EnumHeadType.PLAYER && this.worldObj.getWorldTime() % 20 == 0) {
                 //Mark this as dirty to recheck if we have a valid structure
                 BeaconDataHelper.markBeaconDirty(this);
             }
+            //Dragon egg easter egg
             if ((this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord) == Blocks.dragon_egg) && (PlayerBeacons.config.enableEasterEgg)) {
                 this.worldObj.func_147480_a(this.xCoord, this.yCoord + 1, this.zCoord, false); //Destroy block
                 EntityDragon dragon = new EntityDragon(this.worldObj);
                 dragon.setLocationAndAngles(this.xCoord, this.yCoord + 30, this.zCoord, 0, 0);
                 this.worldObj.spawnEntityInWorld(dragon);
             }
+            //Mob head
             if (this.headType != EnumHeadType.PLAYER && this.headType != EnumHeadType.NONE) {
                 double d0 = 30D;
                 AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(d0, d0, d0);
@@ -194,15 +196,23 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         }
     }
 
-    private void faceEntity(EntityLivingBase par1Entity, double posX, double posY, double posZ) {
+    /**
+     * Adjusts the pitch and yaw to face the entity passed
+     * @param entity The entity
+     * @param posX The pos x
+     * @param posY The pos y
+     * @param posZ The pos z
+     * @param maxChange The max change in each angle
+     */
+    public void faceEntity(EntityLivingBase entity, double posX, double posY, double posZ, float maxChange) {
         this.prevHeadRotationPitch = this.headRotationPitch;
         this.prevHeadRotationYaw = this.headRotationYaw;
 
-        if (par1Entity != null) {
-            float[] pitchYaw = EntityHelper.getPitchYawToEntity(posX, posY, posZ, par1Entity);
+        if (entity != null) {
+            float[] pitchYaw = EntityHelper.getPitchYawToEntity(posX, posY, posZ, entity);
 
-            this.headRotationPitch = EntityHelper.updateRotation(this.headRotationPitch, pitchYaw[0], 5F);
-            this.headRotationYaw = EntityHelper.updateRotation(this.headRotationYaw, pitchYaw[1], 5F);
+            this.headRotationPitch = EntityHelper.updateRotation(this.headRotationPitch, pitchYaw[0], maxChange);
+            this.headRotationYaw = EntityHelper.updateRotation(this.headRotationYaw, pitchYaw[1], maxChange);
         }
     }
 
