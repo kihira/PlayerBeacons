@@ -3,7 +3,6 @@ package kihira.playerbeacons.common.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.crystal.ICrystal;
-import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,10 +13,11 @@ import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
-public class CrystalItem extends Item implements ICrystal {
+public abstract class CrystalItem extends Item implements ICrystal {
 
 	private IIcon blankCrystal;
 	private IIcon crystalOverlay;
+    protected float[] rgba = new float[] {1, 1, 1, 1};
 
 	public CrystalItem() {
 		//This equals one day in real time. Change it depending on how fast we calculate bad render
@@ -76,16 +76,6 @@ public class CrystalItem extends Item implements ICrystal {
     @Override
     @SideOnly(Side.CLIENT)
     public float[] getRGBA() {
-        return new float[] {1, 1, 1, 1};
-    }
-
-    @Override
-    public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
-        return 0;
-    }
-
-    @Override
-    public List<String> getAffectedBuffs() {
-        return null;
+        return this.rgba;
     }
 }

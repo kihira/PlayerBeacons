@@ -9,7 +9,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.common.block.*;
+import kihira.playerbeacons.common.block.BlockDefiledSoulConductor;
+import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
+import kihira.playerbeacons.common.block.BlockPlayerBeacon;
 import kihira.playerbeacons.common.buff.*;
 import kihira.playerbeacons.common.corruption.BatCorruption;
 import kihira.playerbeacons.common.corruption.EndTeleportCorruption;
@@ -26,6 +28,7 @@ import kihira.playerbeacons.proxy.ClientProxy;
 import kihira.playerbeacons.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -66,7 +69,17 @@ public class PlayerBeacons {
     public static final String MOD_ID = "PlayerBeacons";
 
 	public static final BeheaderItem beheaderItem = new BeheaderItem();
-	public static final CrystalItem crystalItem = new CrystalItem();
+	public static final CrystalItem crystalItem = new CrystalItem() {
+        @Override
+        public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
+            return 0;
+        }
+
+        @Override
+        public List<String> getAffectedBuffs() {
+            return null;
+        }
+    };
 	public static final LightBlueCrystalItem lightBlueCrystalItem = new LightBlueCrystalItem();
 	public static final BrownCrystalItem brownCrystalItem = new BrownCrystalItem();
 	public static final GreenCrystalItem greenCrystalItem = new GreenCrystalItem();

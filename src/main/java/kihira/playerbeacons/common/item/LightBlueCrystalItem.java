@@ -1,7 +1,5 @@
 package kihira.playerbeacons.common.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.common.Beacon;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +9,7 @@ import java.util.List;
 
 public class LightBlueCrystalItem extends CrystalItem {
 	public LightBlueCrystalItem() {
+        this.rgba = new float[]{0.5F, 0.5F, 1, 1};
         this.setUnlocalizedName("lightBlueCrystalItem");
 	}
 
@@ -20,12 +19,6 @@ public class LightBlueCrystalItem extends CrystalItem {
 		list.add("speed");
 		return list;
 	}
-
-	@Override
-    @SideOnly(Side.CLIENT)
-    public float[] getRGBA() {
-        return new float[]{0.5F, 0.5F, 1, 1};
-    }
 
     @Override
     public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
