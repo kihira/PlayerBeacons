@@ -2,7 +2,7 @@ package kihira.playerbeacons.api.crystal;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.common.Beacon;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface ICrystal {
      * @param beacon The beacon
      * @return The corruption change caused by the effects
      */
-    public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount);
+    public float doEffects(EntityPlayer player, AbstractBeacon beacon, int crystalCount);
 
     /**
      * A list of Buff's affected by this throttle. Should return a list of the Buff's names, not the Buff itself!

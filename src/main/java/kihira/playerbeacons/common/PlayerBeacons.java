@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.common.block.BlockDefiledSoulConductor;
 import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
 import kihira.playerbeacons.common.block.BlockPlayerBeacon;
@@ -71,7 +72,7 @@ public class PlayerBeacons {
 	public static final BeheaderItem beheaderItem = new BeheaderItem();
 	public static final CrystalItem crystalItem = new CrystalItem() {
         @Override
-        public float doEffects(EntityPlayer player, Beacon beacon, int crystalCount) {
+        public float doEffects(EntityPlayer player, AbstractBeacon beacon, int crystalCount) {
             return 0;
         }
 

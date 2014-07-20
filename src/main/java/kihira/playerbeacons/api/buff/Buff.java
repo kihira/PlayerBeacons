@@ -2,7 +2,7 @@ package kihira.playerbeacons.api.buff;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.common.Beacon;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,7 +30,7 @@ public abstract class Buff {
 	 * @param crystalCount The amount of crystals detected that throttle the buff
      * @return The corruption change (can be negative)
 	 */
-	public abstract float doBuff(EntityPlayer player, Beacon theBeacon, int crystalCount);
+	public abstract float doBuff(EntityPlayer player, AbstractBeacon theBeacon, int crystalCount);
 
     @SideOnly(Side.CLIENT)
     public abstract float[] getRGBA();

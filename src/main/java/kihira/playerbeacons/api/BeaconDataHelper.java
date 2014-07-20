@@ -2,8 +2,8 @@ package kihira.playerbeacons.api;
 
 import com.google.common.base.Stopwatch;
 import kihira.foxlib.common.Loc4;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
-import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class BeaconDataHelper {
 
     //TODO move to better loc?
-    public static HashMap<Loc4, Beacon> beaconMap = new HashMap<Loc4, Beacon>();
+    public static HashMap<Loc4, AbstractBeacon> beaconMap = new HashMap<Loc4, AbstractBeacon>();
 
     public static float getPlayerCorruptionAmount(EntityPlayer player) {
         NBTTagCompound data = getBeaconDataTag(player);
@@ -76,7 +76,7 @@ public class BeaconDataHelper {
         TileEntity tileEntity = theBeacon.getTileEntity();
         Loc4 loc = new Loc4(tileEntity.getWorldObj().provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         if (beaconMap.containsKey(loc)) {
-            final Beacon beacon = beaconMap.get(loc);
+            final AbstractBeacon beacon = beaconMap.get(loc);
 
             //TODO Test this a million times
             Runnable runnable = new Runnable() {
@@ -100,7 +100,7 @@ public class BeaconDataHelper {
         }
     }
 
-    public static Beacon getBeaconForDim(EntityPlayer player, int dimID) {
+    public static AbstractBeacon getBeaconForDim(EntityPlayer player, int dimID) {
         if (player != null) {
             NBTTagCompound beaconData = getBeaconDataTag(player);
             String dimKey = String.valueOf(dimID);
@@ -112,17 +112,19 @@ public class BeaconDataHelper {
                 int z = worldBeaconData.getInteger("zPos");
 
                 Loc4 loc = new Loc4(dimID, x, y, z);
+                //If we already have an instance, return that instead
                 if (beaconMap.containsKey(loc)) return beaconMap.get(loc);
 
                 World world = MinecraftServer.getServer().worldServerForDimension(dimID);
                 TileEntity tileEntity = world.getTileEntity(x, y, z);
                 if (tileEntity instanceof IBeacon) {
-                    //TODO allow API to have custom Beacon instances?
-                    Beacon beacon = new Beacon(dimID, x, y, z, player.getGameProfile());
-                    beaconMap.put(loc, beacon);
+                    IBeacon beacon = (IBeacon) tileEntity;
+                    AbstractBeacon abstractBeacon = beacon.getBeaconInstance(dimID, x, y, z, player.getGameProfile());
+
+                    beaconMap.put(loc, abstractBeacon);
                     markBeaconDirty((IBeacon) tileEntity);
 
-                    return beacon;
+                    return abstractBeacon;
                 }
                 else {
                     setBeaconForDim(player, null, dimID);
@@ -132,7 +134,7 @@ public class BeaconDataHelper {
         return null;
     }
 
-    public static void unloadBeacon(Beacon beacon) {
+    public static void unloadBeacon(AbstractBeacon beacon) {
         if (beacon != null) beaconMap.remove(new Loc4(beacon.dimID, beacon.posX, beacon.posY, beacon.posZ));
     }
 

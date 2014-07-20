@@ -8,10 +8,10 @@ import kihira.foxlib.client.RenderHelper;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.BeaconDataHelper;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.api.crystal.ICrystal;
-import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.FMLEventHandler;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
@@ -138,9 +138,9 @@ public class EventHandler {
         FMLEventHandler.activeCorruptionEffects.remove(e.world);
 
         //Use iterator to prevent CME
-        Iterator<Map.Entry<Loc4, Beacon>> iterator = BeaconDataHelper.beaconMap.entrySet().iterator();
+        Iterator<Map.Entry<Loc4, AbstractBeacon>> iterator = BeaconDataHelper.beaconMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Loc4, Beacon> entry = iterator.next();
+            Map.Entry<Loc4, AbstractBeacon> entry = iterator.next();
             if (entry.getKey().dimID() == e.world.provider.dimensionId) BeaconDataHelper.beaconMap.remove(entry.getKey());
         }
 

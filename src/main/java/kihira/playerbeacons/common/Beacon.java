@@ -3,6 +3,7 @@ package kihira.playerbeacons.common;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.mojang.authlib.GameProfile;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.api.crystal.ICrystal;
@@ -12,24 +13,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class Beacon {
+public class Beacon extends AbstractBeacon {
 
-    public final int dimID;
-    public final int posX;
-    public final int posY;
-    public final int posZ;
-    private int levels;
-    private float corruption = 0;
     private float corruptionReduction = 0;
-    private GameProfile ownerGameProfile;
     private HashMultiset<ICrystal> crystalMultiset = HashMultiset.create();
 
     public Beacon(int dimID, int posX, int posY, int posZ, GameProfile gameProfile) {
-        this.dimID = dimID;
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
-        this.ownerGameProfile = gameProfile;
+        super(dimID, posX, posY, posZ, gameProfile);
     }
 
     /**
@@ -212,7 +202,6 @@ public class Beacon {
                 else break;
             }
         }
-        theBeacon.setLevels(this.levels);
     }
 
     public void invalidateStructure(IBeacon theBeacon) {
@@ -276,7 +265,6 @@ public class Beacon {
         this.corruption = 0;
         this.levels = 0;
         this.crystalMultiset.clear();
-        theBeacon.setLevels(0);
     }
 
     /**

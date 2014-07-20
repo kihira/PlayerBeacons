@@ -6,9 +6,12 @@ import com.mojang.authlib.properties.Property;
 import cpw.mods.fml.common.FMLCommonHandler;
 import kihira.foxlib.common.EntityHelper;
 import kihira.foxlib.common.EnumHeadType;
+import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.BeaconDataHelper;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
+import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
@@ -45,15 +48,15 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     public float headRotationPitch, headRotationYaw, prevHeadRotationPitch, prevHeadRotationYaw = 0;
 
     @Override
-    public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-        super.readFromNBT(par1NBTTagCompound);
-        this.headType = EnumHeadType.fromId(par1NBTTagCompound.getInteger("headType"));
-        this.headRotationPitch = par1NBTTagCompound.getFloat("headRotationPitch");
-        this.headRotationYaw = par1NBTTagCompound.getFloat("headRotationYaw");
-        this.levels = par1NBTTagCompound.getInteger("levels");
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        this.headType = EnumHeadType.fromId(tagCompound.getInteger("headType"));
+        this.headRotationPitch = tagCompound.getFloat("headRotationPitch");
+        this.headRotationYaw = tagCompound.getFloat("headRotationYaw");
+        if (tagCompound.hasKey("levels")) this.levels = tagCompound.getInteger("levels");
 
-        if (par1NBTTagCompound.hasKey("Owner", 10)) {
-            this.ownerGameProfile = NBTUtil.func_152459_a(par1NBTTagCompound.getCompoundTag("Owner"));
+        if (tagCompound.hasKey("Owner", 10)) {
+            this.ownerGameProfile = NBTUtil.func_152459_a(tagCompound.getCompoundTag("Owner"));
         }
     }
 
@@ -72,17 +75,19 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-        super.writeToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setInteger("headType", this.headType.getID());
-        par1NBTTagCompound.setFloat("headRotationPitch", this.headRotationPitch);
-        par1NBTTagCompound.setFloat("headRotationYaw", this.headRotationYaw);
-        par1NBTTagCompound.setInteger("levels", this.levels);
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        tagCompound.setInteger("headType", this.headType.getID());
+        tagCompound.setFloat("headRotationPitch", this.headRotationPitch);
+        tagCompound.setFloat("headRotationYaw", this.headRotationYaw);
+
+        AbstractBeacon beacon = BeaconDataHelper.beaconMap.get(new Loc4(this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord));
+        if (beacon != null) tagCompound.setInteger("levels", beacon.getLevels());
 
         if (this.ownerGameProfile != null) {
             NBTTagCompound gameProfileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(gameProfileTag, this.ownerGameProfile);
-            par1NBTTagCompound.setTag("Owner", gameProfileTag);
+            tagCompound.setTag("Owner", gameProfileTag);
         }
     }
 
@@ -123,9 +128,8 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     }
 
     @Override
-    public void setLevels(int levels) {
-        this.levels = levels;
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+    public AbstractBeacon getBeaconInstance(int dimID, int posX, int posY, int posZ, GameProfile gameProfile) {
+        return new Beacon(dimID, posX, posY, posZ, gameProfile);
     }
 
     @Override

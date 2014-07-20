@@ -1,8 +1,8 @@
 package kihira.playerbeacons.common.block;
 
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
-import kihira.playerbeacons.common.Beacon;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import net.minecraft.block.material.Material;
@@ -34,7 +34,7 @@ public class BlockDefiledSoulConductor extends BlockMultiBlock implements IBeaco
 	}
 
     @Override
-    public float getCorruptionReduction(Beacon beacon, int blockCount) {
+    public float getCorruptionReduction(AbstractBeacon beacon, int blockCount) {
         return beacon.getLevels() * 10F;
     }
 

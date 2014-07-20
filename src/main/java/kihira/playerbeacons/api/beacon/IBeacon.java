@@ -21,13 +21,14 @@ public interface IBeacon {
     public int getLevels();
 
     /**
-     * Sets the amount of levels on this beacon. Used only by {@link kihira.playerbeacons.common.Beacon}
+     * Gets the instance of a {@link kihira.playerbeacons.api.beacon.AbstractBeacon} for this beacon.
+     * @return A beacon instance
      */
-    public void setLevels(int levels);
+    public AbstractBeacon getBeaconInstance(int dimID, int posX, int posY, int posZ, GameProfile gameProfile);
 
     /**
-     * Returns the tile entity
-     * @return
+     * A helper method to reduce casting. Returns the tile entity
+     * @return The tile entity
      */
     public TileEntity getTileEntity();
 }

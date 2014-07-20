@@ -9,6 +9,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import kihira.playerbeacons.api.BeaconDataHelper;
+import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.common.network.PacketEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ public class FMLEventHandler {
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.side.isServer()) {
-            Beacon beacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension);
+            AbstractBeacon beacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension);
             //Check player has a beacon, is in same dimension and that the beacon is active
             if (beacon != null && beacon.dimID == event.player.dimension && beacon.getLevels() > 0) {
                 //General update method, usually used to do effects
