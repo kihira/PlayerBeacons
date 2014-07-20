@@ -4,7 +4,7 @@ import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
-import net.minecraft.block.Block;
+import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -109,24 +109,8 @@ public class TileEntityDefiledSoulPylon extends TileEntityMultiBlock implements 
 	}
 
     public void checkPylon() {
-        Block topBlock = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
-        Block bottomBlock = this.worldObj.getBlock(this.xCoord, this.yCoord - 1, this.zCoord);
-        //No top part
-        if (topBlock == PlayerBeacons.defiledSoulPylonBlock && bottomBlock == PlayerBeacons.defiledSoulPylonBlock) {
-            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 3, 2);
-        }
-        //Base
-        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord - 1, this.zCoord) && bottomBlock != PlayerBeacons.defiledSoulPylonBlock) {
-            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 2, 2);
-        }
-        //Top
-        else if (!this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) && topBlock != PlayerBeacons.defiledSoulPylonBlock) {
-            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 2);
-        }
-        //Neither
-        else {
-            this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 2);
-        }
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord,
+                BlockDefiledSoulPylon.getPylonType(this.worldObj, this.xCoord, this.yCoord, this.zCoord), 2);
     }
 
 	public boolean isPylonBase() {

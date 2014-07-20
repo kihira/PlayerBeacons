@@ -140,4 +140,25 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityDefiledSoulPylon();
 	}
+    
+    public static int getPylonType(World world, int x, int y, int z) {
+        Block topBlock = world.getBlock(x, y + 1, z);
+        Block bottomBlock = world.getBlock(x, y - 1, z);
+        //No top part
+        if (topBlock == PlayerBeacons.defiledSoulPylonBlock && bottomBlock == PlayerBeacons.defiledSoulPylonBlock) {
+            return 3;
+        }
+        //Base
+        else if (!world.isAirBlock(x, y - 1, z) && bottomBlock != PlayerBeacons.defiledSoulPylonBlock) {
+            return 2;
+        }
+        //Top
+        else if (!world.isAirBlock(x, y + 1, z) && topBlock != PlayerBeacons.defiledSoulPylonBlock) {
+            return 1;
+        }
+        //Neither
+        else {
+            return 0;
+        }
+    }
 }
