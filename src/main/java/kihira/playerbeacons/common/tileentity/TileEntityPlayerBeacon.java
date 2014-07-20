@@ -58,6 +58,20 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     }
 
     @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        this.readFromNBT(pkt.func_148857_g());
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        this.refreshGameProfileData();
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
+    }
+
+    @Override
     public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
         super.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setInteger("headType", this.headType.getID());
@@ -70,21 +84,6 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
             NBTUtil.func_152460_a(gameProfileTag, this.ownerGameProfile);
             par1NBTTagCompound.setTag("Owner", gameProfileTag);
         }
-    }
-
-    //TODO only sync what is needed
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        this.readFromNBT(pkt.func_148857_g());
-        this.refreshGameProfileData();
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-    }
-
-    @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
     }
 
     public void setOwner(EntityPlayer player) {
