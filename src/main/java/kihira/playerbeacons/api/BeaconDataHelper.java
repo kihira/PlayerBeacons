@@ -83,7 +83,6 @@ public class BeaconDataHelper {
                 @Override
                 public void run() {
                     Stopwatch stopwatch = Stopwatch.createStarted();
-                    //beacon.invalidateStructure(theBeacon); //TODO only invalidate if the structure has changed? Possible lag cause
                     //If checkStructure is false, something has changed
                     if (!beacon.checkStructure(theBeacon)) {
                         beacon.invalidateStructure(theBeacon);
@@ -91,7 +90,7 @@ public class BeaconDataHelper {
                         beacon.formStructure(theBeacon);
                     }
                     stopwatch.stop();
-                    PlayerBeacons.logger.debug("Multiblock loop took " + stopwatch.elapsed(TimeUnit.MICROSECONDS));
+                    PlayerBeacons.logger.debug("Multiblock loop took " + stopwatch.elapsed(TimeUnit.MICROSECONDS) + " microseconds");
                 }
             };
             runnable.run();

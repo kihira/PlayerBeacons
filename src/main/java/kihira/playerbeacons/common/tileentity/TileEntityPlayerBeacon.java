@@ -8,6 +8,7 @@ import kihira.foxlib.common.EntityHelper;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.IBeacon;
+import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.util.Util;
 import net.minecraft.entity.EntityCreature;
@@ -150,8 +151,8 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
                     }
                 }
             }
-            //No levels but valid head
-            if (this.levels == 0 && this.headType == EnumHeadType.PLAYER && this.worldObj.getWorldTime() % 20 == 0) {
+            //If levels might be different or we don't have a structure but valid head, recheck
+            if ((this.levels == 0 || !this.checkLevels()) && this.headType == EnumHeadType.PLAYER && this.worldObj.getTotalWorldTime() % 20 == 0) {
                 //Mark this as dirty to recheck if we have a valid structure
                 BeaconDataHelper.markBeaconDirty(this);
             }
@@ -214,6 +215,20 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
             this.headRotationPitch = EntityHelper.updateRotation(this.headRotationPitch, pitchYaw[0], maxChange);
             this.headRotationYaw = EntityHelper.updateRotation(this.headRotationYaw, pitchYaw[1], maxChange);
         }
+    }
+
+    /**
+     * Checks if the detected levels of the beacon could have changed.
+     * TODO possible issue if a player levels a beacon only partially built
+     * @return If the levels could have changed
+     */
+    private boolean checkLevels() {
+        int levels = 0;
+        for (int i = 1; i <= 4; i++) {
+            if (this.worldObj.getBlock(this.xCoord, this.yCoord - i, this.zCoord) instanceof IBeaconBase) levels++;
+        }
+
+        return levels == this.levels;
     }
 
     /**
