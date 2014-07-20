@@ -83,14 +83,17 @@ public class BeaconDataHelper {
                 @Override
                 public void run() {
                     Stopwatch stopwatch = Stopwatch.createStarted();
+                    boolean hasChanged = false;
                     //If checkStructure is false, something has changed
                     if (!beacon.checkStructure(theBeacon)) {
+                        hasChanged = true;
                         beacon.invalidateStructure(theBeacon);
                         beacon.checkStructure(theBeacon); //Figure out the levels
                         beacon.formStructure(theBeacon);
                     }
                     stopwatch.stop();
-                    PlayerBeacons.logger.debug("Multiblock loop took " + stopwatch.elapsed(TimeUnit.MICROSECONDS) + " microseconds");
+                    PlayerBeacons.logger.debug("Multiblock loop took " + stopwatch.elapsed(TimeUnit.MICROSECONDS) +
+                            " microseconds, beacon " + (hasChanged ? "changed" : "unchanged"));
                 }
             };
             runnable.run();

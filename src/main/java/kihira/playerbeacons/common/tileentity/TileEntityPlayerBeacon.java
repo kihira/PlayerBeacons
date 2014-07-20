@@ -138,12 +138,12 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     public void updateEntity() {
         if (!this.worldObj.isRemote) {
             //Update head facing rotation
-            if (this.ownerGameProfile != null) {
+            if (this.ownerGameProfile != null && this.worldObj.getWorldTime() % 5 == 0) {
                 EntityPlayer player = this.worldObj.func_152378_a(this.ownerGameProfile.getId()); //Get player by UUID
                 if (player != null) {
+                    this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord, 5F); //Update rotation
                     //Only send packet updates if player is greater then client knows about and is server
-                    if (!this.worldObj.isRemote && (this.worldObj.getWorldTime() % 5 == 0) && (this.getDistanceFrom(player.posX, player.posY, player.posZ) > MinecraftServer.getServer().getConfigurationManager().getEntityViewDistance() * 16)) {
-                        this.faceEntity(player, this.xCoord, this.yCoord, this.zCoord, 5F); //Update rotation
+                    if (this.getDistanceFrom(player.posX, player.posY, player.posZ) > MinecraftServer.getServer().getConfigurationManager().getEntityViewDistance() * 16) {
                         //Only send update if rotation has changed
                         if ((this.headRotationPitch != this.prevHeadRotationPitch) || (this.headRotationYaw != this.prevHeadRotationYaw)) {
                             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
