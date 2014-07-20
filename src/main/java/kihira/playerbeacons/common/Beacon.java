@@ -211,14 +211,6 @@ public class Beacon {
                 }
                 else break;
             }
-
-            //Loop through and check if any crystals are missing from previous. If so, do effects with count 0
-            //TODO should a global list of ICrystals be maintained? Then we just loop though that in doEffects so we can easily send 0
-/*            if (entityPlayer != null && copyCrystal.size() > 0) {
-                for (Multiset.Entry<ICrystal> crystal : copyCrystal.entrySet()) {
-                    if (!this.crystalMultiset.contains(crystal.getElement())) crystal.getElement().doEffects(entityPlayer, this, 0);
-                }
-            }*/
         }
         theBeacon.setLevels(this.levels);
     }
@@ -226,6 +218,14 @@ public class Beacon {
     public void invalidateStructure(IBeacon theBeacon) {
         World world = theBeacon.getTileEntity().getWorldObj();
         this.levels = 4; //Set to max to be sure we properly clean up
+
+        //Loop through and tell buffs to disable themselves
+        EntityPlayer player = world.func_152378_a(this.ownerGameProfile.getId()); //Get player by UUID
+        if (player != null) {
+            for (Multiset.Entry<ICrystal> crystal : this.crystalMultiset.entrySet()) {
+                crystal.getElement().doEffects(player, this, 0);
+            }
+        }
 
         //Loop through and own the base blocks
         for (int i = 1; i <= this.levels; i++) {
@@ -271,6 +271,7 @@ public class Beacon {
                 if (tileEntity.getBeacon() == theBeacon) tileEntity.setBeacon(null);
             }
         }
+
         this.corruptionReduction = 0;
         this.corruption = 0;
         this.levels = 0;

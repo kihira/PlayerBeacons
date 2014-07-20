@@ -22,14 +22,16 @@ public class HealthBoostBuff extends Buff {
 
     @Override
     public float doBuff(EntityPlayer player, Beacon theBeacon, int crystalCount) {
-        if (player.worldObj.getTotalWorldTime() % 10 == 0) {
-            IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
-            AttributeModifier attributeModifier = attribute.getModifier(this.uuid);
+        IAttributeInstance attribute = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+        AttributeModifier attributeModifier = attribute.getModifier(this.uuid);
+
+        //If crystal count is 0, remove
+        if (crystalCount == 0 && attributeModifier != null) {
+            attribute.removeModifier(attributeModifier);
+            player.setHealth(player.getMaxHealth());
+        }
+        else if (player.worldObj.getTotalWorldTime() % 10 == 0) {
             //Remove the effect if no crystals
-            if (crystalCount == 0 && attributeModifier != null) {
-                attribute.removeModifier(attributeModifier);
-                player.setHealth(player.getMaxHealth());
-            }
             if (theBeacon.getLevels() >= 2) {
                 int modifierAmount = MathHelper.clamp_int(crystalCount, 1, theBeacon.getLevels() - 1) * 2;
                 if (attributeModifier != null && attributeModifier.getAmount() != modifierAmount) {
