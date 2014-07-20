@@ -18,11 +18,11 @@ import java.util.Random;
 
 public class ClientProxy extends CommonProxy {
 
-	public static final ResourceLocation playerBeaconTexture = new ResourceLocation("playerbeacon", "textures/model/playerbeacon.png");
-	public static final ResourceLocation pylonTextureBase = new ResourceLocation("playerbeacon", "textures/model/pylonbase.png");
-	public static final ResourceLocation pylonTexture = new ResourceLocation("playerbeacon", "textures/model/pylon.png");
-	public static final ResourceLocation pylonCrystalPortTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports.png");
-    public static final ResourceLocation pylonCrystalPortOverlayTexture = new ResourceLocation("playerbeacon", "textures/model/crystalports_overlay.png");
+	public static final ResourceLocation playerBeaconTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/model/playerbeacon.png");
+	public static final ResourceLocation pylonTextureBase = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/model/pylonbase.png");
+	public static final ResourceLocation pylonTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/model/pylon.png");
+	public static final ResourceLocation pylonCrystalPortTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/model/crystalports.png");
+    public static final ResourceLocation pylonCrystalPortOverlayTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/model/crystalports_overlay.png");
     public static final ResourceLocation potionTextures = new ResourceLocation("textures/gui/container/inventory.png");
 	//public static final ResourceLocation santaHatTexture = new ResourceLocation("playerbeacon", "textures/model/santahat.png");
 

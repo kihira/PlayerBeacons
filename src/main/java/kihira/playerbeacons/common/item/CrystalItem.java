@@ -24,7 +24,7 @@ public class CrystalItem extends Item implements ICrystal {
 		this.setMaxDamage(43200);
         this.setMaxStackSize(1);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setTextureName("playerbeacon:crystalitem");
+        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":crystalitem");
         this.setUnlocalizedName("crystalitem");
 	}
 

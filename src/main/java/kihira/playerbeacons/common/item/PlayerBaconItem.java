@@ -19,7 +19,7 @@ public class PlayerBaconItem extends ItemFood {
     public PlayerBaconItem() {
         super(2, 4, false);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setTextureName("pork");
+        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":playerbacon");
         this.setUnlocalizedName("playerBacon");
     }
 

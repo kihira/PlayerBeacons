@@ -22,7 +22,7 @@ public class BeheaderItem extends ItemArmor {
 	public BeheaderItem() {
 		super(ArmorMaterial.IRON, 2, 0);
 		this.setUnlocalizedName("beheader");
-        this.setTextureName("playerbeacon:beheader");
+        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":beheader");
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setMaxDamage(200);
 	}

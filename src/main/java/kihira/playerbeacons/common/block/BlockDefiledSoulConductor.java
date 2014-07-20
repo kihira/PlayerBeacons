@@ -16,11 +16,11 @@ public class BlockDefiledSoulConductor extends BlockMultiBlock implements IBeaco
 
 	public BlockDefiledSoulConductor() {
 		super(Material.rock);
-		this.setHardness(15f);
-        this.setResistance(100.0F);
+		this.setHardness(15F);
+        this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setBlockName("defiledSoulConductor");
-        this.setBlockTextureName("playerbeacon:pyramidBrick");
+        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
 	}
 
     @Override

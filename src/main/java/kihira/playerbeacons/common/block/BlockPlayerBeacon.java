@@ -32,11 +32,11 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
 
     public BlockPlayerBeacon() {
 		super(Material.rock);
-        this.setHardness(8f);
-        this.setResistance(100.0F);
+        this.setHardness(8F);
+        this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setBlockName("playerBeacon");
-        this.setBlockTextureName("playerbeacon:pyramidBrick");
+        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
 	}
 
     @Override

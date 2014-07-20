@@ -25,7 +25,7 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
         this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setBlockName("defiledSoulPylon");
-        this.setBlockTextureName("playerbeacon:pyramidBrick");
+        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
         this.setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}
 
