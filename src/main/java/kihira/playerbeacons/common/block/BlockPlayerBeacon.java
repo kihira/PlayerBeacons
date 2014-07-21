@@ -86,30 +86,36 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
         if (player.getCurrentEquippedItem() != null && !world.isRemote) {
             ItemStack itemStack = player.getCurrentEquippedItem();
             //Check if player is holding a skull and that it belongs to them
-            if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull && itemStack.getItemDamage() == EnumHeadType.PLAYER.getID()
-                    && itemStack.hasTagCompound()) {
-                //Get skull gameprofile
-                GameProfile gameProfile = null;
-                if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string
-                    gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwner"));
-                }
-                else if (itemStack.getTagCompound().hasKey("SkullOwner", 10)) { //The owners game profile
-                    gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
-                }
-
+            if (!(player instanceof FakePlayer) && itemStack.getItem() == Items.skull) {
                 TileEntityPlayerBeacon playerBeacon = (TileEntityPlayerBeacon) world.getTileEntity(x, y, z);
-                //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
-                if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
-                        !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
-                    playerBeacon.setOwner(player);
-                    playerBeacon.setIsParent();
-                    //Generate the Beacon instance
-                    BeaconDataHelper.getBeaconForDim(player, player.dimension);
-                    //Then validate
-                    BeaconDataHelper.markBeaconDirty(playerBeacon);
 
-                    if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
-                    else player.setCurrentItemOrArmor(0, itemStack);
+                if (itemStack.getItemDamage() == EnumHeadType.PLAYER.getID() && itemStack.hasTagCompound()) {
+                    //Get skull gameprofile
+                    GameProfile gameProfile = null;
+                    if (itemStack.getTagCompound().hasKey("SkullOwner", 8)) { //Owners name as string
+                        gameProfile = new GameProfile(null, itemStack.getTagCompound().getString("SkullOwner"));
+                    }
+                    else if (itemStack.getTagCompound().hasKey("SkullOwner", 10)) { //The owners game profile
+                        gameProfile = NBTUtil.func_152459_a(itemStack.getTagCompound().getCompoundTag("SkullOwner"));
+                    }
+
+                    //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
+                    if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
+                            !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
+                        playerBeacon.setOwner(player);
+                        playerBeacon.setIsParent();
+                        //Generate the Beacon instance
+                        BeaconDataHelper.getBeaconForDim(player, player.dimension);
+                        //Then validate
+                        BeaconDataHelper.markBeaconDirty(playerBeacon);
+
+                        if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
+                        else player.setCurrentItemOrArmor(0, itemStack);
+                    }
+                }
+                else {
+                    //Set it as mob head
+                    playerBeacon.setHeadType(EnumHeadType.fromId(itemStack.getItemDamage()));
                 }
             }
             //Create crystal from emeralds

@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.proxy.ClientProxy;
@@ -32,6 +33,10 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 
     private final ResourceLocation endSkyTexture = new ResourceLocation("textures/environment/end_sky.png");
     private final ResourceLocation endPortalTexture = new ResourceLocation("textures/entity/end_portal.png");
+    private final ResourceLocation skeletonTexture = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+    private final ResourceLocation witherSkeletonTexture = new ResourceLocation("textures/entity/skeleton/wither_skeleton.png");
+    private final ResourceLocation zombieTexture = new ResourceLocation("textures/entity/zombie/zombie.png");
+    private final ResourceLocation creeperTexture = new ResourceLocation("textures/entity/creeper/creeper.png");
     FloatBuffer field_147528_b = GLAllocation.createDirectFloatBuffer(16);
 
 	public BlockPlayerBeaconRenderer() {
@@ -74,15 +79,42 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 		*/
 
         //Render Skull
-        if (playerBeacon != null && playerBeacon.getOwnerGameProfile() != null && playerBeacon.getWorldObj().isAirBlock(playerBeacon.xCoord, playerBeacon.yCoord + 1, playerBeacon.zCoord)) {
+        if (playerBeacon != null && playerBeacon.getHeadType() != null && playerBeacon.getHeadType() != EnumHeadType.NONE
+                && playerBeacon.getWorldObj().isAirBlock(playerBeacon.xCoord, playerBeacon.yCoord + 1, playerBeacon.zCoord)) {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
-            bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
             float yOffset = MathHelper.cos((Minecraft.getSystemTime()) / 2000F) / 30F;
+            EnumHeadType headType = playerBeacon.getHeadType();
 
-            //Update the rotation client side if we have the player in view
-            EntityPlayer player = Minecraft.getMinecraft().theWorld.func_152378_a(playerBeacon.getOwnerGameProfile().getId()); //Get player by UUID
-            if (player != null) {
-                playerBeacon.faceEntity(player, playerBeacon.xCoord, playerBeacon.yCoord, playerBeacon.zCoord, 0.3F); //Update rotation
+            switch (headType) {
+                case PLAYER: {
+                    if (playerBeacon.getHeadType() == EnumHeadType.PLAYER && playerBeacon.getOwnerGameProfile() != null) {
+                        this.bindTexture(this.getSkullTexture(playerBeacon.getOwnerGameProfile()));
+
+                        //Update the rotation client side if we have the player in view
+                        EntityPlayer player = Minecraft.getMinecraft().theWorld.func_152378_a(playerBeacon.getOwnerGameProfile().getId()); //Get player by UUID
+                        if (player != null) {
+                            playerBeacon.faceEntity(player, playerBeacon.xCoord, playerBeacon.yCoord, playerBeacon.zCoord, 0.3F); //Update rotation
+                        }
+                    }
+                    break;
+                }
+                case CREEPER: {
+                    this.bindTexture(this.creeperTexture);
+                    break;
+                }
+                case ZOMBIE: {
+                    this.bindTexture(this.zombieTexture);
+                    break;
+                }
+                case SKELETON: {
+                    this.bindTexture(this.skeletonTexture);
+                    break;
+                }
+                case WITHERSKELETON: {
+                    this.bindTexture(this.witherSkeletonTexture);
+                    break;
+                }
+                default: this.bindTexture(this.zombieTexture);
             }
 
             GL11.glTranslatef(0F, yOffset + 0.7F, 0F);

@@ -255,6 +255,15 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         }
     }
 
+    public EnumHeadType getHeadType() {
+        return this.headType;
+    }
+
+    public void setHeadType(EnumHeadType headType) {
+        this.headType = headType;
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+    }
+
     @Override
     public boolean canUpdate() {
         return true;
