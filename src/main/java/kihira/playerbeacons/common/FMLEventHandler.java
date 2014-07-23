@@ -26,17 +26,21 @@ public class FMLEventHandler {
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.side.isServer()) {
             AbstractBeacon beacon = BeaconDataHelper.getBeaconForDim(event.player, event.player.dimension);
+            EntityPlayer player = event.player;
             //Check player has a beacon, is in same dimension and that the beacon is active
-            if (beacon != null && beacon.dimID == event.player.dimension && beacon.getLevels() > 0) {
+            if (beacon != null && beacon.dimID == player.dimension && beacon.getLevels() > 0) {
                 //General update method, usually used to do effects
-                beacon.doEffects(event.player);
+                beacon.doEffects(player);
 
                 //Update the corruption count
                 if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
-                    BeaconDataHelper.modifyCorruptionAmount(event.player, beacon.getCorruption());
+                    float oldCorr = BeaconDataHelper.getPlayerCorruptionAmount(player);
+                    BeaconDataHelper.modifyCorruptionAmount(player, beacon.getCorruption());
+                    float newCorr = BeaconDataHelper.getPlayerCorruptionAmount(player);
 
-                    //Make the block re-sync
-                    //event.player.worldObj.markBlockForUpdate(beacon.posX, beacon.getTileEntity().yCoord, beacon.getTileEntity().zCoord);
+                    //Send corruption update
+                    FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(player.getCommandSenderName(), newCorr, oldCorr);
+                    PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
                 }
             }
 
@@ -44,10 +48,6 @@ public class FMLEventHandler {
             if (event.player.worldObj.getTotalWorldTime() % 20 == 0) {
                 //Calculate the corruption effects on the player
                 this.calculateCorruptionEffects(event.player, event.player.worldObj);
-
-                //Send corruption update
-                FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(event.player.getCommandSenderName(), BeaconDataHelper.getPlayerCorruptionAmount(event.player));
-                PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(event.player.worldObj.provider.dimensionId, event.player.posX, event.player.posY, event.player.posZ, 64));
             }
         }
         else if (event.side.isClient() && PlayerBeacons.config.enableHideParticleEffects && event.player.worldObj.getTotalWorldTime() % 10 == 0) {

@@ -1,4 +1,4 @@
-package kihira.playerbeacons.common;
+package kihira.playerbeacons.common.command;
 
 import kihira.foxlib.common.EnumHeadType;
 import net.minecraft.command.CommandBase;

@@ -18,12 +18,9 @@ import io.netty.buffer.Unpooled;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
-
-import java.util.Random;
+import net.minecraft.client.entity.AbstractClientPlayer;
 
 public class PacketEventHandler {
-
-    private Random rand = new Random();
 
     public static enum Message {
         CORRUPTION(1);
@@ -41,7 +38,8 @@ public class PacketEventHandler {
         int id = payload.readInt();
 
         if (id == Message.CORRUPTION.id) {
-            PlayerBeacons.logger.warn("Received a corruption update packet on the server for %s, this isn't supposed to happen!", ByteBufUtils.readUTF8String(payload));
+            PlayerBeacons.logger.warn("Received a corruption update packet on the server for %s, this isn't supposed to happen!",
+                    ByteBufUtils.readUTF8String(payload));
         }
     }
 
@@ -53,27 +51,36 @@ public class PacketEventHandler {
 
         if (id == Message.CORRUPTION.id) {
             String playerName = ByteBufUtils.readUTF8String(payload);
-            float corr = payload.readFloat();
-
-            if (Minecraft.getMinecraft().thePlayer.getCommandSenderName().equals(playerName)) {
-                ClientProxy.playerCorruption = corr;
-            }
-
-/*            World world = Minecraft.getMinecraft().theWorld;
-            EntityPlayer player = world.getPlayerEntityByName(playerName);
+            AbstractClientPlayer player = (AbstractClientPlayer) Minecraft.getMinecraft().theWorld.getPlayerEntityByName(playerName);
+            float newCorr = payload.readFloat();
+            float oldCorr = payload.readFloat();
 
             if (player != null) {
-                PlayerBeacons.proxy.corruptRandomPixels(player, corr);
-            }*/
+                if (newCorr == 0) PlayerBeacons.proxy.restorePlayerSkin(player);
+                else PlayerBeacons.proxy.corruptPlayerSkin(player, (int) newCorr, (int) oldCorr);
+
+                if (Minecraft.getMinecraft().thePlayer.getCommandSenderName().equals(playerName)) {
+                    ClientProxy.playerCorruption = newCorr;
+                }
+            }
         }
     }
 
-    public static FMLProxyPacket createCorruptionMessage(String playerName, float corr) {
+    /**
+     * Creates a {@link cpw.mods.fml.common.network.internal.FMLProxyPacket} where the payload contains data for updating
+     * a players corruption on the client
+     * @param playerName The players name
+     * @param newCorr The new corr value
+     * @param oldCorr The old corr value
+     * @return A packet
+     */
+    public static FMLProxyPacket createCorruptionMessage(String playerName, float newCorr, float oldCorr) {
         ByteBuf payload = Unpooled.buffer();
         payload.writeInt(Message.CORRUPTION.id);
 
         ByteBufUtils.writeUTF8String(payload, playerName);
-        payload.writeFloat(corr);
+        payload.writeFloat(newCorr);
+        payload.writeFloat(oldCorr);
 
         return new FMLProxyPacket(payload, "PlayerBeacons");
     }

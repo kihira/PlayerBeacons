@@ -14,6 +14,8 @@ import kihira.playerbeacons.common.block.BlockDefiledSoulConductor;
 import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
 import kihira.playerbeacons.common.block.BlockPlayerBeacon;
 import kihira.playerbeacons.common.buff.*;
+import kihira.playerbeacons.common.command.CommandPlayerBeacons;
+import kihira.playerbeacons.common.command.CommandPlayerHead;
 import kihira.playerbeacons.common.corruption.BatCorruption;
 import kihira.playerbeacons.common.corruption.EndTeleportCorruption;
 import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
