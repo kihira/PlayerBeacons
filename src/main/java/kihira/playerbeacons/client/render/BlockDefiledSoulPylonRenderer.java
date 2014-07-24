@@ -2,6 +2,9 @@ package kihira.playerbeacons.client.render;
 
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
+import kihira.playerbeacons.client.model.ModelCrystalPort;
+import kihira.playerbeacons.client.model.ModelPylon;
+import kihira.playerbeacons.client.model.ModelPylonBase;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;

@@ -5,6 +5,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.foxlib.common.EntityHelper;
+import kihira.playerbeacons.client.model.ModelSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
@@ -19,7 +20,7 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class BlockSkullRenderer extends TileEntitySkullRenderer {
 
-	private final ModelSkull modelSkull = new ModelSkull();
+	public static final ModelSkull modelSkull = new ModelSkull();
 
     @Override
     public void renderTileEntityAt(TileEntitySkull p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_) {

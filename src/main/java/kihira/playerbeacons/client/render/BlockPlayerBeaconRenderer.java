@@ -5,6 +5,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.foxlib.common.EnumHeadType;
+import kihira.playerbeacons.client.model.ModelPlayerBeacon;
+import kihira.playerbeacons.client.model.ModelSkull;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.proxy.ClientProxy;

@@ -1,4 +1,4 @@
-package kihira.playerbeacons.client.render;
+package kihira.playerbeacons.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

@@ -11,6 +11,7 @@ import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
@@ -52,6 +53,7 @@ public class ClientProxy extends CommonProxy {
             TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
             BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
+            MinecraftForgeClient.registerItemRenderer(Items.skull, new ItemSkullRenderer());
         }
 	}
 

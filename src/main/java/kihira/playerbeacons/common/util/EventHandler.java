@@ -60,7 +60,7 @@ public class EventHandler {
 
 		//Death by DamageBehead
 		if (e.source == PlayerBeacons.damageBehead) {
-			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, deadEntity.getCommandSenderName()), 1);
+			if (deadEntity instanceof EntityPlayer) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, ((EntityPlayer) deadEntity).getGameProfile()), 1);
 			else if (deadEntity instanceof EntityZombie) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.ZOMBIE, null), 1);
 			else if (deadEntity instanceof EntitySkeleton) deadEntity.entityDropItem(EnumHeadType.getHead(((EntitySkeleton) deadEntity).getSkeletonType(), null), 1);
 			else if (deadEntity instanceof EntityCreeper) deadEntity.entityDropItem(EnumHeadType.getHead(EnumHeadType.CREEPER, null), 1);
@@ -81,7 +81,7 @@ public class EventHandler {
                     else if (deadEntity instanceof EntityPlayer) {
                         EntityPlayer deadPlayer = (EntityPlayer) deadEntity;
                         deadPlayer.func_110142_aN().func_94547_a(PlayerBeacons.damageBehead, 1, 1); //Sets last damage as beheading so it displays our message instead
-                        e.entityLiving.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, deadPlayer.getCommandSenderName()), 1);
+                        e.entityLiving.entityDropItem(EnumHeadType.getHead(EnumHeadType.PLAYER, deadPlayer.getGameProfile()), 1);
                     }
                 }
             }
@@ -104,7 +104,7 @@ public class EventHandler {
 					EntityPlayer player = (EntityPlayer) entityZombie.worldObj.playerEntities.get(i);
 					//spawn within 50 blocks and similar y level
 					if ((player.getDistanceToEntity(entityZombie) < 50) && (player.posY - entityZombie.posY < 5)) {
-						entityZombie.setCurrentItemOrArmor(4, EnumHeadType.getHead(EnumHeadType.PLAYER, player.getCommandSenderName()));
+						entityZombie.setCurrentItemOrArmor(4, EnumHeadType.getHead(EnumHeadType.PLAYER, player.getGameProfile()));
                         entityZombie.setEquipmentDropChance(4, 100);
 						this.spawnCooldown = System.currentTimeMillis() + PlayerBeacons.config.spawnCooldownDuration * 1000L;
 					}
