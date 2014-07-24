@@ -71,8 +71,8 @@ public class BlockSkullRenderer extends TileEntitySkullRenderer {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             if (hour >= 19 && hour <= 21) {
                 float[] floats = EntityHelper.getPitchYawToEntity(skull.xCoord, skull.yCoord, skull.zCoord, Minecraft.getMinecraft().thePlayer);
-                GL11.glRotatef(floats[0], 1F, 0F, 0.0F);
-                GL11.glRotatef(floats[1] + 180F, 0F, 1F, 0.0F);
+                GL11.glRotatef(floats[1] + 180F, 0F, 1F, 0F);
+                GL11.glRotatef(floats[0], 1F, 0F, 0F);
                 par5 = 0F;
             }
 			modelSkull.render(null, 0F, 0F, 0F, par5, 0F, 0.0625F);

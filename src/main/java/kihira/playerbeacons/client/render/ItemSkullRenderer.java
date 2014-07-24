@@ -30,7 +30,7 @@ public class ItemSkullRenderer implements IItemRenderer {
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         switch (type) {
             case EQUIPPED_FIRST_PERSON: {
-                this.renderSkull(item, 0.5F, 0, 0.5F, 2F, -90F);
+                this.renderSkull(item, 0.5F, 0, 0.5F, 2F, 0F);
                 break;
             }
             case EQUIPPED: {
