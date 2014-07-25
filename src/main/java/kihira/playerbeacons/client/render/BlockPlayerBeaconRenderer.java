@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.foxlib.client.model.ModelSkull;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.playerbeacons.client.model.ModelPlayerBeacon;
-import kihira.playerbeacons.client.model.ModelSkull;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import kihira.playerbeacons.proxy.ClientProxy;
@@ -44,7 +44,7 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
 	public BlockPlayerBeaconRenderer() {
 		this.playerBeaconModel = new ModelPlayerBeacon();
 		//santaHatModel = new ModelSantaHat();
-        this.modelSkull = new ModelSkull();
+        this.modelSkull = new ModelSkull(64, 32);
 	}
 
 	@Override

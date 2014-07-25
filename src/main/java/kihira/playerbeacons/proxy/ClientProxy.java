@@ -4,16 +4,16 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import kihira.foxlib.client.TextureHelper;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
-import kihira.playerbeacons.client.render.*;
+import kihira.playerbeacons.client.render.BlockDefiledSoulPylonRenderer;
+import kihira.playerbeacons.client.render.BlockPlayerBeaconRenderer;
+import kihira.playerbeacons.client.render.ItemDefiledSoulPylonRenderer;
+import kihira.playerbeacons.client.render.ItemPlayerBeaconRenderer;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.apache.logging.log4j.Level;
@@ -47,14 +47,6 @@ public class ClientProxy extends CommonProxy {
 		BlockDefiledSoulPylonRenderer blockDefiledSoulPylonRenderer = new BlockDefiledSoulPylonRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDefiledSoulPylon.class, blockDefiledSoulPylonRenderer);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.defiledSoulPylonBlock), new ItemDefiledSoulPylonRenderer(blockDefiledSoulPylonRenderer));
-
-		//Replace skull renderer
-        if (PlayerBeacons.config.overrideSkullRenderer) {
-            TileEntityRendererDispatcher.instance.mapSpecialRenderers.remove(TileEntitySkull.class);
-            BlockSkullRenderer blockSkullRenderer = new BlockSkullRenderer();
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, blockSkullRenderer);
-            MinecraftForgeClient.registerItemRenderer(Items.skull, new ItemSkullRenderer());
-        }
 	}
 
     @Override

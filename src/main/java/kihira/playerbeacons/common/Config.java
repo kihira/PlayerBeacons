@@ -11,7 +11,6 @@ public class Config {
     public int corruptionPotionID;
 	public int spawnCooldownDuration;
 	public boolean disableCorruption;
-	public boolean overrideSkullRenderer;
     public boolean enableHideParticleEffects;
 	public boolean enableEasterEgg;
 	public boolean enableZombieHead;
@@ -52,9 +51,6 @@ public class Config {
         prop = config.get(Configuration.CATEGORY_GENERAL, "Enable fancy beacon rendering", true);
         prop.comment = "Enables the portal style effect on beacons";
         enablePortalRenderering = prop.getBoolean(true);
-        prop = config.get(Configuration.CATEGORY_GENERAL, "Override vanilla skull rendering", true);
-        prop.comment = "Replaces the vanilla skull (heads) rendering with one that renders the hat layer";
-        overrideSkullRenderer = prop.getBoolean(true);
 	}
 
 	private void save() {
