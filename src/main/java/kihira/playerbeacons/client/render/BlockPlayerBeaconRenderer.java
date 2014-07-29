@@ -209,25 +209,19 @@ public class BlockPlayerBeaconRenderer extends TileEntitySpecialRenderer {
             tessellator.addVertex(x + 0.3, y + (double)f4 - 0.7 + 0.5D, z + 0.27);
             tessellator.addVertex(x + 0.2 + 0.5D, y + (double)f4 - 0.7 + 0.5D, z + 0.27);
             tessellator.addVertex(x + 0.2 + 0.5D, y + (double)f4 - 0.7, z + 0.27);
-            tessellator.draw();
 
-            tessellator.startDrawingQuads();
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             tessellator.addVertex(x + 0.2 + 0.5D, y + (double)f4 - 0.7, z + 0.75);
             tessellator.addVertex(x + 0.2 + 0.5D, y + (double)f4 - 0.7 + 0.5D, z + 0.75);
             tessellator.addVertex(x + 0.3, y + (double)f4 - 0.7 + 0.5D, z + 0.75);
             tessellator.addVertex(x + 0.3, y + (double)f4 - 0.7, z + 0.75);
-            tessellator.draw();
 
-            tessellator.startDrawingQuads();
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             tessellator.addVertex(x + 0.27, y + (double)f4 - 0.7, z + 0.25 + 0.5D);
             tessellator.addVertex(x + 0.27, y + (double)f4 - 0.7 + 0.5D, z + 0.25 + 0.5D);
             tessellator.addVertex(x + 0.27, y + (double)f4 - 0.7 + 0.5D, z + 0.25);
             tessellator.addVertex(x + 0.27, y + (double)f4 - 0.7, z + 0.25);
-            tessellator.draw();
 
-            tessellator.startDrawingQuads();
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             tessellator.addVertex(x + 0.75, y + (double)f4 - 0.7, z + 0.25);
             tessellator.addVertex(x + 0.75, y + (double)f4 - 0.7 + 0.5D, z + 0.25);
