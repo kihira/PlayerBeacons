@@ -101,8 +101,10 @@ public class PlayerBeacons {
     private final BatCorruption batCorruption = new BatCorruption();
 
     public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
-
     public static final DamageSource damageBehead = new DamageSource("behead").setDamageBypassesArmor();
+
+    @Mod.Instance
+    public static PlayerBeacons instance;
 
 	@SidedProxy(clientSide = "kihira.playerbeacons.proxy.ClientProxy", serverSide = "kihira.playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -133,6 +135,7 @@ public class PlayerBeacons {
         registerRecipes();
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
         FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
