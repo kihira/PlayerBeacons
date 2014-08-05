@@ -2,7 +2,6 @@ package kihira.playerbeacons.client.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.playerbeacons.client.FancyFont;
 import kihira.playerbeacons.client.diary.DiaryData;
 import kihira.playerbeacons.client.diary.DiaryEntry;
 import kihira.playerbeacons.client.diary.DiaryPage;
@@ -11,9 +10,10 @@ import kihira.playerbeacons.client.gui.button.GuiButtonNavigation;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import truetyper.FontHelper;
 
 import java.util.List;
 
@@ -65,7 +65,9 @@ public class GuiDiary extends GuiScreen {
                     DiaryPage page = this.currentEntry.getPages().get(this.currentIndex + i);
                     if (page != null) page.drawScreen(this, width, height, i == 0);
                 }
-                else break;
+                else {
+                    //TODO show start of next entry
+                }
             }
         }
         else {
@@ -78,8 +80,13 @@ public class GuiDiary extends GuiScreen {
             else {
                 this.mc.getTextureManager().bindTexture(pageTexture);
                 this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, 173);
+                //FontHelper.drawCenteredString("Contents", this.guiLeft + (this.guiWidth / 4) + 5, this.guiTop + 15, FancyFont.fontOther, 1F, 1F, 0F, 0F, 0F, 1F);
                 GL11.glPushMatrix();
-                FontHelper.drawCenteredString("Comic Sans", this.guiLeft + (this.guiWidth / 4) + 5, this.guiTop + 15, FancyFont.fontComicSans, 1F, 1F, 0F, 0F, 0F, 1F);
+                GL11.glTranslatef(this.guiLeft + (this.guiWidth / 4) + 5, this.guiTop + 15, 0);
+                GL11.glScalef(1.3F, 1.3F, 0F);
+                this.fontRendererObj.setUnicodeFlag(false);
+                this.fontRendererObj.drawString(EnumChatFormatting.BLACK + "Contents", -this.fontRendererObj.getStringWidth("contents") / 2, 0, -1);
+                this.fontRendererObj.setUnicodeFlag(true);
                 GL11.glPopMatrix();
             }
         }
@@ -90,8 +97,14 @@ public class GuiDiary extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button == this.prevPage) this.currentIndex -= 2;
-        if (button == this.nextPage) this.currentIndex += 2;
+        if (button == this.prevPage) {
+            //If we're already at the first page, go back to contents TODO Go back to earlier entry
+            if (this.currentIndex == 0) {
+                this.setCurrentEntry(null);
+            }
+            this.adjustIndex(-2);
+        }
+        if (button == this.nextPage) this.adjustIndex(2);
 
         //Entry
         if (button.id >= 500) {
@@ -106,7 +119,7 @@ public class GuiDiary extends GuiScreen {
     private void addEntries() {
         int index = 0;
         for (DiaryEntry entry : DiaryData.entries) {
-            GuiButtonEntry buttonEntry = new GuiButtonEntry(500 + index, this.guiLeft + 20, this.guiTop + 35 + (index * 20), entry);
+            GuiButtonEntry buttonEntry = new GuiButtonEntry(500 + index, this.guiLeft + 20, this.guiTop + 35 + (index * 10), entry);
             buttonEntry.visible = buttonEntry.enabled = false;
             this.buttonList.add(buttonEntry);
             index++;
@@ -115,7 +128,7 @@ public class GuiDiary extends GuiScreen {
 
     private void updateButtons() {
         //Prev button
-        if (this.currentIndex < 2) this.prevPage.enabled = this.prevPage.visible = false;
+        if (this.currentEntry == null && this.currentIndex < 2) this.prevPage.enabled = this.prevPage.visible = false;
         else this.prevPage.enabled = this.prevPage.visible = true;
 
         //Next button
@@ -123,14 +136,16 @@ public class GuiDiary extends GuiScreen {
         else this.nextPage.enabled = this.nextPage.visible = false;*/
 
         //Contents
-        if (this.currentEntry == null) {
-            for (Object button : this.buttonList) {
-                if (button instanceof GuiButtonEntry) {
-                    GuiButtonEntry guiButtonEntry = (GuiButtonEntry) button;
-                    guiButtonEntry.enabled = guiButtonEntry.visible = (this.currentIndex > 0);
-                }
+        for (Object button : this.buttonList) {
+            if (button instanceof GuiButtonEntry) {
+                GuiButtonEntry guiButtonEntry = (GuiButtonEntry) button;
+                guiButtonEntry.enabled = guiButtonEntry.visible = (this.currentEntry == null && this.currentIndex > 0);
             }
         }
+    }
+
+    public void adjustIndex(int change) {
+        this.currentIndex = MathHelper.clamp_int(this.currentIndex += change, 0, Integer.MAX_VALUE);
     }
 
     public void setCurrentEntry(DiaryEntry entry) {

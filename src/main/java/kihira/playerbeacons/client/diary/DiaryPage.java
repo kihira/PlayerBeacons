@@ -12,10 +12,10 @@ import net.minecraft.util.StatCollector;
 @SideOnly(Side.CLIENT)
 public abstract class DiaryPage {
 
-    private final String name;
+    public final String pageName;
 
     public DiaryPage(String name) {
-        this.name = name;
+        this.pageName = name;
     }
 
     public abstract void drawScreen(GuiDiary diary, int width, int height, boolean isLeftPage);
@@ -25,6 +25,6 @@ public abstract class DiaryPage {
     public abstract void onEntryLoad(DiaryEntry entry);
 
     public String getName() {
-        return StatCollector.translateToLocal("page." + this.name + ".name");
+        return StatCollector.translateToLocal("page." + this.pageName + ".name");
     }
 }

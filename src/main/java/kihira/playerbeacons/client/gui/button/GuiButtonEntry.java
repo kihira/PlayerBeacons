@@ -26,7 +26,7 @@ public class GuiButtonEntry extends GuiButton {
             boolean isMouseOver = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int colour = 16777120;
 
-            fontrenderer.drawString(EnumChatFormatting.BLACK + (isMouseOver ? "> " : "") + this.displayString, this.xPosition, this.yPosition + (this.height - fontrenderer.FONT_HEIGHT) / 2, colour);
+            fontrenderer.drawString(EnumChatFormatting.BLACK + (isMouseOver ? " " : "") + this.displayString, this.xPosition, this.yPosition + (this.height - fontrenderer.FONT_HEIGHT) / 2, colour);
         }
     }
 }
