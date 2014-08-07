@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.client.gui.GuiDiary;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.StatCollector;
 
 /**
  * This is a page of an entry. A base class that should be extended to what is needed
@@ -24,7 +23,7 @@ public abstract class DiaryPage {
 
     public abstract void onEntryLoad(DiaryEntry entry);
 
-    public String getName() {
-        return StatCollector.translateToLocal("page." + this.pageName + ".name");
+    public String getUnlocalisedTitle() {
+        return "page." + this.pageName + ".title";
     }
 }
