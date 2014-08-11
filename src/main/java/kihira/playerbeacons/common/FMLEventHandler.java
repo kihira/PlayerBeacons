@@ -14,6 +14,7 @@ import kihira.playerbeacons.common.network.PacketEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class FMLEventHandler {
     }
 
     private void calculateCorruptionEffects(EntityPlayer player, World world) {
-        List<CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.get(player);
+        List<CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.containsKey(player) ? activeCorruptionEffects.get(player) : new ArrayList<CorruptionEffect>();
         float corruption = BeaconDataHelper.getPlayerCorruptionAmount(player);
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {
