@@ -201,15 +201,11 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                 ItemStack itemStack = crystalContainer.getStackInSlot(i);
                 //Verify it is a crystal
                 if (itemStack != null && itemStack.getItem() instanceof ICrystal) {
-                    List<String> buffList = ((ICrystal) itemStack.getItem()).getAffectedBuffs();
+                    List<Buff> buffList = ((ICrystal) itemStack.getItem()).getAffectedBuffs();
                     //Check buff list isn't empty or null
                     if (buffList != null && !buffList.isEmpty()) {
-                        for (String buff : buffList) {
-                            //Verify buff exists
-                            if (Buff.buffs.containsKey(buff)) {
-                                Buff theBuff = Buff.buffs.get(buff);
-                                PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, theBuff);
-                            }
+                        for (Buff buff : buffList) {
+                            PlayerBeacons.proxy.spawnBeaconParticle(targetX, targetY, targetZ, playerBeacon, buff);
                         }
                     }
                 }
