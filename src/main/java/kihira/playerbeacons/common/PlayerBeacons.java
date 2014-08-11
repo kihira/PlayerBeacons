@@ -10,6 +10,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.AbstractBeacon;
+import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.common.block.BlockDefiledSoulConductor;
 import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
 import kihira.playerbeacons.common.block.BlockPlayerBeacon;
@@ -79,7 +80,7 @@ public class PlayerBeacons {
         }
 
         @Override
-        public List<String> getAffectedBuffs() {
+        public List<Buff> getAffectedBuffs() {
             return null;
         }
     };
@@ -109,7 +110,13 @@ public class PlayerBeacons {
 	@SidedProxy(clientSide = "kihira.playerbeacons.proxy.ClientProxy", serverSide = "kihira.playerbeacons.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
-	@Mod.EventHandler
+    public static SpeedBuff speedbuff;
+    public static JumpBuff jumpBuff;
+    public static HealthBoostBuff healthBuff;
+    public static HasteBuff hasteBuff;
+    public static ResistanceBuff resistanceBuff;
+
+    @Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 
 		config = new Config(e.getSuggestedConfigurationFile());
@@ -169,11 +176,11 @@ public class PlayerBeacons {
     }
 
 	private void registerBuffs() {
-		new SpeedBuff();
-		new JumpBuff();
-		new HasteBuff();
-		new ResistanceBuff();
-        new HealthBoostBuff();
+		speedbuff = new SpeedBuff();
+		jumpBuff = new JumpBuff();
+		hasteBuff = new HasteBuff();
+		resistanceBuff = new ResistanceBuff();
+        healthBuff = new HealthBoostBuff();
 	}
 
 	private void registerRecipes() {

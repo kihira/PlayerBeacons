@@ -2,6 +2,7 @@ package kihira.playerbeacons.common.item;
 
 import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.buff.Buff;
+import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -14,15 +15,14 @@ public class LightBlueCrystalItem extends CrystalItem {
 	}
 
 	@Override
-	public List<String> getAffectedBuffs() {
-		List<String> list = new ArrayList<String>();
-		list.add("speed");
+	public List<Buff> getAffectedBuffs() {
+		List<Buff> list = new ArrayList<Buff>();
+		list.add(PlayerBeacons.speedbuff);
 		return list;
 	}
 
     @Override
     public float doEffects(EntityPlayer player, AbstractBeacon beacon, int crystalCount) {
-        Buff buff = Buff.buffs.get("speed");
-        return buff.doBuff(player, beacon, crystalCount);
+        return PlayerBeacons.speedbuff.doBuff(player, beacon, crystalCount);
     }
 }

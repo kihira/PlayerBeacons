@@ -290,13 +290,16 @@ public class Beacon extends AbstractBeacon {
      */
     public void doEffects(EntityPlayer entityPlayer) {
         this.corruption = 0;
+        this.activeBuffs.clear();
         //Verify the owner is valid for receiving effects
         if (entityPlayer.getGameProfile().equals(this.ownerGameProfile)) {
             if (entityPlayer.dimension == this.dimID) {
                 //Loop through the crystals this beacon has detected
                 for (Multiset.Entry<ICrystal> entry : this.crystalMultiset.entrySet()) {
-                    this.corruption += entry.getElement().doEffects(entityPlayer, this, entry.getCount());
-                    PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d)", entry.getElement().getClass().toString(), entry.getCount());
+                    ICrystal crystal = entry.getElement();
+                    this.corruption += crystal.doEffects(entityPlayer, this, entry.getCount());
+                    this.activeBuffs.addAll(crystal.getAffectedBuffs());
+                    PlayerBeacons.logger.debug("Doing effects for the crystal %s(%d)", crystal.getClass().toString(), entry.getCount());
                 }
             }
         }

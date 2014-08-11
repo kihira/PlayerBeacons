@@ -1,7 +1,11 @@
 package kihira.playerbeacons.api.beacon;
 
 import com.mojang.authlib.GameProfile;
+import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An instance created each time a new beacon is placed for the associated beacon. This will handle all the logic of
@@ -17,6 +21,7 @@ public abstract class AbstractBeacon {
     protected GameProfile ownerGameProfile;
     protected int levels;
     protected float corruption = 0;
+    protected Set<Buff> activeBuffs = new HashSet<Buff>();
 
     public AbstractBeacon(int dimID, int posX, int posY, int posZ, GameProfile gameProfile) {
         this.dimID = dimID;
@@ -67,5 +72,14 @@ public abstract class AbstractBeacon {
      */
     public int getLevels() {
         return this.levels;
+    }
+
+    /**
+     * Gets the list of buffs that is currently affecting the player from this beacon. Does not return the level of each
+     * buff
+     * @return
+     */
+    public Set<Buff> getBuffs() {
+        return this.activeBuffs;
     }
 }

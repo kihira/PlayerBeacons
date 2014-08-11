@@ -15,13 +15,15 @@ import java.util.HashMap;
 public abstract class Buff {
 
 	public static HashMap<String, Buff> buffs = new HashMap<String, Buff>();
+    public final String buffName;
 
 	public Buff(String simpleName) {
 		if (!buffs.containsKey(simpleName)) {
+            this.buffName = simpleName;
 			buffs.put(simpleName, this);
 		}
 		else throw new IllegalArgumentException("Buff " + simpleName + " is already registered");
-	}
+    }
 
 	/**
 	 * This method is called when the requirements to activate the buff are reached.

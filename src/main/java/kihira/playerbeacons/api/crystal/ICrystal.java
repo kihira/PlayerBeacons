@@ -3,6 +3,7 @@ package kihira.playerbeacons.api.crystal;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.beacon.AbstractBeacon;
+import kihira.playerbeacons.api.buff.Buff;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -33,5 +34,5 @@ public interface ICrystal {
      * Eg "dig" instead of DigBuff
      * @return List of Buff's names that this throttle effects.
      */
-    public List<String> getAffectedBuffs();
+    public List<Buff> getAffectedBuffs();
 }

@@ -2,6 +2,7 @@ package kihira.playerbeacons.common.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -31,11 +32,11 @@ public abstract class CrystalItem extends Item implements ICrystal {
 	@Override
     @SuppressWarnings("unchecked")
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List par3List, boolean par4) {
-		List<String> buffList = this.getAffectedBuffs();
+		List<Buff> buffList = this.getAffectedBuffs();
 		if (buffList != null) {
 			par3List.add("Enables Buffs: ");
-			for (String buffName : buffList) {
-				par3List.add(StatCollector.translateToLocal("buff." + buffName + ".name"));
+			for (Buff buffName : buffList) {
+				par3List.add(StatCollector.translateToLocal("buff." + buffName.buffName + ".name"));
 			}
 		}
 	}
@@ -78,4 +79,10 @@ public abstract class CrystalItem extends Item implements ICrystal {
     public float[] getRGBA() {
         return this.rgba;
     }
+
+/*    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        player.openGui(PlayerBeacons.instance, 0, world, 0, 0, 0);
+        return itemStack;
+    }*/
 }
