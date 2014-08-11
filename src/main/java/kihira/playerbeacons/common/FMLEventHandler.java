@@ -1,7 +1,6 @@
 package kihira.playerbeacons.common;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.MapMaker;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -15,12 +14,14 @@ import kihira.playerbeacons.common.network.PacketEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class FMLEventHandler {
 
-    public static final HashMap<World, Multimap<EntityPlayer, CorruptionEffect>> activeCorruptionEffects = new HashMap<World, Multimap<EntityPlayer, CorruptionEffect>>();
+    //We can't do weak multimaps so we do this old system instead
+    public static final Map<EntityPlayer, List<CorruptionEffect>> activeCorruptionEffects = new MapMaker().weakKeys().makeMap();
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
@@ -88,22 +89,22 @@ public class FMLEventHandler {
     }
 
     private void calculateCorruptionEffects(EntityPlayer player, World world) {
-        Multimap<EntityPlayer, CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.containsKey(world) ? activeCorruptionEffects.get(world) : HashMultimap.<EntityPlayer, CorruptionEffect>create();
+        List<CorruptionEffect> playerCurrentEffects = activeCorruptionEffects.get(player);
         float corruption = BeaconDataHelper.getPlayerCorruptionAmount(player);
         //Calculate new corruption effects
         for (CorruptionEffect corruptionEffect : CorruptionEffect.corruptionEffects) {
             //If it is currently not active and can be applied to the player
-            if (!playerCurrentEffects.containsEntry(player, corruptionEffect) && corruptionEffect.shouldActivate(player, world, corruption)) {
-                playerCurrentEffects.put(player, corruptionEffect);
+            if (!playerCurrentEffects.contains(corruptionEffect) && corruptionEffect.shouldActivate(player, world, corruption)) {
+                playerCurrentEffects.add(corruptionEffect);
                 corruptionEffect.init(player, corruption);
                 PlayerBeacons.logger.debug("Started corruption %s for %s", corruptionEffect, player);
             }
         }
 
         //Check we have the player in the list
-        if (playerCurrentEffects.containsKey(player)) {
+        if (playerCurrentEffects.size() > 0) {
             //Iterator is used here as we can modify it whilst looping through without it throwing a ConcurrentModificationException
-            Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.get(player).iterator();
+            Iterator<CorruptionEffect> corruptionEffects = playerCurrentEffects.iterator();
             while (corruptionEffects.hasNext()) {
                 CorruptionEffect corruptionEffect = corruptionEffects.next();
                 //Check if the effect should continue functioning
@@ -119,6 +120,7 @@ public class FMLEventHandler {
             }
         }
 
-        activeCorruptionEffects.put(world, playerCurrentEffects);
+        //Add in the modified list back into the main map
+        activeCorruptionEffects.put(player, playerCurrentEffects);
     }
 }
