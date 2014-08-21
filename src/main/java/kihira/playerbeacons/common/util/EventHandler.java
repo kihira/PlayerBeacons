@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import kihira.foxlib.client.RenderHelper;
+import kihira.foxlib.client.TextHelper;
 import kihira.foxlib.common.EnumHeadType;
 import kihira.foxlib.common.Loc4;
 import kihira.playerbeacons.api.BeaconDataHelper;
@@ -204,8 +204,8 @@ public class EventHandler {
                     String string = "";
 
                     if (ownerGameProfile != null) string += EnumChatFormatting.DARK_PURPLE + ownerGameProfile.getName();
-                    RenderHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D,
-                            RenderHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, false);
+                    TextHelper.drawMultiLineMessageFacingPlayer(viewX + 0.5D, viewY + 2D, viewZ + 0.5D,
+                            TextHelper.drawWrappedMessageFacingPlayer$default$4() * 1.2F, string.split("\\n"), -1, true, false);
                 }
 			}
 		}
