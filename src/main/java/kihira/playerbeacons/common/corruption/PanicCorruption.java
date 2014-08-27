@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -21,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 public class PanicCorruption extends CorruptionEffect {
 
     private final Multiset<EntityPlayer> multiset = HashMultiset.create();
+    private boolean allowNextSound;
 
     public PanicCorruption() {
         super("panic", 0);
@@ -39,8 +41,13 @@ public class PanicCorruption extends CorruptionEffect {
             Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundHeartbeat(player)); //TODO move to proxy
             multiset.add(player);
         }
-        //Fog density change
         if (multiset.count(player) < 300) multiset.add(player, 1);
+
+        //if (player.getRNG().nextInt(Math.abs(multiset.count(player) - 400)) == 0) {
+            this.allowNextSound = true;
+            player.worldObj.playSound(player.posX + MathHelper.getRandomDoubleInRange(player.getRNG(), -10, 10), player.posY + MathHelper.getRandomDoubleInRange(player.getRNG(), -10, 10),
+                    player.posZ + MathHelper.getRandomDoubleInRange(player.getRNG(), -10, 10), "mob.spider.say", 1F, player.getRNG().nextFloat() * 0.1F * 0.9F, false);
+        //}
     }
 
     @Override
@@ -74,7 +81,8 @@ public class PanicCorruption extends CorruptionEffect {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onSound(PlaySoundEvent17 event) {
-        if (multiset.contains(Minecraft.getMinecraft().thePlayer) && !(event.sound instanceof MovingSoundHeartbeat)) event.result = null;
+        if (multiset.contains(Minecraft.getMinecraft().thePlayer) && (!(event.sound instanceof MovingSoundHeartbeat) && !allowNextSound)) event.result = null;
+        allowNextSound = false;
     }
 
     @SideOnly(Side.CLIENT)
