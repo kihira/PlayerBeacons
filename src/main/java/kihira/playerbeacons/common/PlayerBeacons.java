@@ -23,7 +23,6 @@ import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
 import kihira.playerbeacons.common.corruption.SlownessCorruption;
 import kihira.playerbeacons.common.item.*;
 import kihira.playerbeacons.common.network.PacketEventHandler;
-import kihira.playerbeacons.common.potion.CorruptionPotion;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
@@ -146,7 +145,6 @@ public class PlayerBeacons {
 		proxy.registerRenderers();
 
 		new EnchantmentDecapitation(config.decapitationEnchantmentID);
-        new CorruptionPotion(config.corruptionPotionID);
 
 		ChestGenHooks info = ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST);
 		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
