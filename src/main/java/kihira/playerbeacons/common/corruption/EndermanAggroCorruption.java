@@ -21,7 +21,7 @@ public class EndermanAggroCorruption extends CorruptionEffect {
 
     @Override
     public void onUpdate(EntityPlayer player, float corruption) {
-        if (player.worldObj.getTotalWorldTime() % 80 == 0 && player.getRNG().nextInt(50) == 0) {
+        if (player.worldObj.getTotalWorldTime() % 80 == 0 && player.getRNG().nextInt(25) == 0) {
             //Make enderman nearby angry at player
             double d = (corruption / this.corruptionUnlock) * 15;
             AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(player.posX, player.posY, player.posZ, player.posX + 1, player.posY + 1, player.posZ + 1).expand(d, d, d);

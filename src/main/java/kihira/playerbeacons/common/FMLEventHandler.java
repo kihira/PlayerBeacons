@@ -47,7 +47,7 @@ public class FMLEventHandler {
             }
 
             //We only calculate new corruption effects every 20 ticks and regardless of beacon
-            if (!PlayerBeacons.config.disableCorruption && event.player.worldObj.getTotalWorldTime() % 20 == 0) {
+            if (!PlayerBeacons.config.disableCorruption) {
                 //Calculate the corruption effects on the player
                 this.calculateCorruptionEffects(event.player, event.player.worldObj);
             }
