@@ -1,6 +1,7 @@
 package kihira.playerbeacons.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.relauncher.Side;
 import kihira.foxlib.client.TextureHelper;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.client.particle.EntityBuffParticleFX;
@@ -9,6 +10,7 @@ import kihira.playerbeacons.client.render.BlockPlayerBeaconRenderer;
 import kihira.playerbeacons.client.render.ItemDefiledSoulPylonRenderer;
 import kihira.playerbeacons.client.render.ItemPlayerBeaconRenderer;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.network.CorruptionUpdateMessage;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.client.Minecraft;
@@ -37,6 +39,12 @@ public class ClientProxy extends CommonProxy {
 
     //TODO store original skin on disk instead of modified skin in HashMap?
     private final HashMap<String, BufferedImage> playerSkins = new HashMap<String, BufferedImage>();
+
+    @Override
+    public void registerMessages() {
+        PlayerBeacons.networkWrapper.registerMessage(CorruptionUpdateMessage.CorruptionUpdateMessageHandler.class, CorruptionUpdateMessage.class, 0, Side.CLIENT);
+        super.registerMessages();
+    }
 
     @Override
 	public void registerRenderers() {

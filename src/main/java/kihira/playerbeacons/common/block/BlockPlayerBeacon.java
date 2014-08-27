@@ -2,7 +2,6 @@ package kihira.playerbeacons.common.block;
 
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.foxlib.common.EnumHeadType;
@@ -11,7 +10,7 @@ import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
-import kihira.playerbeacons.common.network.PacketEventHandler;
+import kihira.playerbeacons.common.network.CorruptionUpdateMessage;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -128,7 +127,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                 EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
                 world.spawnEntityInWorld(item);
             }
-            //If they right click with depleted crystal, disperse all corruption
+            //If they right click with depleted crystal, disperse all corruption TODO remove
             else if (itemStack.getItem() instanceof ICrystal) {
                 if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                 else player.setCurrentItemOrArmor(0, itemStack);
@@ -138,8 +137,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
                 player.addChatComponentMessage(new ChatComponentTranslation("crystal.dissipation").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA).setItalic(true)));
 
                 //Send corruption update
-                FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(player.getCommandSenderName(), 0, oldCorr);
-                PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
+                PlayerBeacons.networkWrapper.sendToAllAround(new CorruptionUpdateMessage(player.getCommandSenderName(), 0, oldCorr), new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
             }
         }
         return true;

@@ -4,8 +4,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +19,6 @@ import kihira.playerbeacons.common.command.CommandPlayerBeacons;
 import kihira.playerbeacons.common.command.CommandPlayerHead;
 import kihira.playerbeacons.common.corruption.*;
 import kihira.playerbeacons.common.item.*;
-import kihira.playerbeacons.common.network.PacketEventHandler;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
@@ -67,6 +66,7 @@ public class PlayerBeacons {
 	public static Config config;
 	public static final Logger logger = LogManager.getLogger(PlayerBeacons.MOD_ID);
     public static final String MOD_ID = "PlayerBeacons";
+    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(PlayerBeacons.MOD_ID);
 
 	public static final BeheaderItem beheaderItem = new BeheaderItem();
 	public static final CrystalItem crystalItem = new CrystalItem() {
@@ -98,7 +98,6 @@ public class PlayerBeacons {
     private final BatCorruption batCorruption = new BatCorruption();
     private final PanicCorruption panicCorruption = new PanicCorruption();
 
-    public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel("PlayerBeacons");
     public static final DamageSource damageBehead = new DamageSource("behead").setDamageBypassesArmor();
 
     @Mod.Instance
@@ -150,8 +149,6 @@ public class PlayerBeacons {
 		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
 		info = ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY);
 		info.addItem(new WeightedRandomChestContent(researchNotes, 1, 1, 5));
-
-        eventChannel.register(new PacketEventHandler());
 	}
 
 	@Mod.EventHandler

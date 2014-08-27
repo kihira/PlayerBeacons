@@ -6,11 +6,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import kihira.playerbeacons.api.BeaconDataHelper;
 import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
-import kihira.playerbeacons.common.network.PacketEventHandler;
+import kihira.playerbeacons.common.network.CorruptionUpdateMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -41,8 +40,7 @@ public class FMLEventHandler {
                     float newCorr = BeaconDataHelper.getPlayerCorruptionAmount(player);
 
                     //Send corruption update
-                    FMLProxyPacket packet = PacketEventHandler.createCorruptionMessage(player.getCommandSenderName(), newCorr, oldCorr);
-                    PlayerBeacons.eventChannel.sendToAllAround(packet, new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
+                    PlayerBeacons.networkWrapper.sendToAllAround(new CorruptionUpdateMessage(player.getCommandSenderName(), newCorr, oldCorr), new NetworkRegistry.TargetPoint(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ, 64));
                 }
             }
 

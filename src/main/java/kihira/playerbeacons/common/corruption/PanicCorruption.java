@@ -13,6 +13,7 @@ import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
@@ -53,6 +54,11 @@ public class PanicCorruption extends CorruptionEffect {
     @Override
     public void finish(EntityPlayer player, float corruption) {
         multiset.setCount(player, 0);
+    }
+
+    @Override
+    public boolean shouldActivate(EntityPlayer player, World world, float corruption) {
+        return super.shouldActivate(player, world, corruption);
     }
 
     @SubscribeEvent
