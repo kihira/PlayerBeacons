@@ -10,6 +10,8 @@ import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModBlocks;
+import kihira.playerbeacons.common.lib.ModItems;
 import kihira.playerbeacons.common.network.CorruptionUpdateMessage;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
 import net.minecraft.block.material.Material;
@@ -37,8 +39,8 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
         this.setHardness(8F);
         this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setBlockName("playerBeacon");
-        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
+        this.setBlockName(ModBlocks.Names.SOUL_PYLON);
+        this.setBlockTextureName(ModBlocks.Names.getTextureName(ModBlocks.Names.PLAYER_BEACON));
 	}
 
     @Override
@@ -124,7 +126,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
             else if (itemStack.getItem() == Items.emerald) {
                 if (itemStack.stackSize-- == 0) player.setCurrentItemOrArmor(0, null);
                 else player.setCurrentItemOrArmor(0, itemStack);
-                EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(PlayerBeacons.crystalItem));
+                EntityItem item = new EntityItem(world, x, y + 0.5, z, new ItemStack(ModItems.itemCrystal));
                 world.spawnEntityInWorld(item);
             }
             //If they right click with depleted crystal, disperse all corruption TODO remove

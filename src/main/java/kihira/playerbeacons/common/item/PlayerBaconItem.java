@@ -3,6 +3,7 @@ package kihira.playerbeacons.common.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +20,8 @@ public class PlayerBaconItem extends ItemFood {
     public PlayerBaconItem() {
         super(2, 4, false);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":playerbacon");
-        this.setUnlocalizedName("playerBacon");
+        this.setUnlocalizedName(ModItems.Names.PLAYER_BACON);
+        this.setTextureName(ModItems.Names.getTextureName(ModItems.Names.PLAYER_BACON));
     }
 
     @Override

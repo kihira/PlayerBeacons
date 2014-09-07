@@ -1,6 +1,6 @@
 package kihira.playerbeacons.common.util;
 
-import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModItems;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Util {
 
     public static ItemStack getPlayerBacon(String playerName, int count) {
-        ItemStack itemStack = new ItemStack(PlayerBeacons.playerBaconItem, MathHelper.clamp_int(count, 1, 64), 0);
+        ItemStack itemStack = new ItemStack(ModItems.itemPlayerBacon, MathHelper.clamp_int(count, 1, 64), 0);
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setString("PlayerName", playerName);
         itemStack.setTagCompound(tagCompound);

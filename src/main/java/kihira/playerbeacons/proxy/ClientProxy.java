@@ -10,6 +10,7 @@ import kihira.playerbeacons.client.render.BlockPlayerBeaconRenderer;
 import kihira.playerbeacons.client.render.ItemDefiledSoulPylonRenderer;
 import kihira.playerbeacons.client.render.ItemPlayerBeaconRenderer;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModBlocks;
 import kihira.playerbeacons.common.network.CorruptionUpdateMessage;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import kihira.playerbeacons.common.tileentity.TileEntityPlayerBeacon;
@@ -50,11 +51,11 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers() {
 		BlockPlayerBeaconRenderer playerBeaconRenderer = new BlockPlayerBeaconRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlayerBeacon.class, playerBeaconRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.playerBeaconBlock), new ItemPlayerBeaconRenderer(playerBeaconRenderer));
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockPlayerBeacon), new ItemPlayerBeaconRenderer(playerBeaconRenderer));
 
 		BlockDefiledSoulPylonRenderer blockDefiledSoulPylonRenderer = new BlockDefiledSoulPylonRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDefiledSoulPylon.class, blockDefiledSoulPylonRenderer);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(PlayerBeacons.defiledSoulPylonBlock), new ItemDefiledSoulPylonRenderer(blockDefiledSoulPylonRenderer));
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockDefiledSoulPylon), new ItemDefiledSoulPylonRenderer(blockDefiledSoulPylonRenderer));
 	}
 
     @Override

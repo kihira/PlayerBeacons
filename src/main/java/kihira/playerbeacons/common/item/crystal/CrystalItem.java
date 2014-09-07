@@ -1,10 +1,11 @@
-package kihira.playerbeacons.common.item;
+package kihira.playerbeacons.common.item.crystal;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModItems;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,8 +26,8 @@ public abstract class CrystalItem extends Item implements ICrystal {
 		this.setMaxDamage(43200);
         this.setMaxStackSize(1);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":crystalitem");
-        this.setUnlocalizedName("crystalitem");
+        this.setUnlocalizedName(ModItems.Names.CRYSTAL);
+        this.setTextureName(ModItems.Names.getTextureName(ModItems.Names.CRYSTAL));
 	}
 
 	@Override

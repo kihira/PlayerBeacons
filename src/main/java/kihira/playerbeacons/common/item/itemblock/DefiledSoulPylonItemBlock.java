@@ -1,4 +1,4 @@
-package kihira.playerbeacons.common.item;
+package kihira.playerbeacons.common.item.itemblock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -3,8 +3,8 @@ package kihira.playerbeacons.common.tileentity;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.api.crystal.ICrystalContainer;
-import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.block.BlockDefiledSoulPylon;
+import kihira.playerbeacons.common.lib.ModBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,7 +73,7 @@ public class TileEntityDefiledSoulPylon extends TileEntityMultiBlock implements 
 		if (i == 0) {
 			this.crystal = itemstack;
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-            this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, PlayerBeacons.defiledSoulPylonBlock);
+            this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ModBlocks.blockDefiledSoulPylon);
 		}
 	}
 

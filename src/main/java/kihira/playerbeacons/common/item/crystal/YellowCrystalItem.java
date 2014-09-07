@@ -1,8 +1,9 @@
-package kihira.playerbeacons.common.item;
+package kihira.playerbeacons.common.item.crystal;
 
 import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.buff.Buff;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModItems;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class YellowCrystalItem extends CrystalItem {
 
     public YellowCrystalItem() {
         this.rgba = new float[]{0.9F, 0.8F, 0.1F, 1};
-        this.setUnlocalizedName("yellowCrystalItem");
+        this.setUnlocalizedName(ModItems.Names.CRYSTAL_YELLOW);
     }
 
     @Override

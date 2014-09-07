@@ -63,7 +63,7 @@ public abstract class AbstractBeacon {
      * @return The corruption level
      */
     public float getCorruption() {
-        return this.corruption;
+        return corruption;
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbstractBeacon {
      * @return The level count
      */
     public int getLevels() {
-        return this.levels;
+        return levels;
     }
 
     /**
@@ -80,6 +80,20 @@ public abstract class AbstractBeacon {
      * @return
      */
     public Set<Buff> getBuffs() {
-        return this.activeBuffs;
+        return activeBuffs;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractBeacon{" +
+                "dimID=" + dimID +
+                ", posX=" + posX +
+                ", posY=" + posY +
+                ", posZ=" + posZ +
+                ", ownerGameProfile=" + ownerGameProfile +
+                ", levels=" + levels +
+                ", corruption=" + corruption +
+                ", activeBuffs=" + activeBuffs +
+                '}';
     }
 }

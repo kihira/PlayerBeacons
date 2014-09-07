@@ -4,6 +4,7 @@ import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.beacon.IBeaconBase;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModBlocks;
 import kihira.playerbeacons.common.tileentity.TileEntityMultiBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -19,8 +20,8 @@ public class BlockDefiledSoulConductor extends BlockMultiBlock implements IBeaco
 		this.setHardness(15F);
         this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setBlockName("defiledSoulConductor");
-        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
+        this.setBlockName(ModBlocks.Names.SOUL_CONDUCTOR);
+        this.setBlockTextureName(ModBlocks.Names.getTextureName(ModBlocks.Names.PLAYER_BEACON));
 	}
 
     @Override

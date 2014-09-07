@@ -2,6 +2,7 @@ package kihira.playerbeacons.common.block;
 
 import kihira.playerbeacons.api.crystal.ICrystal;
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModBlocks;
 import kihira.playerbeacons.common.tileentity.TileEntityDefiledSoulPylon;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -24,8 +25,8 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
         this.setHardness(8F);
         this.setResistance(100F);
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
-        this.setBlockName("defiledSoulPylon");
-        this.setBlockTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":pyramidBrick");
+        this.setBlockName(ModBlocks.Names.SOUL_PYLON);
+        this.setBlockTextureName(ModBlocks.Names.getTextureName(ModBlocks.Names.PLAYER_BEACON));
         this.setBlockBounds(0.20F, 0.0F, 0.20F, 0.8F, 1.0F, 0.8F);
 	}
 
@@ -145,15 +146,15 @@ public class BlockDefiledSoulPylon extends BlockMultiBlock {
         Block topBlock = world.getBlock(x, y + 1, z);
         Block bottomBlock = world.getBlock(x, y - 1, z);
         //No top part
-        if (topBlock == PlayerBeacons.defiledSoulPylonBlock && bottomBlock == PlayerBeacons.defiledSoulPylonBlock) {
+        if (topBlock == ModBlocks.blockDefiledSoulPylon && bottomBlock == ModBlocks.blockDefiledSoulPylon) {
             return 3;
         }
         //Base
-        else if (!world.isAirBlock(x, y - 1, z) && bottomBlock != PlayerBeacons.defiledSoulPylonBlock) {
+        else if (!world.isAirBlock(x, y - 1, z) && bottomBlock != ModBlocks.blockDefiledSoulPylon) {
             return 2;
         }
         //Top
-        else if (!world.isAirBlock(x, y + 1, z) && topBlock != PlayerBeacons.defiledSoulPylonBlock) {
+        else if (!world.isAirBlock(x, y + 1, z) && topBlock != ModBlocks.blockDefiledSoulPylon) {
             return 1;
         }
         //Neither

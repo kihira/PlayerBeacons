@@ -1,6 +1,7 @@
 package kihira.playerbeacons.common.item;
 
 import kihira.playerbeacons.common.PlayerBeacons;
+import kihira.playerbeacons.common.lib.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -21,15 +22,15 @@ public class BeheaderItem extends ItemArmor {
 
 	public BeheaderItem() {
 		super(ArmorMaterial.IRON, 2, 0);
-		this.setUnlocalizedName("beheader");
-        this.setTextureName(PlayerBeacons.MOD_ID.toLowerCase() + ":beheader");
+		this.setUnlocalizedName(ModItems.Names.BEHEADER);
+        this.setTextureName(ModItems.Names.getTextureName(ModItems.Names.BEHEADER));
         this.setCreativeTab(PlayerBeacons.tabPlayerBeacons);
         this.setMaxDamage(200);
 	}
 
     @Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-		if (slot == 0) return "playerbeacon:textures/armour/beheader.png";
+		if (slot == 0) return "playerbeacon:textures/armour/itemBeheader.png";
 		else return null;
 	}
 
@@ -112,7 +113,7 @@ public class BeheaderItem extends ItemArmor {
 	}
 
     private ItemStack bindAndReset(String name, ItemStack itemStack) {
-        if (itemStack == null) itemStack = new ItemStack(PlayerBeacons.beheaderItem);
+        if (itemStack == null) itemStack = new ItemStack(ModItems.itemBeheader);
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         nbtTagCompound.setString("owner", name);
         itemStack.setTagCompound(nbtTagCompound);
