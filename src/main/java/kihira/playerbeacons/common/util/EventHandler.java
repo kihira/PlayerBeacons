@@ -12,7 +12,6 @@ import kihira.playerbeacons.api.beacon.AbstractBeacon;
 import kihira.playerbeacons.api.beacon.IBeacon;
 import kihira.playerbeacons.api.corruption.CorruptionEffect;
 import kihira.playerbeacons.api.crystal.ICrystal;
-import kihira.playerbeacons.common.FMLEventHandler;
 import kihira.playerbeacons.common.PlayerBeacons;
 import kihira.playerbeacons.common.item.PlayerBaconItem;
 import kihira.playerbeacons.proxy.ClientProxy;
@@ -43,7 +42,6 @@ import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -135,13 +133,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload e) {
-        FMLEventHandler.activeCorruptionEffects.remove(e.world);
-
-        //Use iterator to prevent CME
-        Iterator<Map.Entry<Loc4, AbstractBeacon>> iterator = BeaconDataHelper.beaconMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Loc4, AbstractBeacon> entry = iterator.next();
-            if (entry.getKey().dimID() == e.world.provider.dimensionId) BeaconDataHelper.beaconMap.remove(entry.getKey());
+        for (Map.Entry<Loc4, AbstractBeacon> entry : BeaconDataHelper.beaconMap.entrySet()) {
+            if (entry.getKey().dimID() == e.world.provider.dimensionId)
+                BeaconDataHelper.beaconMap.remove(entry.getKey());
         }
 
         if (e.world.isRemote) {

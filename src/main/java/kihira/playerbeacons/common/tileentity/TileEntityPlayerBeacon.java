@@ -93,7 +93,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
     }
 
     public void setOwner(EntityPlayer player) {
-        if (!BeaconDataHelper.doesPlayerHaveBeaconForDim(player, this.worldObj.provider.dimensionId)) {
+        if (!BeaconDataHelper.playerHasBeacon(player, this.worldObj.provider.dimensionId)) {
             BeaconDataHelper.setBeaconForDim(player, this, this.worldObj.provider.dimensionId);
             this.ownerGameProfile = player.getGameProfile();
             this.headType = EnumHeadType.PLAYER;
@@ -138,6 +138,7 @@ public class TileEntityPlayerBeacon extends TileEntityMultiBlock implements IBea
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void updateEntity() {
         if (!this.worldObj.isRemote) {

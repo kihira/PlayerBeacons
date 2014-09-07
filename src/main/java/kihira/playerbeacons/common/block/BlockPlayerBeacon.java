@@ -105,7 +105,7 @@ public class BlockPlayerBeacon extends BlockMultiBlock {
 
                     //If there is no current beacon owner, set it to them. Check based off name as the skull game profile might not have UUID
                     if (playerBeacon.getOwnerGameProfile() == null && gameProfile != null && player.getGameProfile().getName().equals(gameProfile.getName()) &&
-                            !BeaconDataHelper.doesPlayerHaveBeaconForDim(player, world.provider.dimensionId)) {
+                            !BeaconDataHelper.playerHasBeacon(player, world.provider.dimensionId)) {
                         playerBeacon.setOwner(player);
                         playerBeacon.setIsParent();
                         //Generate the Beacon instance

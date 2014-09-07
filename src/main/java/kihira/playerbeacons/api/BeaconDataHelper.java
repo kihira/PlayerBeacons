@@ -40,7 +40,8 @@ public class BeaconDataHelper {
         data.setFloat("Corruption", Math.max(0, corr));
     }
 
-    public static boolean doesPlayerHaveBeaconForDim(EntityPlayer player, int dimID) {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean playerHasBeacon(EntityPlayer player, int dimID) {
         NBTTagCompound beaconData = getBeaconDataTag(player);
         return beaconData.hasKey(String.valueOf(dimID));
     }
@@ -81,10 +82,8 @@ public class BeaconDataHelper {
                 @Override
                 public void run() {
                     Stopwatch stopwatch = Stopwatch.createStarted();
-                    boolean hasChanged = false;
                     //If checkStructure is false, something has changed
                     if (!beacon.checkStructure(theBeacon)) {
-                        hasChanged = true;
                         beacon.invalidateStructure(theBeacon);
                         beacon.checkStructure(theBeacon); //Figure out the levels
                         beacon.formStructure(theBeacon);

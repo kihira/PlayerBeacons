@@ -19,6 +19,7 @@ apply plugin: 'forge'
 
 version = "2.0.0_beta3"
 group= "kihira.playerbeacons" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+//noinspection GroovyUnusedAssignment
 archivesBaseName = "PlayerBeacons"
 
 minecraft {
