@@ -49,7 +49,7 @@ public class EventHandler {
 
 	private final Random random = new Random();
 	private long spawnCooldown = System.currentTimeMillis();
-    private final ResourceLocation vignetteTexPath = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/misc/vignette.png");
+    private final ResourceLocation vignetteTexPath = new ResourceLocation(PlayerBeacons.MOD_ID, "textures/misc/vignette.png");
 
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent e) {

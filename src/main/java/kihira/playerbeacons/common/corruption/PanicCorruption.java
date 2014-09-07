@@ -97,7 +97,7 @@ public class PanicCorruption extends CorruptionEffect {
         private final EntityPlayer player;
 
         public MovingSoundHeartbeat(EntityPlayer player) {
-            super(new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "player.heartbeat"));
+            super(new ResourceLocation(PlayerBeacons.MOD_ID, "player.heartbeat"));
 
             this.player = player;
             this.field_147666_i = ISound.AttenuationType.NONE;

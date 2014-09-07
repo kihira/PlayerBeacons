@@ -31,6 +31,9 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = PlayerBeacons.MOD_ID, dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version", useMetadata = true, guiFactory = "kihira.playerbeacons.client.PlayerBeaconsGuiFactory")
 public class PlayerBeacons {
 
+    public static final String MOD_ID = "PlayerBeacons";
+    public static final Logger logger = LogManager.getLogger(MOD_ID);
+    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs(MOD_ID) {
         @Override
         @SideOnly(Side.CLIENT)
@@ -40,9 +43,6 @@ public class PlayerBeacons {
     };
 
 	public static Config config;
-	public static final Logger logger = LogManager.getLogger(PlayerBeacons.MOD_ID);
-    public static final String MOD_ID = "PlayerBeacons";
-    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(PlayerBeacons.MOD_ID);
 
     private final EndermanAggroCorruption endermanAggroCorruption = new EndermanAggroCorruption();
     private final EndTeleportCorruption endTeleportCorruption = new EndTeleportCorruption();

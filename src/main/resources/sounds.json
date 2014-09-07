@@ -1,0 +1,9 @@
+{
+  "player.heartbeat": {
+    "category": "player",
+    "sounds": [{
+		"name": "player/heartbeat",
+		"stream": false
+	}]
+  }
+}
