@@ -15,15 +15,38 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Kihira Repo'
+        url = 'http://maven.kihirakreations.co.uk'
+    }
+}
+
 apply plugin: 'forge'
 
-version = "2.0.0_beta3"
-group= "kihira.playerbeacons" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-//noinspection GroovyUnusedAssignment
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
+}
+
+project.ext {
+    massive = "2"
+    major = "0"
+    minor = "0"
+    mcVersion = "1.7.10"
+    forgeVersion = "10.13.0.1180"
+}
+
+version = "${project.ext.mcVersion}-${project.ext.massive}.${project.ext.major}.${project.minor}.${System.getenv("BUILD_NUMBER") ?: 0}"
+group= "kihira"
 archivesBaseName = "PlayerBeacons"
 
 minecraft {
-    version = "1.7.10-10.13.0.1180"
+    version = "${project.ext.mcVersion}-${project.ext.forgeVersion}"
 }
 
 processResources {
@@ -43,12 +66,14 @@ processResources {
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
+    from sourceSets.api.allSource
     classifier = 'src'
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    from sourceSets.api.output
+    classifier = 'dev'
 }
 
 artifacts {
@@ -56,9 +81,13 @@ artifacts {
     archives deobfJar
 }
 
-jar.doFirst {
-    version = project.minecraft.version + "-" + version;
-    if (System.getenv().BUILD_NUMBER != null) {
-        version += "-" + "${System.getenv().BUILD_NUMBER}"
+uploadArchives {
+    dependsOn 'reobf'
+
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        repository(url: teamcity["maven_url"]) {
+            authentication(userName: teamcity["maven_username"], password: teamcity["maven_password"])
+        }
     }
 }
