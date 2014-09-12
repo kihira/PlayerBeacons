@@ -25,20 +25,22 @@ repositories {
 
 apply plugin: 'forge'
 
-configurations {
-    deployerJars
-}
-
-dependencies {
-    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
-}
-
 project.ext {
     massive = "2"
     major = "0"
     minor = "0"
     mcVersion = "1.7.10"
     forgeVersion = "10.13.0.1180"
+    foxlibVersion = "1.7.10-0.4.1.28"
+}
+
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
+    compile "kihira:FoxLib:"+project.foxlibVersion+":dev"
 }
 
 version = "${project.ext.mcVersion}-${project.ext.massive}.${project.ext.major}.${project.minor}.${System.getenv("BUILD_NUMBER") ?: 0}"
