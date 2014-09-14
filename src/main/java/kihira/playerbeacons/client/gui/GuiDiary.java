@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -86,7 +87,8 @@ public class GuiDiary extends GuiScreen {
                 GL11.glTranslatef(this.guiLeft + (this.guiWidth / 4) + 5, this.guiTop + 15, 0);
                 GL11.glScalef(1.3F, 1.3F, 0F);
                 this.fontRendererObj.setUnicodeFlag(false);
-                this.fontRendererObj.drawString(EnumChatFormatting.BLACK + "Contents", -this.fontRendererObj.getStringWidth("contents") / 2, 0, -1);
+                String s = StatCollector.translateToLocal("diary.contents.title");
+                this.fontRendererObj.drawString(EnumChatFormatting.BLACK + s, -this.fontRendererObj.getStringWidth(s) / 2, 0, -1);
                 this.fontRendererObj.setUnicodeFlag(true);
                 GL11.glPopMatrix();
             }
