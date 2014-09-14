@@ -27,9 +27,9 @@ public class GuiDiary extends GuiScreen {
     private DiaryEntry currentEntry;
     private int currentIndex = 0;
 
-    public static final ResourceLocation bookCoverGuiTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/book_cover.png");
-    public static final ResourceLocation pageTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/book_pages.png");
-    public static final ResourceLocation pageTitleTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/book_title.png");
+    public static final ResourceLocation bookCoverGuiTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/gui/diary/book_cover.png");
+    public static final ResourceLocation pageTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/gui/diary/book_pages.png");
+    public static final ResourceLocation pageTitleTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/gui/diary/book_title.png");
 
     private GuiButtonNavigation prevPage;
     private GuiButtonNavigation nextPage;

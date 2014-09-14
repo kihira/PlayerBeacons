@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.StatCollector;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class DiaryText extends DiaryPage {
@@ -46,6 +47,7 @@ public class DiaryText extends DiaryPage {
             offset += FancyFont.fontTest.getHeight() * 0.14F;
         }
         GL11.glPopMatrix();*/
+        GL11.glColor3f(1F, 1F, 1F);
     }
 
     @Override

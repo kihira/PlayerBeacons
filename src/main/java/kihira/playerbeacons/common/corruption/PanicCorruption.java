@@ -26,7 +26,7 @@ public class PanicCorruption extends CorruptionEffect {
     private boolean allowNextSound;
 
     public PanicCorruption() {
-        super("panic", 0);
+        super("panic", CORRUPTION_MAX);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -64,18 +64,22 @@ public class PanicCorruption extends CorruptionEffect {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
-        GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-        Minecraft.getMinecraft().gameSettings.gammaSetting = -multiset.count(Minecraft.getMinecraft().thePlayer) / 2F;
-        event.density = multiset.count(Minecraft.getMinecraft().thePlayer) / 1000F;
-        event.setCanceled(true);
+        if (multiset.contains(Minecraft.getMinecraft().thePlayer)) {
+            GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
+            Minecraft.getMinecraft().gameSettings.gammaSetting = -multiset.count(Minecraft.getMinecraft().thePlayer) / 2F;
+            event.density = multiset.count(Minecraft.getMinecraft().thePlayer) / 1000F;
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onFogColour(EntityViewRenderEvent.FogColors event) {
-        event.red -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
-        event.green -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
-        event.blue -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
+        if (multiset.contains(Minecraft.getMinecraft().thePlayer)) {
+            event.red -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
+            event.green -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
+            event.blue -= (multiset.count(Minecraft.getMinecraft().thePlayer) / 200F);
+        }
     }
 
     @SubscribeEvent

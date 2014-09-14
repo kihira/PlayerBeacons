@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 public class PlayerBeacons {
 
     public static final String MOD_ID = "PlayerBeacons";
+    public static final String RESOURCE_PRE = MOD_ID.toLowerCase() + ":";
     public static final Logger logger = LogManager.getLogger(MOD_ID);
     public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 	public static final CreativeTabs tabPlayerBeacons = new CreativeTabs(MOD_ID) {

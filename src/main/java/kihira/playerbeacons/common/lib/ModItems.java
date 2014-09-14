@@ -67,7 +67,7 @@ public class ModItems {
         public static final String CRYSTAL_YELLOW = "itemYellowCrystal";
 
         public static String getTextureName(String name) {
-            return PlayerBeacons.MOD_ID + ":" + name;
+            return PlayerBeacons.RESOURCE_PRE + name;
         }
     }
 }
