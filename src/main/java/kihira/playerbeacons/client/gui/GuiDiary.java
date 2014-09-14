@@ -15,6 +15,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -24,7 +26,6 @@ public class GuiDiary extends GuiScreen {
     public final int guiHeight = 180;
     private int guiLeft, guiTop;
 
-    private DiaryEntry currentEntry;
     private int currentIndex = 0;
 
     public static final ResourceLocation bookCoverGuiTexture = new ResourceLocation(PlayerBeacons.MOD_ID.toLowerCase(), "textures/gui/diary/book_cover.png");
@@ -33,6 +34,7 @@ public class GuiDiary extends GuiScreen {
 
     private GuiButtonNavigation prevPage;
     private GuiButtonNavigation nextPage;
+    private List<DiaryPage> pages;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -47,7 +49,7 @@ public class GuiDiary extends GuiScreen {
         this.buttonList.add(this.nextPage = new GuiButtonNavigation(1, this.guiLeft + this.guiWidth - 22, this.guiTop + this.guiHeight - 22, true)); //Next
 
         //Entries
-        this.addEntries();
+        compilePages();
 
         this.updateButtons();
     }
@@ -58,15 +60,14 @@ public class GuiDiary extends GuiScreen {
         this.mc.getTextureManager().bindTexture(bookCoverGuiTexture);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
 
-        if (this.currentEntry != null) {
-            List<DiaryPage> pages = this.currentEntry.getPages();
+        //Not the content pages
+        if (this.currentIndex >= 4) {
             for (int i = 0; i < 2; i++) {
-                if (pages.size() > (this.currentIndex + i)) {
-                    DiaryPage page = this.currentEntry.getPages().get(this.currentIndex + i);
-                    if (page != null) page.drawScreen(this, width, height, i == 0);
-                }
-                else {
-                    //TODO show start of next entry
+                if (pages.size() > currentIndex + i - 4) {
+                    DiaryPage page = this.pages.get(this.currentIndex + i - 4);
+                    if (page != null) {
+                        page.drawScreen(this, width, height, i == 0);
+                    }
                 }
             }
         }
@@ -98,37 +99,53 @@ public class GuiDiary extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == this.prevPage) {
-            //If we're already at the first page, go back to contents TODO Go back to earlier entry
-            if (this.currentIndex == 0) {
-                this.setCurrentEntry(null);
+            if (this.currentIndex != 0) {
+                this.adjustIndex(-2);
             }
-            this.adjustIndex(-2);
         }
-        if (button == this.nextPage) this.adjustIndex(2);
+        if (button == this.nextPage) {
+            this.adjustIndex(2);
+        }
 
         //Entry
         if (button.id >= 500) {
             GuiButtonEntry buttonEntry = (GuiButtonEntry) button;
-            this.setCurrentEntry(buttonEntry.diaryEntry);
+            this.currentIndex = buttonEntry.index + 4;
         }
 
         this.updateButtons();
     }
 
     @SuppressWarnings("unchecked")
-    private void addEntries() {
+    private void compilePages() {
+        ArrayList<DiaryPage> pages = new ArrayList<DiaryPage>();
+/*        pages.add(null);
+        pages.add(new DiaryCover());
+        pages.add(new DiaryContents());*/
         int index = 0;
+        int buttonOffset = 0;
+        int buttonID = 500;
         for (DiaryEntry entry : DiaryData.entries) {
-            GuiButtonEntry buttonEntry = new GuiButtonEntry(500 + index, this.guiLeft + 20, this.guiTop + 35 + (index * 10), entry);
+            pages.addAll(entry.getPages());
+            index += entry.getPages().size() + 1;
+
+            //Add contents button
+            GuiButtonEntry buttonEntry = new GuiButtonEntry(buttonID, this.getGuiLeft() + 20, this.getGuiTop() + 35 + (buttonOffset * 10), entry, index);
             buttonEntry.visible = buttonEntry.enabled = false;
-            this.buttonList.add(buttonEntry);
-            index++;
+            buttonList.add(buttonEntry);
+            buttonOffset++;
+            buttonID++;
+            if (buttonOffset > 13) {
+                buttonOffset = 0;
+            }
         }
+
+        this.pages = Collections.unmodifiableList(pages);
     }
 
     private void updateButtons() {
         //Prev button
-        if (this.currentEntry == null && this.currentIndex < 2) this.prevPage.enabled = this.prevPage.visible = false;
+        if (this.currentIndex < 2) this.prevPage.enabled = this.prevPage.visible = false;
         else this.prevPage.enabled = this.prevPage.visible = true;
 
         //Next button
@@ -139,22 +156,13 @@ public class GuiDiary extends GuiScreen {
         for (Object button : this.buttonList) {
             if (button instanceof GuiButtonEntry) {
                 GuiButtonEntry guiButtonEntry = (GuiButtonEntry) button;
-                guiButtonEntry.enabled = guiButtonEntry.visible = (this.currentEntry == null && this.currentIndex > 0);
+                guiButtonEntry.enabled = guiButtonEntry.visible = this.currentIndex == 2;
             }
         }
     }
 
     public void adjustIndex(int change) {
         this.currentIndex = MathHelper.clamp_int(this.currentIndex += change, 0, Integer.MAX_VALUE);
-    }
-
-    public void setCurrentEntry(DiaryEntry entry) {
-        this.currentEntry = entry;
-        this.currentIndex = 0;
-    }
-
-    public DiaryEntry getDiaryEntry() {
-        return this.currentEntry;
     }
 
     public int getCurrentIndex() {

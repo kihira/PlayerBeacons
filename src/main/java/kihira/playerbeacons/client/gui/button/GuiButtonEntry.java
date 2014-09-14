@@ -13,10 +13,12 @@ import org.lwjgl.opengl.GL11;
 public class GuiButtonEntry extends GuiButton {
 
     public final DiaryEntry diaryEntry;
+    public final int index;
 
-    public GuiButtonEntry(int id, int posX, int posY, DiaryEntry entry) {
+    public GuiButtonEntry(int id, int posX, int posY, DiaryEntry entry, int index) {
         super(id, posX, posY, 100, 10, entry.getName());
         this.diaryEntry = entry;
+        this.index = index;
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
