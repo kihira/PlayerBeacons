@@ -51,7 +51,7 @@ public class GuiDiary extends GuiScreen {
         //Entries
         compilePages();
 
-        this.updateButtons();
+        updateButtons();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GuiDiary extends GuiScreen {
         this.mc.getTextureManager().bindTexture(bookCoverGuiTexture);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
 
-        //Not the content pages
+        //Not the content pages. NOTE: 4 is used as an "offset" of when actual entries start
         if (this.currentIndex >= 4) {
             for (int i = 0; i < 2; i++) {
                 if (pages.size() > currentIndex + i - 4) {
@@ -149,8 +149,8 @@ public class GuiDiary extends GuiScreen {
         else this.prevPage.enabled = this.prevPage.visible = true;
 
         //Next button
-/*        if (this.currentIndex > 0) this.nextPage.enabled = this.nextPage.visible = true;
-        else this.nextPage.enabled = this.nextPage.visible = false;*/
+        if (this.currentIndex < 4 || this.pages.size() < this.currentIndex - 4) this.nextPage.enabled = this.nextPage.visible = true;
+        else this.nextPage.enabled = this.nextPage.visible = false;
 
         //Contents
         for (Object button : this.buttonList) {

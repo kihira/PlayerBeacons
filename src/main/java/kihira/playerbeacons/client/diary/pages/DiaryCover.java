@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 public class DiaryCover extends DiaryPage {
 
     public DiaryCover() {
-        super("cover");
+        super("cover", "cover");
     }
 
     @Override

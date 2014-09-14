@@ -12,17 +12,17 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class DiaryText extends DiaryPage {
+public class DiaryPageText extends DiaryPage {
 
-    public DiaryText(String name) {
-        super(name);
+    public DiaryPageText(String name, String pageTitle) {
+        super(name, pageTitle);
     }
 
     @Override
     public void drawScreen(GuiDiary diary, int width, int height, boolean isLeftPage) {
         //Calculate offset
         int leftOffset = (isLeftPage ? 0 : 128);
-        int mainTextTopoffset = (StatCollector.canTranslate(this.getUnlocalisedTitle()) ? 15 : 0);
+        int mainTextTopOffset = (StatCollector.canTranslate(this.getUnlocalisedTitle()) ? 15 : 0);
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
         //Draw the page background
@@ -30,7 +30,7 @@ public class DiaryText extends DiaryPage {
         diary.drawTexturedModalRect(diary.getGuiLeft() + leftOffset, diary.getGuiTop(), leftOffset, 0, diary.guiWidth / 2, 173);
 
         //Title
-        if (mainTextTopoffset != 0) {
+        if (mainTextTopOffset != 0) {
             fontRenderer.setUnicodeFlag(false);
             String s = StatCollector.translateToLocal(this.getUnlocalisedTitle());
             fontRenderer.drawString(s, diary.getGuiLeft() + leftOffset + (isLeftPage ? 64 : 5) - (fontRenderer.getStringWidth(s) / 2), diary.getGuiTop() + 15, 1973019);
@@ -38,7 +38,7 @@ public class DiaryText extends DiaryPage {
         }
 
         //Now the test itself
-        fontRenderer.drawSplitString(StatCollector.translateToLocal("page." + this.pageName + ".text"), diary.getGuiLeft() + leftOffset + (isLeftPage ? 17 : 5), diary.getGuiTop() + 12 + mainTextTopoffset, 108, 1973019);
+        fontRenderer.drawSplitString(StatCollector.translateToLocal(this.pageName), diary.getGuiLeft() + leftOffset + (isLeftPage ? 17 : 5), diary.getGuiTop() + 12 + mainTextTopOffset, 108, 1973019);
 /*        GL11.glPushMatrix();
         List<String> list = fontRenderer.listFormattedStringToWidth(StatCollector.translateToLocal("page." + this.pageName + ".text"), 108);
         int offset = 0;

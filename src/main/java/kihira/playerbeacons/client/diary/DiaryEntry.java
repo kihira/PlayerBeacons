@@ -42,6 +42,6 @@ public class DiaryEntry {
     }
 
     public String getName() {
-        return StatCollector.translateToLocal("entry." + name + ".name");
+        return StatCollector.translateToLocal(name);
     }
 }

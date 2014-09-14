@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 public class DiaryContents extends DiaryPage {
 
     public DiaryContents(String name, DiaryEntry ... entries) {
-        super(name);
+        super(name, "");
     }
 
     @Override
