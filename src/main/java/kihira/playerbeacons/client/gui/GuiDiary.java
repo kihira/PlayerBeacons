@@ -110,7 +110,8 @@ public class GuiDiary extends GuiScreen {
         //Entry
         if (button.id >= 500) {
             GuiButtonEntry buttonEntry = (GuiButtonEntry) button;
-            this.currentIndex = buttonEntry.index + 4;
+            //We want currentIndex to always be even
+            this.currentIndex = buttonEntry.index + 4 - (buttonEntry.index % 2);
         }
 
         this.updateButtons();
@@ -127,14 +128,15 @@ public class GuiDiary extends GuiScreen {
         int buttonID = 500;
         for (DiaryEntry entry : DiaryData.entries) {
             pages.addAll(entry.getPages());
-            index += entry.getPages().size() + 1;
 
             //Add contents button
             GuiButtonEntry buttonEntry = new GuiButtonEntry(buttonID, this.getGuiLeft() + 20, this.getGuiTop() + 35 + (buttonOffset * 10), entry, index);
             buttonEntry.visible = buttonEntry.enabled = false;
             buttonList.add(buttonEntry);
+
             buttonOffset++;
             buttonID++;
+            index += entry.getPages().size();
             if (buttonOffset > 13) {
                 buttonOffset = 0;
             }
@@ -148,8 +150,10 @@ public class GuiDiary extends GuiScreen {
         if (this.currentIndex < 2) this.prevPage.enabled = this.prevPage.visible = false;
         else this.prevPage.enabled = this.prevPage.visible = true;
 
-        //Next button
-        if (this.currentIndex < 4 || this.pages.size() < this.currentIndex - 4) this.nextPage.enabled = this.nextPage.visible = true;
+        //Next button. + 2 to check if there are entries ahead
+        if (this.currentIndex < 4 || this.pages.size() > this.currentIndex + 2 - 4) {
+            this.nextPage.enabled = this.nextPage.visible = true;
+        }
         else this.nextPage.enabled = this.nextPage.visible = false;
 
         //Contents

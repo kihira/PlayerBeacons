@@ -13,7 +13,7 @@ public class DiaryData {
     public static final List<DiaryEntry> entries = new ArrayList<DiaryEntry>(); //TODO sorted
 
     static {
-        entries.add(new DiaryEntry("day1").addDiaryPages(new DiaryPageText("page.day1.0.text", "page.day1.0.title")));
-        entries.add(new DiaryEntry("day2").addDiaryPages(new DiaryPageText("test2", "test2"), new DiaryPageText("test3", "test3")));
+        entries.add(new DiaryEntry("entry.day1.title").addDiaryPages(new DiaryPageText("page.day1.0.text", "page.day1.0.title")));
+        entries.add(new DiaryEntry("entry.day2.title").addDiaryPages(new DiaryPageText("test2", "test2"), new DiaryPageText("test3", "test3")));
     }
 }
