@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -66,6 +67,12 @@ public class DiaryPageRecipe extends DiaryPage {
                 for (int recipeHeight = 0; recipeHeight < shapedRecipe.recipeHeight; recipeHeight++) {
                     renderItemStack(shapedRecipe.recipeItems[recipeHeight * shapedRecipe.recipeWidth + recipeWidth], xPos + (16 * recipeWidth), yPos + (16 * recipeHeight));
                 }
+            }
+        }
+        else if (recipe instanceof ShapelessRecipes) {
+            ShapelessRecipes shapeless = (ShapelessRecipes) recipe;
+            for (int recipeItem = 0; recipeItem < shapeless.getRecipeSize(); recipeItem++) {
+                renderItemStack((ItemStack) shapeless.recipeItems.get(recipeItem), xPos + (16 * (recipeItem % 3)), yPos + (16 * (recipeItem / 3)));
             }
         }
 
