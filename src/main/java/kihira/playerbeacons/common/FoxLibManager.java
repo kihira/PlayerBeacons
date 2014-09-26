@@ -43,7 +43,7 @@ public class FoxLibManager {
     public static final String foxlibDownloadFallback = "http://minecraft.curseforge.com/mc-mods/223291-foxlib/files";
     public static final Logger logger = LogManager.getLogger("FoxLib Manager");
 
-    @SidedProxy(serverSide = "kihira.tails.common.FoxLibManager$CommonProxy", clientSide = "kihira.tails.common.FoxLibManager$ClientProxy")
+    @SidedProxy(serverSide = "kihira.playerbeacons.common.FoxLibManager$CommonProxy", clientSide = "kihira.playerbeacons.common.FoxLibManager$ClientProxy")
     public static CommonProxy proxy;
     long totalSize;
 
