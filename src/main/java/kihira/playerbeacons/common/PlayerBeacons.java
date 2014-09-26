@@ -28,7 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = PlayerBeacons.MOD_ID, dependencies = "after:Waila;required-after:foxlib@[0.1.0,)", version = "$version", useMetadata = true, guiFactory = "kihira.playerbeacons.client.PlayerBeaconsGuiFactory")
+@Mod(modid = PlayerBeacons.MOD_ID, dependencies = "after:Waila;", version = "$version", useMetadata = true, guiFactory = "kihira.playerbeacons.client.PlayerBeaconsGuiFactory")
 public class PlayerBeacons {
 
     public static final String MOD_ID = "PlayerBeacons";
@@ -69,17 +69,19 @@ public class PlayerBeacons {
 	public void preInit(FMLPreInitializationEvent e) {
 		config = new Config(e.getSuggestedConfigurationFile());
 
-        ModItems.init();
-        ModBlocks.init();
+        if (FoxLibManager.checkFoxlib()) {
+            ModItems.init();
+            ModBlocks.init();
 
-		registerBuffs();
-        registerRecipes();
-		MinecraftForge.EVENT_BUS.register(new EventHandler());
-        FMLCommonHandler.instance().bus().register(new FMLEventHandler());
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-		proxy.registerRenderers();
+            registerBuffs();
+            registerRecipes();
+            MinecraftForge.EVENT_BUS.register(new EventHandler());
+            FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+            NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+            proxy.registerRenderers();
 
-		new EnchantmentDecapitation(config.decapitationEnchantmentID);
+            new EnchantmentDecapitation(config.decapitationEnchantmentID);
+        }
 	}
 
 	@Mod.EventHandler
