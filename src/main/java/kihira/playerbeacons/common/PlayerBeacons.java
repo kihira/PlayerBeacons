@@ -12,7 +12,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import kihira.playerbeacons.common.buff.*;
 import kihira.playerbeacons.common.command.CommandPlayerBeacons;
 import kihira.playerbeacons.common.command.CommandPlayerHead;
-import kihira.playerbeacons.common.corruption.*;
+import kihira.playerbeacons.common.corruption.BatCorruption;
+import kihira.playerbeacons.common.corruption.EndTeleportCorruption;
+import kihira.playerbeacons.common.corruption.EndermanAggroCorruption;
+import kihira.playerbeacons.common.corruption.SlownessCorruption;
 import kihira.playerbeacons.common.lib.ModBlocks;
 import kihira.playerbeacons.common.lib.ModItems;
 import kihira.playerbeacons.common.util.EventHandler;
@@ -49,7 +52,7 @@ public class PlayerBeacons {
     private final EndTeleportCorruption endTeleportCorruption = new EndTeleportCorruption();
     private final SlownessCorruption slownessCorruption = new SlownessCorruption();
     private final BatCorruption batCorruption = new BatCorruption();
-    private final PanicCorruption panicCorruption = new PanicCorruption();
+    //private final PanicCorruption panicCorruption = new PanicCorruption();
 
     public static final DamageSource damageBehead = new DamageSource("behead").setDamageBypassesArmor();
 
