@@ -86,10 +86,12 @@ artifacts {
 uploadArchives {
     dependsOn 'reobf'
 
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-        repository(url: teamcity["maven_url"]) {
-            authentication(userName: teamcity["maven_username"], password: teamcity["maven_password"])
+    if (project.hasProperty("teamcity")) {
+        repositories.mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: teamcity["maven_url"]) {
+                authentication(userName: teamcity["maven_username"], password: teamcity["maven_password"])
+            }
         }
     }
 }
